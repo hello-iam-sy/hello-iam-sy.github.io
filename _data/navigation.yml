@@ -1,0 +1,21 @@
+# main links
+main:
+  # - title: "Quick-Start Guide"
+  #   url: https://mmistakes.github.io/minimal-mistakes/docs/quick-start-guide/
+  - title: "About"
+    url: /about/
+
+sidebar-category:
+  - title: "Algorithm"
+    children:
+     - title: "linked list"
+       url: "/linked_list"
+
+  - title: "Kafka"
+    url: "/kafka/"
+  - title: "Spark"
+    url: "/spark/"  
+  # - title: "Sample Collections"
+  #   url: /collection-archive/
+  # - title: "Sitemap"
+  #   url: /sitemap/
