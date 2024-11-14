@@ -1,6 +1,7 @@
 ---
 title: "Linked List 개념 정리"
 date: 2024-11-09
+last_modified_at: 2024-11-13
 categories:
   - linked_list
 toc: true
@@ -38,17 +39,17 @@ delete, insert 시 연결된 포인터만 바꿔주면 되기때문에 구조의
 | next         | Node or Null      | 다음 노드를 가르키는 pointer |
 
 ```python
-class ListNode():
+class Node():
     def __init__(self, val=0,next=None):
         self.val = val
         self.next = next
 
-node0 = ListNode(0)
-node1 = ListNode(1)
-node2 = ListNode(2)
-node3 = ListNode(3)
-node4 = ListNode(4)
-node5 = ListNode(5)
+node0 = Node(0)
+node1 = Node(1)
+node2 = Node(2)
+node3 = Node(3)
+node4 = Node(4)
+node5 = Node(5)
 
 node0.next = node1
 node1.next = node2
@@ -56,7 +57,7 @@ node2.next = node3
 node3.next = node4
 node4.next = node5
 
-## print the value of ListNode
+## print the value of Node
 current = node0
 while(current != None):
     temp = current
