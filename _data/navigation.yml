@@ -10,11 +10,24 @@ sidebar-category:
     children:
      - title: "linked list"
        url: "/linked_list"
+       category: "linked_list"
+     - title: "tree"
+       url: "/tree"
+       category: "tree"
 
   - title: "Kafka"
     url: "/kafka/"
+    category: "kafka"
+
   - title: "Spark"
-    url: "/spark/"  
+    url: "/spark/"
+    category: "spark"
+
+  - title: "LeetCode"
+    children:
+      - title: "LeetCode"
+        url: "/leetcode/"
+        category: "leetcode"
   # - title: "Sample Collections"
   #   url: /collection-archive/
   # - title: "Sitemap"
