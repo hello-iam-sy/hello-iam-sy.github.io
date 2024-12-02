@@ -10,7 +10,7 @@ toc_label: "On This Page"
 ---
 
 ### KafKa 개념 정리
-*인프런에서 카프카 강의를 약 50% 들은 시점에서 관련 개념들 및 앞으로 기억하면 좋을 부분들을 추려 포스팅 한다.*
+*인프런에서 카프카 강의에서 관련 개념들 및 앞으로 기억하면 좋을 부분들을 추려 포스팅 한다.*
 
 ---
 
@@ -55,8 +55,48 @@ Producer와 Consumer의 직렬화 설정이 일치하지 않으면 메시지를 
 - **리더 파티션과 팔로워 파티션**  
 리더 파티션: 파티션에서 읽기/쓰기 요청을 처리하는 주된 파티션이다.  
 팔로워 파티션: 리더 파티션의 데이터를 주기적으로 복사(Replication)하여 백업 역할을 한다.  
-리더 파티션은 디스크 I/O가 집중적으로 발생하며, 리더 장애 시 팔로워 중 하나가 리더로 승격된다.  
+리더 파티션은 디스크 I/O가 집중적으로 발생하며, 리더 장애 시 팔로워 중 하나가 리더로 승격된다.
 
+- **Consumer Lag**  
+  Consumer Lag은 Producer가 데이터를 생성하는 속도보다 Consumer가 데이터를 소비하는 속도가 낮을 때 발생한다.  
+  이는 토픽의 파티션 상태와 Consumer의 처리 성능을 모니터링하는 데 중요한 지표로 활용된다.
+
+  **활용 방안**:  
+  - **LAG이 증가한 경우**:
+    1. **토픽의 파티션 개수를 늘림**으로써 데이터를 병렬로 처리할 수 있도록 한다.
+    2. **Consumer 수를 늘려 병렬 처리 속도를 개선**한다.
+    3. LAG이 지속적으로 증가한다면 **특정 파티션의 장애를 의심**해볼 수 있다.
+
+  모니터링 툴: Datadog, Confluent Contrl Center, Burrow
+  - kafka burrow monitoring architecture  
+  
+  ![burrow](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FvKgCt%2Fbtrf3sG6KqR%2FFQSktp7J0oqVJOvTW9gnP1%2Fimg.png)
+
+- **Kafka Streams**
+  - Source Processor (E - Extract)  
+    Source Processor는 카프카 토픽에서 데이터를 읽어오는 역할  
+  - Stream Processor (T - Transform)  
+    실시간으로 데이터를 변환하거나 처리하는 역할  
+    데이터를 필터링, 매핑, 집계, 조인 등의 작업을 통해 의미 있는 데이터로 변환
+  - Sink Processor (L - Load)   
+    처리된 데이터를 특정 토픽에 저장하거나 외부 시스템으로 전달하는 역할  
+  
+  **Kafka Streams의 Co-Partitioning**
+
+    Kafka Streams에서 `KTable`과 `KStream`을 조인하려면 **Co-Partitioning**이 필수    
+    이는 두 데이터 소스(`KTable`, `KStream`)가 **동일한 파티션 키**와 **동일한 파티션 개수**를 가져야 한다는 것을 의미  
+    
+
+- **Co-Partitioning**:  
+  Kafka Streams에서 데이터를 조인하려면, **두 소스 데이터가 동일한 파티션 키와 파티션 개수로 구성**되어 있어야 함
+
+  _관련하여 spark의 shuffing 이 생각이 났다._  
+  spark 의 경우는 두 데이터 소스의 파티션 키가 다를 경우, Shuffling을 통해 데이터를 재분배하여 조인하기 때문  
+
+  대신, 카프카 스트림즈에서는 globalKTable 을 지원  
+  _이는 Spark의 Broadcasting 을 떠올리게 한다._  
+  globalKTable 은 파티션되어 있는 데이터를 materialized view 로 하여 분할되어진 모든 데이터를 메모리에 띄워 join할 수 있도록 한 개념  
+  
 ---
 
 ### Kafka 명령어 사용 예시
