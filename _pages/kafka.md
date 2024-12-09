@@ -3,8 +3,8 @@ title: "Kafka"
 layout: archive
 permalink: /kafka
 author_profile: true
-sidebar:
-    nav: "sidebar-category"
+# sidebar:
+#     nav: "sidebar-category"
 ---
 {% assign posts = site.categories['kafka']%}
 {% for post in posts %}
