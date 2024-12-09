@@ -6,7 +6,7 @@ main:
     url: /about/
 
 sidebar-category:
-  - title: "Algorithm"
+  - title: "Data Structure"
     children:
      - title: "linked list"
        url: "/linked_list"
@@ -14,20 +14,20 @@ sidebar-category:
      - title: "tree"
        url: "/tree"
        category: "tree"
-
-  - title: "Kafka"
-    url: "/kafka/"
-    category: "kafka"
-
-  - title: "Spark"
-    url: "/spark/"
-    category: "spark"
-
-  - title: "LeetCode"
+  - title: "Data Engineering"
     children:
-      - title: "LeetCode"
-        url: "/leetcode/"
-        category: "leetcode"
+     - title: "kafka"
+       url: "/kafka"
+       category: "kafka"
+     - title: "Spark"
+       url: "/spark"
+       category: "spark"
+
+  - title: "Algorithm"
+    children:
+     - title: "LeetCode"
+       url: "/leetcode/"
+       category: "leetcode"
   # - title: "Sample Collections"
   #   url: /collection-archive/
   # - title: "Sitemap"
