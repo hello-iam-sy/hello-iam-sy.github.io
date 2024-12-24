@@ -1,7 +1,7 @@
 ---
 title: "Leetcode"
 layout: archive
-permalink: /leetcode
+permalink: /leetcode/
 author_profile: true
 sidebar:
     nav: "sidebar-category"
