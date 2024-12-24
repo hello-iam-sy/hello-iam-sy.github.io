@@ -1,0 +1,29 @@
+@media print {
+    body {
+        font-size: 12px; /* 기본 폰트 크기 줄이기 */
+        line-height: 1.4; /* 줄 간격 조정 */
+    }
+    h1 {
+        font-size: 20px; /* 제목 크기 조정 */
+        text-align: center;
+    }
+    h2 {
+        font-size: 18px;
+        border-bottom: 1px solid #21487d !important;
+        color: #21487d
+    }
+    h3 {
+        font-size: 16px;
+    }
+    h4 {
+        font-size: 16px;
+        border-bottom: 1px solid #21487d !important;
+    }
+    p {
+        font-size: 12px;
+    }
+    a {
+        text-decoration: none;
+        color: black; /* 링크 색상을 인쇄에 적합하도록 변경 */
+    }
+}

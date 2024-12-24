@@ -26,3 +26,8 @@
     <script src="{{ script | relative_url }}"></script>
   {% endfor %}
 {% endif %}
+
+
+{% if page.print_style %}
+<link rel="stylesheet" href="{{ '/assets/css/print.css' | relative_url }}" media="print">
+{% endif %}

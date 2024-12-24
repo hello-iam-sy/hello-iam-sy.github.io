@@ -1,7 +1,7 @@
 ---
 title: "Kafka 개념 정리"
 date: 2024-11-14
-last_modified_at: 2024-12-01
+last_modified_at: 2024-12-10
 categories:
   - kafka
 toc: true
@@ -55,7 +55,12 @@ Producer와 Consumer의 직렬화 설정이 일치하지 않으면 메시지를 
 - **리더 파티션과 팔로워 파티션**  
 리더 파티션: 파티션에서 읽기/쓰기 요청을 처리하는 주된 파티션이다.  
 팔로워 파티션: 리더 파티션의 데이터를 주기적으로 복사(Replication)하여 백업 역할을 한다.  
-리더 파티션은 디스크 I/O가 집중적으로 발생하며, 리더 장애 시 팔로워 중 하나가 리더로 승격된다.
+리더 파티션은 디스크 I/O가 집중적으로 발생하며, 리더 장애 시 팔로워 중 하나가 리더로 승격된다.  
+Kafka Producer 의 acks 옵션:  
+- `acks=0` : 리더 파티션에게 데이터가 전송되었는지 확인하지 않고, 일단 push
+- `acks=1` : 리더 파티션에 데이터가 잘 쓰여졌는지 확인
+- `acks=-1(all)` : 리더 뿐만이 아니라, 팔로워 파티션에게도 데이터가 잘 쓰여졌는지까지 확인
+ - min.insync.replicas: acks=-1 인 경우, 최소 몇 개의 ISR 복제본이 데이터를 복제해야 **쓰기 성공**으로 간주할지 결정
 
 ---
 #### Consumer Lag
@@ -76,7 +81,7 @@ Producer와 Consumer의 직렬화 설정이 일치하지 않으면 메시지를 
 
 ---
 
-#### Kafka Streams**
+#### Kafka Streams
 
   - Source Processor (E - Extract)  
     Source Processor는 카프카 토픽에서 데이터를 읽어오는 역할  
