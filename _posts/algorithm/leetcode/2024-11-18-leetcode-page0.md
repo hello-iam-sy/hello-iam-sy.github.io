@@ -59,3 +59,9 @@ return False
 ```python
 randomList == randomList[::-1]
 ```
+
+- **파이썬에서 ASCII 변환**
+```python
+ord('a')
+chr(ord('a'))
+``` 
