@@ -1,7 +1,7 @@
 ---
 title: "Spark"
 layout: archive
-permalink: /spark
+permalink: /spark/
 author_profile: true
 sidebar:
     nav: "sidebar-category"

@@ -35,7 +35,7 @@ toc_label: "On This Page"
 ---
 ### Graph python class 코드
 ```python
-print('hello world')
+
 class Vertex:
     def __init__(self):
         self.item = 0
