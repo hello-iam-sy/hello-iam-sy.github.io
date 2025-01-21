@@ -12,7 +12,7 @@ print_style: true
 ## CAREER PROFILE
 Experienced in data engineering, data platform architecture, project management, and system maintenance, with a strong foundation in building and managing data solutions. My career in South Korea has been focused on enabling businesses to derive value from data by designing and maintaining data platforms.
 
-Currently pursuing a Master’s in Software Engineering in Australia to develop expertise in Data Science and AI. While I am still at the beginning of my journey with AI and ML algorithms, my goal is to apply these technologies in real-world operations by building effective DevOps and MLOps pipelines. I am passionate about leveraging this expertise to create scalable systems that integrate advanced analytics into practical, everyday applications.
+Currently pursuing a Master’s in Software Engineering in Australia to develop expertise in Data Science and AI. While I am at the beginning of my journey in machine learning, I am actively building a strong foundation in data engineering and distributed systems. Recently, I have started exploring tools like Kafka and Spark to better understand how to handle and process large datasets in scalable environments. My goal is to contribute to real-world AI projects by supporting the development of scalable systems that integrate advanced analytics and machine learning models into practical applications. I am eager to learn and collaborate with experienced professionals in a dynamic environment. 
 
 
 ## EDUCATION    

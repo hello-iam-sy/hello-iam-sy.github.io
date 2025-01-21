@@ -149,3 +149,116 @@ g.DepthFirstTraversal()
 g.IterDFT()
 g.BreadthFirstTraversal()
 ```
+
+---
+
+### Graph python class 코드 (linked-list 활용)
+- self.list_[0]: ->Node(1) -> Node(2) -> None
+  
+```python
+
+class Vertex:
+    def __init__(self):
+        self.item = 0
+
+class Node:
+    def __init__(self, vertex=-1, next=None):
+        self.vertex = vertex
+        self.next = next
+    
+class AdjListGraph:
+    def __init__(self,max_vertices):
+        self.max_vertices_ = max_vertices
+        self.vertices_ = [Vertex() for _ in range(self.max_vertices_)]
+        self.list_ = [None for _ in range(self.max_vertices_)]
+        self.n_ = 0
+        self.visited_ = [False] * self.max_vertices_
+
+    def InsertVertex(self, item):
+        self.vertices_[self.n_].item = item
+        self.n_ +=1
+
+    def Capacity(self):
+        return self.max_vertices_
+    
+    def InsertEdge(self, u, v):
+        temp = Node(v, self.list_[u])
+        self.list_[u] = temp
+
+    def Print(self):
+        for v in range(self.n_):
+            print(f"{self.vertices_[v].item} : ", end="")
+            current = self.list_[v]
+            while current:
+                print(self.vertices_[current.vertex].item, end = " ")
+                current = current.next
+            print()
+    def ResetVisited(self):
+        self.visited_ = [False] * self.max_vertices_
+
+    def DepthFirstTraversal(self):
+        print("DepthFirstTraversal")
+        self.ResetVisited()
+        def dfs(visit):
+            self.visited_[visit] = True
+            print(f"visited: {visit}")
+            current = self.list_[visit]
+            while current:
+                w = current.vertex
+                if self.visited_[w] == False:
+                    dfs(w)
+                current = current.next
+
+        dfs(0)
+
+    def IterDFT(self):
+        print("IterDFT")
+        self.ResetVisited()
+        visit = 0
+        stack = [visit]
+        while stack:
+            visit = stack.pop()
+            current = self.list_[visit]
+            if self.visited_[visit] == False:
+                print(f"visited: {visit}")
+                self.visited_[visit] = True
+                while current:
+                    stack.append(current.vertex)
+                    current = current.next
+
+    def BreadthFirstTraversal(self):
+        print("BreadthFirstTraversal")
+        self.ResetVisited()
+        visit = 0
+        queue = [visit]
+        self.visited_[0] = True
+        while queue:
+            visit = queue.pop(0)
+            current = self.list_[visit]
+            print(f"visited: {visit}")
+            while current:
+                if self.visited_[current.vertex] == False:
+                    self.visited_[current.vertex] = True
+                    queue.append(current.vertex)
+                current = current.next
+
+
+g = AdjListGraph(7)
+for i in range(g.Capacity()):
+    g.InsertVertex(i)
+
+g.InsertEdge(0,2); g.InsertEdge(2,0)
+g.InsertEdge(0,1); g.InsertEdge(1,0)
+g.InsertEdge(1,4); g.InsertEdge(4,1)
+g.InsertEdge(1,3); g.InsertEdge(3,1)
+g.InsertEdge(2,4); g.InsertEdge(4,2)
+g.InsertEdge(3,6); g.InsertEdge(6,3)
+g.InsertEdge(4,6); g.InsertEdge(6,4)
+g.InsertEdge(5,6); g.InsertEdge(6,5)
+
+g.Print()
+
+g.DepthFirstTraversal()
+g.IterDFT()
+g.BreadthFirstTraversal()
+```
