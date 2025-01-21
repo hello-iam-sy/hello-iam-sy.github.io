@@ -72,7 +72,7 @@ class Solution:
 - **memoization**은 이전에 계산한 값을 저장하여, 중복 계산을 방지하고 속도를 최적화하는 기법.
 - **(i, j)** 좌표에서의 경로 수는 **(i-1, j)** 좌표에서의 경로 수와 **(i, j-1)** 좌표에서의 경로 수의 합으로 표현된다.
   - 수식: `dfs(i, j) = dfs(i-1, j) + dfs(i, j-1)`
-- Python의 **`from functools import lru_cache`** 데코레이터를 사용하여, 간단하고 효율적으로 메모이제이션을 구현할 수 있다.
+- Python에서는 **`from functools import lru_cache`** 데코레이터를 사용하여, 간단하고 효율적으로 메모이제이션을 구현할 수 있다.
   - `lru_cache`는 C로 구현된 최적화된 라이브러리로, **해시 테이블**을 사용하여 중복 계산을 피한다.
   - 수동으로 딕셔너리를 사용하는 방법보다 더 빠르고 간결하다.
 
@@ -116,6 +116,7 @@ class Solution:
 - **`flag` 활용**: 각 레벨마다 **순서 변경**(정방향 ↔ 역방향)을 위한 boolean 플래그를 사용.
 - **Pythonic 코드**: 파이썬의 **if 조건 한줄 코딩**을 활용하여 가독성 높이기.
 - 시간복잡도: 모든 노드를 한번만 방문하므로 **`O(N)`**
+
 ```python
 # Definition for a binary tree node.
 # class TreeNode:
