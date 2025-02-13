@@ -8,18 +8,17 @@ print_style: true
 # Suyeong Kim 
 <p style="text-align: center;"> sy.from.kr@gmail.com | hello-iam-sy.github.io | Sydney, NSW</p>
 
-
 ## CAREER PROFILE
-Experienced in data engineering, data platform architecture, project management, and system maintenance, with a strong foundation in building and managing data solutions. My career in South Korea has been focused on enabling businesses to derive value from data by designing and maintaining data platforms.
+Experienced **Data Engineer** with **5 years of experience** in **data platform engineering and data pipeline architecture** in South Korea. My expertise lies in **building and optimizing data infrastructure**, ensuring **efficient data processing, accessibility, and reliability** to support analytical and operational needs.
 
-Currently pursuing a Master’s in Software Engineering in Australia to develop expertise in Data Science and AI. While I am at the beginning of my journey in machine learning, I am actively building a strong foundation in data engineering and distributed systems. Recently, I have started exploring tools like Kafka and Spark to better understand how to handle and process large datasets in scalable environments. My goal is to contribute to real-world AI projects by supporting the development of scalable systems that integrate advanced analytics and machine learning models into practical applications. I am eager to learn and collaborate with experienced professionals in a dynamic environment. 
+Currently pursuing a **Master of Computer Science** at **The University of Sydney**, focusing on **Data Science and Artificial Intelligence**, to enhance my ability to develop **data-driven decision-making systems**. I am particularly interested in **leveraging AI and advanced analytics** to drive **operational efficiency and digital transformation** within organizations.
 
+With my strong background in **data platform development, automation, and optimization**, I aim to transition into the **consulting and digital transformation space**, where I can contribute by **enhancing data-driven strategies, streamlining business processes, and implementing AI-powered solutions**. I am eager to bring my expertise to **Visagio**, applying **innovative data engineering solutions** to support **business transformation, operational efficiency, and AI-driven decision-making**. 
 
 ## EDUCATION    
-<!-- **Master of Professional Engineering (Software Engineering)**  | February 2025 - expected Dec 2026    -->
 <div style="display: flex; justify-content: space-between;">
   <span>
-    <span>Master of Professional Engineering (Software Engineering)</span><br>
+    <span>Master of Computer Science</span><br>
     <span>The University of Sydney</span>
   </span>
   <span style="font-size: 12px;">February 2025 - expected Dec 2026</span>
@@ -32,7 +31,6 @@ Currently pursuing a Master’s in Software Engineering in Australia to develop 
   </span>
   <span style="font-size: 12px;">March 2014 - August 2019</span>
 </div>
-
 
 ## RELEVANT EXPERIENCE  
 
@@ -50,65 +48,27 @@ Currently pursuing a Master’s in Software Engineering in Australia to develop 
   <span style="font-size: 12px;">July 2019 - October 2024</span>
 </div>
 
-<div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 16px;">
-  <span>
-    <strong>Implementation of New Big Data Platform Components</strong><br>
-  </span>
-  <span style="font-size: 12px;">February 2024 - October 2024</span>
-</div>
+### Implementation of New Big Data Platform Components
+- Designed and integrated **metadata management and data lineage tracking systems** using **DataHub** to enhance transparency and traceability.
+- Modified **container-based deployment** (originally Docker/Kubernetes) to function in an **on-premise environment**, optimizing **metadata management**.
+- Connected **S3, Hive, Delta Lake, and PostgreSQL** to DataHub, improving **data discoverability and quality control**.
+- Developed concise **API documentation and internal usage guides**, ensuring smooth adoption by data teams.
+- **Technologies used**: Python, DataHub, Hadoop, Ambari, Docker, Shell  
 
-- Conducted a technical assessment of DataHub, an open-source metadata management platform, and provided detailed technical recommendations to stakeholders, justifying its adoption for metadata management, data lineage, and quality control within the existing Hadoop-based on-premise big data environment.  
-- Adapted the deployment process of DataHub, originally designed for Docker/Kubernetes, to fit the on-premise Hadoop ecosystem by running it as a customized process for seamless integration.  
-- Configured and integrated DataHub with organizational tools, including S3, Hive, Delta Lake, and PostgreSQL, enabling robust metadata tracking.  
-- Documented the key APIs from DataHub’s documentation, tailored to the team’s needs, and created a concise usage guide to ensure effective adoption and consistent use of the platform.   
-- Collaborated with cross-functional teams to ensure successful deployment and alignment with organizational workflows.  
-- **Technologies used**: Python, DataHub, Docker, Shell, Ambari  
+### Data API Testing and Validation
+- Developed and tested **API-driven data pipelines** to ensure secure, high-speed access to large-scale datasets.
+- Simulated **AWS-like API behavior** for an **on-premise data platform**, integrating services like **HDFS, S3, GreenPlum DB, and DynamoDB**.
+- **Technologies used**: Python, Pandas, HDFS, S3, GreenPlum DB, Hive, Athena  
 
-<div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 16px;">
-  <span>
-    <strong>Automation of User Sandbox Creation</strong><br>
-  </span>
-  <span style="font-size: 12px;">June 2023 - October 2023</span>
-</div>
-
-- Built OS image templates for CentOS, Rocky Linux, and Ubuntu to support user sandboxes, ensuring seamless GPU-enabled data analysis in an on-premise environment.  
-- Configured Nvidia A40 and A100 GPUs by installing GPU drivers, CUDA, and PyTorch, ensuring compatibility with various hardware setups.  
-- Resolved installation and configuration issues related to GPU drivers and software dependencies, enabling seamless GPU utilization.  
-- **Technologies used**: OS, vRealize Automation  
-
-<div style="page-break-after: always;"></div>
-
-
-<div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 16px;">
-  <span>
-    <strong>Data API Testing and Validation</strong><br>
-  </span>
-  <span style="font-size: 12px;">March 2022 - May 2023</span>
-</div>
-
-
-- Validated the functionality of APIs to ensure seamless operation for data security, access control, and efficient data access within the organization.   
-- Simulated AWS-like behavior by configuring and testing the boto3 client in an on-premise environment to ensure compatibility with existing infrastructure.  
-- Designed and executed comprehensive API test cases, verifying performance and reliability before deployment.   
-- **Technologies used**: HDFS, S3, GreenPlum DB, DynamoDB, Hive, Athena, Python, Pandas  
-
-<div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 16px;">
-  <span>
-    <strong>Home Appliance Demand Forecasting Service</strong><br>
-  </span>
-  <span style="font-size: 12px;">February 2020 - March 2021</span>
-</div>
-
-- Operated and maintained the weekly demand forecasting pipeline for home appliance products, ensuring accurate and timely predictions.    
-- Managed and monitored ETL processes using Informatica, addressing data discrepancies and ensuring pipeline reliability.  
-- Collaborated with data scientists to incorporate requested features into the data mart, enhancing the forecasting model's performance.  
-- Validated and resolved data integrity issues using BigQuery and Pandas for detailed analysis and troubleshooting.  
-- Developed and implemented a Slack-based alert system to proactively monitor pipeline performance and address anomalies.    
+### Home Appliance Demand Forecasting Service
+- Maintained and optimized **forecasting models for demand prediction**, ensuring accurate weekly updates.
+- Collaborated with data scientists to **enhance machine learning models** by integrating **new data features**.
+- Built an **automated Slack-based alerting system** for real-time monitoring of **ETL pipelines**.
 - **Technologies used**: Informatica, BigQuery, Python, Pandas  
-
 
 ## TECHNICAL SKILLS  
 **Programming Languages**: Python, SQL, Shell  
-**Data Engineering**: Hadoop, ETL  
+**Data Engineering**: Hadoop, Kafka, Spark, ETL Pipelines, API Development  
 **Cloud Platforms**: AWS, GCP  
-**Languages**: Korean(native), English(Proficient)  
+**Machine Learning & AI**: Scikit-learn, TensorFlow (beginner level)  
+**Languages**: Korean (Native), English (Proficient)  
