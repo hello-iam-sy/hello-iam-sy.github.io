@@ -1,0 +1,625 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NSW EV Charger Platform · Suyeong Kim</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+:root {
+  --bg: #fbfaf8; --surface: #ffffff; --ink: #1c1c1e; --muted: #6b6b70; --line: #e6e3de;
+  --accent: #0f766e; --accent-soft: #ccfbf1; --dc: #0f766e; --ac: #ea580c; --warn: #b45309; --err: #b91c1c;
+  --ramp-0: #f0fdfa; --ramp-1: #99f6e4; --ramp-2: #2dd4bf; --ramp-3: #0d9488; --ramp-4: #134e4a;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111113; --surface: #1a1a1d; --ink: #ececee; --muted: #9a9aa0; --line: #2a2a2e;
+    --accent: #2dd4bf; --accent-soft: #134e4a; --dc: #2dd4bf; --ac: #fb923c; --warn: #f59e0b; --err: #f87171;
+    --ramp-0: #1a2e2c; --ramp-1: #134e4a; --ramp-2: #0f766e; --ramp-3: #14b8a6; --ramp-4: #5eead4;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.6 Inter, system-ui, sans-serif; }
+code, .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: .88em; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+section { padding: 72px 0; border-top: 1px solid var(--line); }
+h1 { font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.1; letter-spacing: -.02em; margin: 0 0 16px; }
+h2 { font-size: 1.6rem; letter-spacing: -.01em; margin: 0 0 8px; }
+.eyebrow { color: var(--accent); font-weight: 600; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; }
+.lede { color: var(--muted); max-width: 680px; font-size: 1.1rem; }
+.sub { color: var(--muted); margin: 0 0 32px; max-width: 720px; }
+header { padding: 96px 0 56px; }
+.tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+.tag { border: 1px solid var(--line); background: var(--surface); padding: 4px 10px; border-radius: 999px; font-size: .82rem; color: var(--muted); }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+.kpi { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
+.kpi b { display: block; font-size: 2rem; font-weight: 700; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.kpi span { color: var(--muted); font-size: .88rem; }
+.map-shell { display: grid; grid-template-columns: 1fr 300px; gap: 16px; }
+#map { height: 560px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; font-size: .9rem; overflow: auto; max-height: 560px; }
+.panel h3 { margin: 0 0 8px; font-size: 1rem; }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.controls button { font: inherit; font-size: .85rem; border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 6px 12px; border-radius: 8px; cursor: pointer; }
+.controls button[aria-pressed="true"] { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+.legend { display: flex; gap: 16px; align-items: center; font-size: .82rem; color: var(--muted); margin-top: 8px; flex-wrap: wrap; }
+.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+.ramp { display: inline-flex; vertical-align: middle; } .ramp i { width: 22px; height: 10px; }
+dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0; }
+dt { color: var(--muted); } dd { margin: 0; overflow-wrap: anywhere; }
+.flow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; align-items: stretch; }
+.stage { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; position: relative; }
+.stage h4 { margin: 0 0 4px; font-size: .95rem; }
+.stage p { margin: 0; color: var(--muted); font-size: .84rem; }
+.stage:not(:last-child)::after { content: '→'; position: absolute; right: -12px; top: 50%; transform: translate(50%, -50%); color: var(--muted); }
+.stage.bronze { border-top: 3px solid #b45309; } .stage.silver { border-top: 3px solid #94a3b8; } .stage.gold { border-top: 3px solid #ca8a04; }
+.sources { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 16px; }
+.src { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
+.src .kind { display: inline-block; font-size: .75rem; font-weight: 600; color: var(--accent); background: var(--accent-soft); padding: 2px 10px; border-radius: 999px; margin-bottom: 10px; }
+.src h3 { margin: 0 0 4px; font-size: 1.05rem; } .src h3 a { color: inherit; }
+.src .what { color: var(--muted); font-size: .9rem; margin: 0 0 12px; }
+.src dl { font-size: .85rem; }
+.dag { margin: 0 0 16px; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; overflow-x: auto; }
+.dag figcaption { color: #6b6b70; font-size: .85rem; margin-bottom: 8px; } .dag figcaption b { color: #1c1c1e; }
+.dag img { display: block; max-width: 100%; min-width: 640px; height: auto; }
+.app { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.app-tabs { display: flex; align-items: center; gap: 4px; padding: 0 16px; border-bottom: 1px solid var(--line); background: var(--bg); }
+.app-tabs button { font: inherit; font-size: .9rem; font-weight: 600; background: none; border: 0; border-bottom: 2px solid transparent; color: var(--muted); padding: 12px 14px; margin-bottom: -1px; cursor: pointer; }
+.app-tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+.app-url { margin-left: auto; color: var(--muted); font-size: .78rem; }
+.app-pane { padding: 20px; }
+.app-lede, .app-note { color: var(--muted); font-size: .9rem; margin: 0 0 8px; max-width: 760px; }
+.app-note { margin-top: 16px; }
+.app-h { margin: 24px 0 8px; font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.app-panel { border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; }
+.app input, .app select, .app .btn { font: inherit; font-size: .82rem; border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; background: var(--surface); color: var(--ink); }
+.app .btn { cursor: pointer; } .app .btn.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+.app .inline { display: flex; gap: 6px; flex-wrap: nowrap; align-items: center; }
+#dict-q { width: 100%; max-width: 320px; margin: 6px 0 10px; }
+#dict-list { max-height: 420px; overflow-y: auto; }
+.op { border-top: 1px solid var(--line); } .op summary { display: grid; grid-template-columns: minmax(140px, 1.2fr) minmax(110px, .8fr) 3fr; gap: 12px; padding: 8px 4px; cursor: pointer; list-style: none; font-size: .9rem; }
+.op summary::-webkit-details-marker { display: none; } .op summary b::before { content: '▸ '; color: var(--muted); } .op[open] summary b::before { content: '▾ '; }
+.op .body { padding: 4px 4px 12px 22px; font-size: .85rem; color: var(--muted); }
+.chip { display: inline-block; border: 1px solid var(--line); border-radius: 999px; padding: 0 8px; margin: 1px 4px 1px 0; font-size: .8rem; }
+.chip.new { border-color: var(--accent); color: var(--accent); }
+.gate { display: flex; flex-wrap: wrap; gap: 12px; align-items: baseline; border-radius: 10px; padding: 14px 16px; }
+.gate.pass { background: var(--accent-soft); } .gate.fail { background: color-mix(in srgb, var(--err) 14%, transparent); }
+.gate b { font-size: 1.1rem; } .gate.fail b { color: var(--err); }
+.dims { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+.dim { border: 1px solid var(--line); border-top: 3px solid var(--accent); border-radius: 10px; padding: 10px 12px; font-size: .8rem; color: var(--muted); }
+.dim.warn { border-top-color: var(--warn); } .dim.fail { border-top-color: var(--err); }
+.dim b { display: block; color: var(--ink); text-transform: uppercase; letter-spacing: .06em; font-size: .75rem; } .dim .n { color: var(--ink); font-size: 1.3rem; font-weight: 700; }
+.sev.pass { color: var(--accent); } .sev.fail { color: var(--err); } .sev.measured { color: var(--muted); }
+tr.dimrow td { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; background: var(--bg); }
+tr.fail .bar { background: var(--err); } tr.warn .bar { background: var(--warn); } tr.measured .bar { background: var(--muted); }
+@media (max-width: 860px) { .op summary { grid-template-columns: 1fr; gap: 2px; } .app-pane { padding: 14px; } }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
+.card h3 { margin: 0 0 12px; font-size: 1.05rem; }
+.card .row { margin: 0 0 8px; font-size: .9rem; } .card .row b { color: var(--accent); font-weight: 600; margin-right: 6px; }
+.card .rej { color: var(--muted); font-size: .85rem; margin: 0; }
+table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+th { color: var(--muted); font-weight: 500; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.bar { height: 8px; background: var(--accent); border-radius: 4px; }
+.sev { font-size: .75rem; padding: 2px 8px; border-radius: 999px; border: 1px solid currentColor; }
+.sev.error { color: var(--err); } .sev.warn { color: var(--warn); } .sev.info { color: var(--muted); }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.funnel { display: grid; gap: 10px; }
+.funnel div { display: grid; grid-template-columns: 170px 1fr 60px; gap: 12px; align-items: center; font-size: .9rem; }
+.funnel .track { background: var(--line); border-radius: 4px; height: 10px; }
+footer { padding: 48px 0; color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); }
+.lineage { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; position: relative; }
+.lineage .col h4 { margin: 0 0 8px; font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.lineage .node { display: block; width: 100%; text-align: left; font: inherit; font-family: 'JetBrains Mono', monospace; font-size: .74rem;
+  background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; margin-bottom: 6px; cursor: pointer; overflow-wrap: anywhere; }
+.lineage .node.up { border-color: var(--ac); } .lineage .node.down { border-color: var(--accent); }
+.lineage .node.sel { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+.lineage.focus .node:not(.up):not(.down):not(.sel) { opacity: .35; }
+.leaflet-container { font: inherit; background: var(--surface); }
+.leaflet-popup-content-wrapper, .leaflet-popup-tip { background: var(--surface); color: var(--ink); }
+@media (max-width: 860px) {
+  .map-shell, .two { grid-template-columns: 1fr; }
+  #map { height: 420px; }
+  .flow, .lineage { grid-template-columns: 1fr; } .stage:not(:last-child)::after { content: '↓'; right: 50%; top: auto; bottom: -18px; transform: translateX(50%); }
+  .funnel div { grid-template-columns: 120px 1fr 48px; }
+}
+</style>
+</head>
+<body>
+<nav style="border-bottom:1px solid var(--line);font-size:.92rem"><div class="wrap" style="display:flex;justify-content:space-between;align-items:center;height:52px"><a href="../../" style="color:var(--ink);font-weight:600;text-decoration:none">&larr; Suyeong Kim</a><a href="../../#projects" style="color:var(--muted);text-decoration:none">All projects</a></div></nav>
+
+<header class="wrap">
+  <div class="eyebrow">Data engineering portfolio</div>
+  <h1>NSW EV Charger<br>Data Platform</h1>
+  <p class="lede">An on-premise ELT platform that turns four messy sources (open government data, a community API and an
+    operator's own site data) into one trustworthy view of electric-vehicle charging in New South Wales, keeps it current
+    with daily, change-aware runs, and watches itself with metrics, alerts and lineage.</p>
+  <div class="tags">
+    <span class="tag">PostgreSQL / PostGIS</span><span class="tag">Airflow 3</span><span class="tag">Medallion ELT</span>
+    <span class="tag">Parquet</span><span class="tag">SCD Type 2</span><span class="tag">Record linkage</span><span class="tag">Kafka</span><span class="tag">Spark Structured Streaming</span>
+    <span class="tag">Prometheus / Grafana</span><span class="tag">OpenLineage / Marquez</span><span class="tag">LangChain</span><span class="tag">Slack</span>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Architecture</div>
+    <h2>Medallion ELT, all in SQL after landing</h2>
+    <p class="sub">Python only retrieves and lands files; every transformation is a versioned SQL model that owns one table.</p>
+    <div class="flow">
+      <div class="stage"><h4>Sources</h4><p>4 sources</p></div>
+      <div class="stage"><h4>Landing</h4><p>Raw file archive</p></div>
+      <div class="stage bronze"><h4>Bronze</h4><p>Raw records as tables</p></div>
+      <div class="stage silver"><h4>Silver</h4><p>Cleaned, joined, matched</p></div>
+      <div class="stage gold"><h4>Gold</h4><p>Analysis-ready outputs</p></div>
+    </div>
+    <h3 style="margin:40px 0 16px">Sources</h3>
+    <div class="sources">
+      <div class="src"><span class="kind">Open government data</span>
+        <h3><a href="https://opendata.transport.nsw.gov.au/">Transport for NSW</a></h3>
+        <p class="what">EV Charging Locations: every public charger in NSW with operator, address, coordinates and rating.</p>
+        <dl><dt>Provides</dt><dd>The charger list (the spine of the model)</dd>
+          <dt>Format</dt><dd>CSV from the TfNSW Open Data Hub (CKAN), no login</dd>
+          <dt>Change check</dt><dd>CKAN API <code>last_modified</code> before download, then SHA-256</dd>
+          <dt>Rows</dt><dd>1,958 chargers</dd></dl></div>
+      <div class="src"><span class="kind">Official statistics</span>
+        <h3><a href="https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs">Australian Bureau of Statistics</a></h3>
+        <p class="what">ASGS Edition 4 (2026) Statistical Area Level 4 boundaries, GDA2020.</p>
+        <dl><dt>Provides</dt><dd>Regions for the spatial join and density per km²</dd>
+          <dt>Format</dt><dd>Shapefile (zip) from the ABS digital boundary downloads</dd>
+          <dt>Change check</dt><dd>HTTP conditional GET (304 Not Modified)</dd>
+          <dt>Rows</dt><dd>108 SA4 regions in Australia, 28 in NSW</dd></dl></div>
+      <div class="src"><span class="kind">Community open data API</span>
+        <h3><a href="https://openchargemap.org/">Open Charge Map</a></h3>
+        <p class="what">Crowd-sourced global registry of charging sites, queried for the NSW bounding box.</p>
+        <dl><dt>Provides</dt><dd>Plug types, pricing text, bay count, status history</dd>
+          <dt>Format</dt><dd>JSON from the REST API (<code>/v3/poi</code>), free API key</dd>
+          <dt>Change check</dt><dd>Full daily snapshot; SHA-256 decides if it is new</dd>
+          <dt>Rows</dt><dd>525 sites in and around NSW</dd></dl></div>
+      <div class="src"><span class="kind">Operator website data</span>
+        <h3><a href="https://evie.com.au/find-a-charger/">Evie Networks</a></h3>
+        <p class="what">The operator's own charger map: every site with its chargers, connector standards, power and tariff.</p>
+        <dl><dt>Provides</dt><dd>Plug types, power, AC/DC tariffs with peak surcharges, where OCM has no data</dd>
+          <dt>Format</dt><dd>JSON from the site's public store-locator endpoint, no key</dd>
+          <dt>Change check</dt><dd>Grid of queries (50 sites each, split when capped), 10 s apart per robots.txt; SHA-256</dd>
+          <dt>Rows</dt><dd><span id="evie-sites">—</span> sites</dd></dl></div>
+    </div>
+<h3 style="margin:40px 0 8px">Airflow DAGs</h3>
+    <p class="sub" style="margin-bottom:16px">Rendered by Airflow from the DAG code (<code>airflow dags show</code>). <code>publish_sa4</code> emits an Asset event that starts <code>ev_sources</code> when new boundaries arrive.</p>
+    <figure class="dag"><figcaption><b>ev_reference</b> · manual, SA4 boundaries</figcaption><img src="img/ev_reference.svg" alt="ev_reference DAG: retrieve, load Bronze, stage SA4 boundaries, publish asset event"></figure>
+    <figure class="dag"><figcaption><b>ev_sources</b> · daily 06:00 Sydney, or on the SA4 asset event</figcaption><img src="img/ev_sources.svg" alt="ev_sources DAG: TfNSW, OCM and Evie chains in parallel, joined by record linkage, then Gold and quality checks"></figure>
+    <h3 style="margin:40px 0 16px">What it produces</h3>
+    <div class="kpis" id="kpis"></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Result</div>
+    <h2>Every charger, placed in its region</h2>
+    <p class="sub">TfNSW charger points joined to ABS SA4 boundaries with <code>ST_Covers</code>, then enriched with
+      plug types, prices and bay counts from Evie's own data or Open Charge Map. Click a region or a charger.</p>
+    <div class="controls" role="group" aria-label="Map layers">
+      <button data-filter="all" aria-pressed="true">All chargers</button>
+      <button data-filter="DC" aria-pressed="false">DC fast (24&ndash;400 kW)</button>
+      <button data-filter="AC" aria-pressed="false">AC (3&ndash;23 kW)</button>
+    </div>
+    <div class="map-shell">
+      <div id="map"></div>
+      <aside class="panel" id="detail"><h3>Details</h3><p style="color:var(--muted)">Select a region or charger on the map.</p></aside>
+    </div>
+    <div class="legend">
+      <span><i class="dot" style="background:var(--dc)"></i>DC charger</span>
+      <span><i class="dot" style="background:var(--ac)"></i>AC charger</span>
+      <span>DC chargers per 1,000 km²
+        <span class="ramp"><i style="background:var(--ramp-0)"></i><i style="background:var(--ramp-1)"></i><i style="background:var(--ramp-2)"></i><i style="background:var(--ramp-3)"></i><i style="background:var(--ramp-4)"></i></span>
+      </span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Design decisions</div>
+    <h2>The trade-offs behind it</h2>
+    <p class="sub">Each choice is written up as a decision record in <code>docs/decisions/</code>.</p>
+    <div class="cards">
+      <div class="card"><h3>Detect change before downloading</h3>
+        <p class="row"><b>Problem</b>Daily runs should not re-store or re-process identical data.</p>
+        <p class="row"><b>Choice</b>Per-source checks: CKAN <code>last_modified</code>, HTTP 304 for ABS, SHA-256 for OCM snapshots. Unchanged models are skipped too.</p>
+        <p class="rej">Rejected: trusting the portal's "Last Updated", which changed while the bytes did not.</p></div>
+      <div class="card"><h3>DAGs split by change frequency</h3>
+        <p class="row"><b>Problem</b>Boundaries change yearly, chargers daily.</p>
+        <p class="row"><b>Choice</b>A manual reference DAG and a daily DAG linked by an Airflow Asset. Initial and incremental loads are the same idempotent run.</p>
+        <p class="rej">Rejected: a separate initial-load DAG that would drift from the daily logic.</p></div>
+      <div class="card"><h3>Append-only Bronze with a ledger</h3>
+        <p class="row"><b>Problem</b>Sources overwrite themselves; history disappears.</p>
+        <p class="row"><b>Choice</b>Every version keeps its rows, keyed by file hash and row number; <code>_latest</code> views serve current state; one ledger row per version.</p>
+        <p class="rej">Rejected: overwriting one file per source.</p></div>
+      <div class="card"><h3>SCD2 price and status history</h3>
+        <p class="row"><b>Problem</b>OCM only publishes the current state of each site.</p>
+        <p class="row"><b>Choice</b><code>MERGE</code> closes changed rows and inserts new periods per snapshot; a forced run replays all versions.</p>
+        <p class="rej">Rejected: storing full daily copies and diffing at query time.</p></div>
+      <div class="card"><h3>Record linkage in SQL</h3>
+        <p class="row"><b>Problem</b>TfNSW and OCM share no key and spell operators differently.</p>
+        <p class="row"><b>Choice</b>DC-capable OCM site within 300 m; beyond 50 m the operator or address (trigram) must agree.</p>
+        <p class="rej">Rejected: substring operator matching, which paired unrelated operators.</p></div>
+      <div class="card"><h3>A standard term dictionary</h3>
+        <p class="row"><b>Problem</b><code>Tesla Motors&nbsp;</code>, <code>BP Pulse (AU)</code>, names truncated to 13 characters.</p>
+        <p class="row"><b>Choice</b><code>ref.standard_term</code> with TfNSW spellings as the standard, an editing screen and an audited history.</p>
+        <p class="rej">Rejected: alias lists hard-coded in SQL.</p></div>
+      <div class="card"><h3>Operator data where the open registry falls short</h3>
+        <p class="row"><b>Problem</b>Open Charge Map covered 41.8% of DC chargers; most gaps had no OCM site within 300 m at all.</p>
+        <p class="row"><b>Choice</b>Evie's own site data, matched only to TfNSW chargers of the same operator, kept as SCD2 per site and AC/DC; Evie wins where both match. Coverage rose to <span id="aug-pct">—</span>.</p>
+        <p class="rej">Rejected: loosening the OCM rules, which only paired chargers with other operators' sites.</p></div>
+      <div class="card"><h3>A model proposes, a person decides</h3>
+        <p class="row"><b>Problem</b>Spellings like <code>GET Electric</code> defeat the rules; the trigram hint suggested the wrong operator.</p>
+        <p class="row"><b>Choice</b>LangChain sends the spellings and the dictionary to an OpenAI mini model with a structured-output schema; proposals are validated, then accepted or rejected on the screen or in Slack.</p>
+        <p class="rej">Rejected: calling the model inside the daily pipeline, where a wrong answer would merge two operators unseen.</p></div>
+      <div class="card"><h3>Watch the data, not only the jobs</h3>
+        <p class="row"><b>Problem</b>A failed or skipped day, a stalled source or a dropped volume went unnoticed.</p>
+        <p class="row"><b>Choice</b>Airflow StatsD plus a database exporter in Prometheus, alert rules to Slack, and OpenLineage events so Marquez shows which task feeds which table.</p>
+        <p class="rej">Rejected: freshness alerts on every source, since TfNSW and ABS legitimately stay unchanged for months.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Metadata</div>
+    <h2>One screen for reference data and quality</h2>
+    <p class="sub">The local metadata app (Flask, port 8790) has two tabs: <b>Meta</b>, the standard term dictionary people curate,
+      and <b>Dashboard</b>, the data quality result of every run. This is a working copy on the snapshot data:
+      edits stay in your browser and reset on reload.</p>
+    <div class="app">
+      <nav class="app-tabs" role="tablist">
+        <button role="tab" aria-selected="true" data-tab="meta">Meta</button>
+        <button role="tab" aria-selected="false" data-tab="dash">Dashboard</button>
+        <span class="app-url mono">localhost:8790</span>
+      </nav>
+
+      <div class="app-pane" id="pane-meta">
+        <p class="app-lede">Each spelling seen in a source maps to one standard; TfNSW spellings are the standard.
+          The pipeline lists spellings it does not know; a person maps each to a known operator or creates a new one,
+          and the next run applies it. Every change is audited by a trigger.</p>
+        <h4 class="app-h">Unregistered spellings (<span id="cand-count"></span>)</h4>
+        <div class="app-panel" style="overflow-x:auto"><table id="cand"><thead><tr><th>Spelling</th><th>Source</th><th class="num">Rows</th><th>A · another spelling of</th><th>B · a new operator</th></tr></thead><tbody></tbody></table></div>
+        <h4 class="app-h">LLM proposals (<span id="prop-count"></span>) · LangChain → OpenAI, decided here or in Slack</h4>
+        <div class="app-panel" style="overflow-x:auto">
+          <p class="app-lede" id="prop-lede"></p>
+          <table id="prop"><thead><tr><th>Spelling</th><th>Proposal</th><th class="num">Confidence</th><th>Reason</th><th>Decision</th></tr></thead><tbody></tbody></table>
+        </div>
+        <h4 class="app-h">Dictionary · <span id="dict-count"></span></h4>
+        <div class="app-panel">
+          <input id="dict-q" type="search" placeholder="Search term, name or code" aria-label="Search the dictionary">
+          <div id="dict-list"></div>
+        </div>
+        <h4 class="app-h">Recent changes</h4>
+        <div class="app-panel" style="overflow-x:auto"><table id="hist"><thead><tr><th>When</th><th>Who</th><th>Change</th><th>Term</th><th>Code</th></tr></thead><tbody></tbody></table></div>
+      </div>
+
+      <div class="app-pane" id="pane-dash" hidden>
+        <div class="gate" id="gate"></div>
+        <h4 class="app-h">Dimensions · worst status of their checks</h4>
+        <div class="dims" id="dims"></div>
+        <h4 class="app-h">Coverage · operational DC chargers augmented from Evie or Open Charge Map</h4>
+        <div class="app-panel"><div class="funnel" id="funnel"></div></div>
+        <h4 class="app-h">Sources · timeliness and volume</h4>
+        <div class="app-panel" style="overflow-x:auto"><table id="fresh"><thead><tr><th>Source</th><th>Version in use loaded</th><th>Upstream last modified</th><th class="num">Rows</th><th class="num">vs previous</th><th class="num">Versions</th></tr></thead><tbody></tbody></table></div>
+        <h4 class="app-h">Checks · latest run</h4>
+        <div class="app-panel" style="overflow-x:auto"><table id="checks"><thead><tr><th>Check</th><th>Dataset</th><th>Severity</th><th>Status</th><th class="num">Failed</th><th class="num">%</th><th style="width:18%"></th></tr></thead><tbody></tbody></table></div>
+        <p class="app-note">An <i>error</i> check that finds rows fails the Airflow run; <i>warn</i> and <i>info</i> are reported.
+          "Measured" is an info check describing the data, not a defect. Each run is appended to <code>meta.data_quality_result</code>, which the local app draws as a trend.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Gold output</div>
+    <h2>Operators across NSW</h2>
+    <p class="sub">From <code>gold.operator_summary</code>, after operator names were standardized. Top 12 by operational chargers.</p>
+    <div style="overflow-x:auto"><table id="operators"><thead><tr><th>Operator</th><th class="num">Chargers</th><th style="width:30%"></th><th class="num">DC</th><th class="num">Regions</th><th class="num">Max kW</th><th class="num">Avg $/kWh</th></tr></thead><tbody></tbody></table></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Streaming</div>
+    <h2>Price changes between batch runs</h2>
+    <p class="sub">The daily snapshot sees Open Charge Map once a day. A producer polls it every 15 minutes for POIs modified
+      since the last poll and streams them through Kafka and Spark Structured Streaming. Raw events land like batch Bronze;
+      a view serves the latest state at once, and the next batch merges them into the same SCD2 history.</p>
+    <div class="flow stream-flow">
+      <div class="stage"><h4>Producer</h4><p>OCM <code>modifiedsince</code>, every 15 min</p></div>
+      <div class="stage"><h4>Kafka</h4><p><code>ev.ocm.poi.changes</code>, key = OCM ID</p></div>
+      <div class="stage"><h4>Spark</h4><p>Structured Streaming, 2 checkpointed queries</p></div>
+      <div class="stage bronze"><h4>Bronze</h4><p>Parquet by <code>event_date</code> + <code>bronze.ocm_poi_events</code></p></div>
+      <div class="stage gold"><h4>Serve</h4><p>Hot: latest-price view<br>Cold: SCD2 history</p></div>
+    </div>
+    <div class="cards" style="margin-top:16px">
+      <div class="card"><h3>Exactly once, twice</h3>
+        <p class="row">The Parquet file sink commits through <code>_spark_metadata</code>; the PostgreSQL writer relies on a unique
+          (topic, partition, offset), so a micro-batch replayed after a crash is a no-op.</p></div>
+      <div class="card"><h3>One writer per table</h3>
+        <p class="row">The stream only appends raw events. The history model stays the only writer of the SCD2 table and reads
+          snapshots and events in arrival order, so a full replay equals the incremental result.</p>
+        <p class="rej">Rejected: the stream merging into the history itself, racing the batch.</p></div>
+      <div class="card"><h3>The topic is the replay log</h3>
+        <p class="row">Key = OCM ID keeps each site's changes in order; retention is unlimited, so after a database reset the
+          stream re-lands every event from offset 0.</p></div>
+    </div>
+    <h3 style="margin:32px 0 8px">Latest streamed state <span id="stream-meta" style="color:var(--muted);font-weight:400;font-size:.9rem"></span></h3>
+    <div style="overflow-x:auto"><table id="stream"><thead><tr><th>OCM site</th><th>Operator</th><th>Price text</th><th class="num">$/kWh</th><th>Status</th><th>In history</th></tr></thead><tbody></tbody></table></div>
+    <p style="color:var(--muted);font-size:.85rem">From <code>gold.ocm_price_latest</code>. "In history" means the next batch has merged it into the SCD2 history.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Operations</div>
+    <h2>Metrics, alerts and lineage</h2>
+    <p class="sub">Airflow sends StatsD metrics; a small exporter reads the data's own state from PostgreSQL (freshness,
+      volume, quality, augmentation). Prometheus evaluates the alert rules and Alertmanager posts to Slack; Grafana shows
+      one provisioned dashboard. Every task declares what it reads and writes, and OpenLineage sends it to Marquez.</p>
+    <div class="flow">
+      <div class="stage"><h4>Airflow</h4><p>StatsD: runs, tasks, scheduler</p></div>
+      <div class="stage"><h4>Exporter</h4><p>Data metrics from the database</p></div>
+      <div class="stage"><h4>Prometheus</h4><p>30 days, <span id="alert-count"></span> alert rules</p></div>
+      <div class="stage"><h4>Alertmanager</h4><p>Slack, resolved messages too</p></div>
+      <div class="stage"><h4>Grafana · Marquez</h4><p>Dashboard · lineage graph</p></div>
+    </div>
+    <h3 style="margin:32px 0 8px">Alert rules</h3>
+    <div style="overflow-x:auto"><table id="alerts"><thead><tr><th>Alert</th><th>Severity</th><th>Fires when</th></tr></thead><tbody></tbody></table></div>
+    <h3 style="margin:32px 0 8px">Table-level lineage</h3>
+    <p class="sub" style="margin-bottom:12px">The same declarations the tasks send to Marquez (<code>orchestration/lineage.py</code>). Select a table to trace what feeds it and what it feeds.</p>
+    <div class="lineage" id="lineage"></div>
+    <p id="lineage-note" style="color:var(--muted);font-size:.85rem"></p>
+  </div>
+</section>
+
+<footer><div class="wrap" id="foot"></div></footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+const fmt = n => n == null ? '—' : Number(n).toLocaleString('en-AU');
+const esc = s => String(s ?? '—').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+Promise.all(['chargers.geojson', 'sa4.geojson', 'summary.json'].map(f => fetch('data/' + f).then(r => r.json())))
+  .then(([chargers, sa4, summary]) => { kpis(chargers, sa4, summary); map(chargers, sa4); operators(summary); metadata(summary); stream(summary); ops(summary); foot(summary); });
+
+function kpis(chargers, sa4, s) {
+  const operational = chargers.features.filter(f => f.properties.status === 'operational').length;
+  const blocking = s.quality.filter(q => q.severity === 'error').length;
+  document.getElementById('kpis').innerHTML = [
+    [fmt(chargers.features.length), `chargers integrated (${fmt(operational)} operational)`],
+    [sa4.features.length, 'NSW SA4 regions, every charger assigned'],
+    [s.augmentation.matched_pct + '%', `DC chargers augmented (${s.augmentation.matched}/${s.augmentation.dc_chargers}: ${s.augmentation.from_evie} from Evie, ${s.augmentation.from_ocm} from Open Charge Map)`],
+    [s.quality.length, `quality checks on every run, ${blocking} of them able to stop it`],
+  ].map(([b, t]) => `<div class="kpi"><b>${b}</b><span>${t}</span></div>`).join('');
+  document.getElementById('evie-sites').textContent = fmt(s.evie.sites);
+  document.getElementById('aug-pct').textContent = s.augmentation.matched_pct + '%';
+}
+
+function map(chargers, sa4) {
+  const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+  const m = L.map('map', { scrollWheelZoom: false }).setView([-32.8, 147.5], 6);
+  // Esri gray canvas: no API key needed (CARTO basemaps now require one).
+  L.tileLayer(`https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_${dark ? 'Dark' : 'Light'}_Gray_Base/MapServer/tile/{z}/{y}/{x}`, {
+    attribution: 'Tiles &copy; Esri, HERE, Garmin, &copy; OpenStreetMap contributors', maxZoom: 16 }).addTo(m);
+  const ramp = [0, 1, 2, 3, 4].map(i => css(`--ramp-${i}`));
+  const step = d => d >= 20 ? 4 : d >= 5 ? 3 : d >= 1 ? 2 : d >= 0.3 ? 1 : 0;
+  const detail = document.getElementById('detail');
+  const regions = L.geoJSON(sa4, {
+    style: f => ({ fillColor: ramp[step(f.properties.dc_chargers_per_1000_sqkm)], fillOpacity: .55, color: css('--line'), weight: 1 }),
+    onEachFeature: (f, layer) => layer.on('click', () => {
+      const p = f.properties;
+      detail.innerHTML = `<h3>${esc(p.sa4_name)}</h3><dl>
+        <dt>Area</dt><dd>${esc(p.gcc_name)}</dd><dt>Operational</dt><dd>${fmt(p.operational_chargers)}</dd>
+        <dt>DC chargers</dt><dd>${fmt(p.dc_chargers)}</dd><dt>Upcoming</dt><dd>${fmt(p.upcoming_chargers)}</dd>
+        <dt>Plugs</dt><dd>${fmt(p.operational_plugs)}</dd><dt>Operators</dt><dd>${fmt(p.operators)}</dd>
+        <dt>DC / 1,000 km²</dt><dd>${p.dc_chargers_per_1000_sqkm}</dd><dt>Area km²</dt><dd>${fmt(Math.round(p.area_sqkm))}</dd></dl>`;
+    }),
+  }).addTo(m);
+  const canvas = L.canvas({ padding: .5 });
+  let points;
+  const draw = filter => {
+    if (points) m.removeLayer(points);
+    points = L.geoJSON(chargers, {
+      filter: f => filter === 'all' || f.properties.current_type === filter,
+      pointToLayer: (f, ll) => L.circleMarker(ll, { renderer: canvas, radius: f.properties.current_type === 'DC' ? 4.5 : 3.5,
+        color: css('--surface'), weight: 1, fillColor: f.properties.current_type === 'DC' ? css('--dc') : css('--ac'), fillOpacity: .95 }),
+      onEachFeature: (f, layer) => layer.on('click', e => {
+        L.DomEvent.stopPropagation(e);
+        const p = f.properties;
+        const price = p.price_per_kwh == null ? esc(p.usage_cost)
+          : '$' + Number(p.price_per_kwh).toFixed(2) + '/kWh' + (p.peak_surcharge_per_kwh ? ` + $${Number(p.peak_surcharge_per_kwh).toFixed(2)} ${p.peak_start.slice(0, 5)}–${p.peak_end.slice(0, 5)}` : '');
+        const ocm = !p.enrichment_source ? '<dt>Augmented</dt><dd>no match</dd>' : `
+          <dt>Augmented</dt><dd>${p.enrichment_source === 'evie' ? `Evie site #${p.evie_site_id}` : `OCM #${p.ocm_id}`}, ${esc(p.match_method)}, ${p.match_distance_m} m</dd>
+          <dt>Plug types</dt><dd>${esc(p.plug_types)}</dd><dt>Price</dt><dd>${price}</dd>
+          <dt>Bays</dt><dd>${fmt(p.number_of_bays)}</dd>`;
+        detail.innerHTML = `<h3>${esc(p.station_name || p.operator_name)}</h3><dl>
+          <dt>Operator</dt><dd>${esc(p.operator_name)}</dd><dt>Type</dt><dd>${esc(p.current_type)}, ${esc(p.max_power_kw)} kW</dd>
+          <dt>Status</dt><dd>${esc(p.status)}</dd><dt>Plugs</dt><dd>${fmt(p.number_of_plugs)}</dd>
+          <dt>Address</dt><dd>${esc(p.address)}</dd><dt>Region</dt><dd>${esc(p.sa4_name)}</dd>${ocm}</dl>`;
+      }),
+    }).addTo(m);
+  };
+  draw('all');
+  document.querySelectorAll('.controls button').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.controls button').forEach(o => o.setAttribute('aria-pressed', o === b));
+    draw(b.dataset.filter);
+  }));
+  m.fitBounds(regions.getBounds(), { padding: [8, 8] });
+}
+
+function operators(s) {
+  const top = s.operators.slice(0, 12), max = top[0].operational_chargers;
+  document.querySelector('#operators tbody').innerHTML = top.map(o => `<tr><td>${esc(o.operator_name)}</td>
+    <td class="num">${fmt(o.operational_chargers)}</td><td><div class="bar" style="width:${o.operational_chargers / max * 100}%"></div></td>
+    <td class="num">${fmt(o.dc_chargers)}</td><td class="num">${o.sa4_regions}</td><td class="num">${fmt(o.max_power_kw)}</td>
+    <td class="num">${o.avg_price_per_kwh ?? '—'}</td></tr>`).join('');
+}
+
+function metadata(s) {
+  document.querySelectorAll('.app-tabs button').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.app-tabs button').forEach(o => o.setAttribute('aria-selected', o === b));
+    document.getElementById('pane-meta').hidden = b.dataset.tab !== 'meta';
+    document.getElementById('pane-dash').hidden = b.dataset.tab !== 'dash';
+  }));
+  metaTab(s.dictionary);
+  proposalsPane(s.proposals, s.dictionary.candidates);
+  dashTab(s.quality_dashboard, s.augmentation);
+}
+
+function metaTab(d) {
+  const terms = d.terms.map(t => ({ ...t })), candidates = d.candidates.map(c => ({ ...c })), history = d.history.map(h => ({ ...h }));
+  const date = v => new Date(v).toISOString().slice(0, 16).replace('T', ' ');
+  const codeOf = t => t.toUpperCase().replace(/[^A-Z0-9]+/g, '_').replace(/^_|_$/g, '');
+  const standards = () => terms.filter(t => t.is_standard).sort((a, b) => a.standard_name.localeCompare(b.standard_name));
+  const log = (op, term, oldCode, newCode) => history.unshift({ changed_at: new Date().toISOString(), changed_by: 'you (demo)', operation: op, term, old_code: oldCode, new_code: newCode, fresh: true });
+  const render = () => {
+    const std = standards();
+    document.getElementById('cand-count').textContent = candidates.length;
+    document.querySelector('#cand tbody').innerHTML = candidates.length ? candidates.map((c, i) => {
+      const close = c.similarity >= 0.5;
+      return `<tr><td><b>${esc(c.term)}</b></td><td>${esc(c.source)}</td><td class="num">${c.rows}</td>
+        <td><span class="inline"><select data-i="${i}" aria-label="Operator for ${esc(c.term)}"><option value="">Choose operator…</option>${std.map(t =>
+          `<option value="${t.standard_code}" ${close && t.standard_code === c.suggested_code ? 'selected' : ''}>${esc(t.standard_name)}</option>`).join('')}</select>
+          <button class="btn ${close ? 'primary' : ''}" data-map="${i}">Map</button></span></td>
+        <td><span class="inline"><input value="${codeOf(c.term)}" size="14" data-code="${i}" aria-label="New code"><button class="btn ${close ? '' : 'primary'}" data-new="${i}">Create</button></span></td></tr>`;
+    }).join('') : '<tr><td colspan="5" style="color:var(--muted)">Every spelling in the data is registered.</td></tr>';
+    const q = document.getElementById('dict-q').value.trim().toLowerCase();
+    const groups = std.map(t => ({ std: t, syn: terms.filter(x => !x.is_standard && x.standard_code === t.standard_code) }))
+      .filter(g => !q || [g.std, ...g.syn].some(x => (x.term + ' ' + x.standard_name + ' ' + x.standard_code).toLowerCase().includes(q)));
+    document.getElementById('dict-count').textContent = `${std.length} operators · ${terms.length} terms`;
+    document.getElementById('dict-list').innerHTML = groups.map(g => `<details class="op" ${q ? 'open' : ''}><summary>
+        <b>${esc(g.std.standard_name)}</b><span class="mono">${esc(g.std.standard_code)}</span>
+        <span>${g.syn.length ? g.syn.map(x => `<span class="chip ${x.fresh ? 'new' : ''}">${esc(x.term)} <small>${esc(x.source)}</small></span>`).join('') : '<span style="color:var(--muted)">—</span>'}</span></summary>
+        <div class="body">Source ${esc(g.std.source)} · updated ${date(g.std.updated_at)}${g.std.note ? ' · ' + esc(g.std.note) : ''}</div></details>`).join('')
+      || `<p style="color:var(--muted)">No operator matches "${esc(q)}".</p>`;
+    document.querySelector('#hist tbody').innerHTML = history.slice(0, 12).map(h => `<tr${h.fresh ? ' style="color:var(--accent)"' : ''}>
+      <td class="mono">${date(h.changed_at)}</td><td>${esc(h.changed_by)}</td><td>${h.operation}</td><td>${esc(h.term)}</td>
+      <td class="mono">${h.old_code && h.old_code !== h.new_code ? esc(h.old_code) + ' → ' : ''}${esc(h.new_code || h.old_code)}</td></tr>`).join('');
+  };
+  document.getElementById('cand').addEventListener('click', e => {
+    const map = e.target.dataset.map, fresh = e.target.dataset.new;
+    if (map !== undefined) {
+      const c = candidates[map], code = document.querySelector(`select[data-i="${map}"]`).value;
+      if (!code) return;
+      const std = terms.find(t => t.is_standard && t.standard_code === code);
+      terms.push({ term: c.term, standard_code: code, standard_name: std.standard_name, is_standard: false, source: c.source, updated_at: new Date().toISOString(), fresh: true });
+      log('INSERT', c.term, null, code); candidates.splice(map, 1); render();
+    } else if (fresh !== undefined) {
+      const c = candidates[fresh], code = document.querySelector(`input[data-code="${fresh}"]`).value.trim().toUpperCase();
+      if (!/^[A-Z0-9_]+$/.test(code) || terms.some(t => t.is_standard && t.standard_code === code)) return;
+      terms.push({ term: c.term, standard_code: code, standard_name: c.term, is_standard: true, source: c.source, updated_at: new Date().toISOString(), fresh: true });
+      log('INSERT', c.term, null, code); candidates.splice(fresh, 1); render();
+    }
+  });
+  document.getElementById('dict-q').addEventListener('input', render);
+  render();
+}
+
+function dashTab(q, a) {
+  const l = q.latest;
+  document.getElementById('gate').className = 'gate ' + (l.passed ? 'pass' : 'fail');
+  document.getElementById('gate').innerHTML = `<b>${l.passed ? 'Gate passed' : 'Gate failed'}</b><span>Last check ${new Date(l.checked_at).toISOString().slice(0, 16).replace('T', ' ')} UTC · ${l.errors} blocking error(s), ${l.warnings} warning(s)</span>`;
+  document.getElementById('dims').innerHTML = q.dimensions.map(d => `<div class="dim ${d.status}"><b>${d.name}</b><span class="n">${d.checks}</span> check${d.checks > 1 ? 's' : ''}<br>
+    ${d.pass} pass${d.fail ? ` · ${d.fail} failed` : ''}${d.warn ? ` · ${d.warn} warning` : ''}${d.measured ? ` · ${d.measured} measured` : ''}</div>`).join('')
+    + `<div class="dim"><b>timeliness · volume</b><span class="n">${q.sources.length}</span> sources<br>from the ingestion ledger</div>`;
+  document.getElementById('funnel').innerHTML = [
+    ['DC chargers', a.dc_chargers], ['Augmented', a.matched], ['… from Evie', a.from_evie], ['… from OCM', a.from_ocm], ['With plug types', a.with_plug_types],
+    ['With bay count', a.with_bay_count], ['With usage cost', a.with_usage_cost], ['With parsed $/kWh', a.with_parsed_price],
+  ].map(([t, n]) => `<div><span>${t}</span><span class="track"><span class="bar" style="display:block;width:${n / a.dc_chargers * 100}%"></span></span><span class="mono" style="text-align:right">${n}</span></div>`).join('');
+  document.querySelector('#fresh tbody').innerHTML = q.sources.map(r => `<tr><td class="mono">${r.source_name}</td>
+    <td>${r.loaded_at.slice(0, 10)}</td><td>${r.upstream_last_modified ? r.upstream_last_modified.slice(0, 10) : '—'}</td>
+    <td class="num">${fmt(r.row_count)}</td><td class="num">${r.volume_change == null ? '<span style="color:var(--muted)">first version</span>' : (r.volume_change > 0 ? '+' : '') + r.volume_change + '%'}</td>
+    <td class="num">${r.versions}</td></tr>`).join('');
+  let dim = null;
+  document.querySelector('#checks tbody').innerHTML = q.checks.map(c => {
+    const head = c.dimension !== dim ? `<tr class="dimrow"><td colspan="7">${(dim = c.dimension)}</td></tr>` : '';
+    return head + `<tr class="${c.status}"><td class="mono">${esc(c.check_name)}</td><td>${esc(c.dataset)}</td><td>${c.severity}</td>
+      <td><span class="sev ${c.status}">${c.status}</span></td><td class="num">${fmt(c.failed_rows)}</td><td class="num">${c.failed_pct ?? '—'}</td>
+      <td><div class="bar" style="width:${Math.min(c.failed_pct || 0, 100)}%"></div></td></tr>`;
+  }).join('');
+}
+
+function stream(s) {
+  const e = s.stream.events;
+  document.getElementById('stream-meta').textContent = `· ${e.events} event(s) for ${e.pois} site(s), last poll ${e.last_polled ? e.last_polled.slice(0, 10) : '—'}`;
+  document.querySelector('#stream tbody').innerHTML = s.stream.latest.map(r => `<tr><td>${esc(r.title)}<br><small style="color:var(--muted)">#${r.ocm_id} · ${esc(r.town)}</small></td>
+    <td>${esc(r.operator_title)}</td><td>${esc(r.usage_cost)}</td><td class="num">${r.price_per_kwh == null ? '—' : Number(r.price_per_kwh).toFixed(2)}</td>
+    <td>${esc(r.status_title)}</td><td><span class="sev ${r.merged_into_history ? 'pass' : 'warn'}">${r.merged_into_history ? 'merged' : 'pending'}</span></td></tr>`).join('');
+}
+
+function proposalsPane(props, candidates) {
+  const open = props.filter(p => p.status === 'pending');
+  document.getElementById('prop-count').textContent = open.length;
+  document.getElementById('prop-lede').innerHTML = props.length
+    ? `The model's proposals for the unregistered spellings. Accepting one writes the same audited dictionary change as a manual registration.`
+    : `No model run in this snapshot yet. The button on the Meta tab (or <code>python -m pipelines.dictionary.proposals</code>) sends the
+       ${candidates.length} unregistered spellings above and the dictionary to the model; each proposal then waits here and in Slack for a person.`;
+  const what = p => p.action === 'map' ? `Another spelling of <b>${esc(p.standard_name)}</b> <span class="mono">${esc(p.standard_code)}</span>`
+    : p.action === 'new' ? `New operator <span class="mono">${esc(p.standard_code)}</span> "${esc(p.standard_name)}"` : '<span style="color:var(--muted)">Unsure</span>';
+  document.querySelector('#prop tbody').innerHTML = props.map(p => `<tr><td><b>${esc(p.term)}</b></td>
+    <td>${what(p)}${p.problem ? `<br><small style="color:var(--err)">${esc(p.problem)}</small>` : ''}</td>
+    <td class="num">${p.confidence == null ? '—' : Number(p.confidence).toFixed(2)}</td><td style="color:var(--muted)">${esc(p.reason)}</td>
+    <td><span class="sev ${p.status === 'accepted' ? 'pass' : p.status === 'rejected' ? 'fail' : 'warn'}">${p.status}${p.decided_in ? ' · ' + p.decided_in : ''}</span></td></tr>`).join('')
+    || '<tr><td colspan="5" style="color:var(--muted)">Awaiting a model run.</td></tr>';
+}
+
+function ops(s) {
+  document.getElementById('alert-count').textContent = s.alerts.length;
+  document.querySelector('#alerts tbody').innerHTML = s.alerts.map(a => `<tr><td class="mono">${esc(a.alert)}</td>
+    <td><span class="sev ${a.severity === 'critical' ? 'fail' : 'warn'}">${a.severity}</span></td><td>${esc(a.summary)}</td></tr>`).join('');
+  const { nodes, edges } = s.lineage;
+  const cols = [['landing', 'Landing'], ['bronze', 'Bronze'], ['ref', 'Reference'], ['silver', 'Silver'], ['gold', 'Gold']];
+  const box = document.getElementById('lineage');
+  box.innerHTML = cols.map(([layer, title]) => `<div class="col"><h4>${title}</h4>${nodes.filter(n => n.layer === layer)
+    .map(n => `<button class="node" data-id="${esc(n.id)}">${esc(n.id.replace(/^[a-z]+[./]/, ''))}</button>`).join('')}</div>`).join('');
+  const walk = (start, dir) => {
+    const seen = new Set(), todo = [start];
+    while (todo.length) {
+      const id = todo.pop();
+      edges.filter(e => (dir === 'down' ? e[0] : e[1]) === id).forEach(e => {
+        const next = dir === 'down' ? e[1] : e[0];
+        if (!seen.has(next)) { seen.add(next); todo.push(next); }
+      });
+    }
+    return seen;
+  };
+  const note = document.getElementById('lineage-note');
+  const idle = `${nodes.length} datasets, ${edges.length} edges. Orange: upstream, teal: downstream.`;
+  note.textContent = idle;
+  box.addEventListener('click', e => {
+    const id = e.target.dataset.id;
+    if (!id) return;
+    const was = e.target.classList.contains('sel');
+    box.querySelectorAll('.node').forEach(n => n.classList.remove('sel', 'up', 'down'));
+    box.classList.toggle('focus', !was);
+    if (was) { note.textContent = idle; return; }
+    const up = walk(id, 'up'), down = walk(id, 'down');
+    box.querySelectorAll('.node').forEach(n => {
+      if (n.dataset.id === id) n.classList.add('sel');
+      else if (up.has(n.dataset.id)) n.classList.add('up');
+      else if (down.has(n.dataset.id)) n.classList.add('down');
+    });
+    const jobs = [...new Set(edges.filter(x => x[1] === id).map(x => x[2]))];
+    note.textContent = `${id}: ${up.size} upstream, ${down.size} downstream` + (jobs.length ? `; written by ${jobs.join(', ')}` : '');
+  });
+}
+
+function foot(s) {
+  const d = new Date(s.exported_at).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
+  document.getElementById('foot').innerHTML = `Snapshot exported ${d} from the Gold layer. Data: Transport for NSW, Australian Bureau of Statistics (ASGS Edition 4), Open Charge Map contributors, Evie Networks (public site map).`;
+}
+</script>
+</body>
+</html>
