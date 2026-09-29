@@ -1,0 +1,17 @@
+# Secrets: this site is public on GitHub Pages, so nothing here may hold keys
+.env
+.env.*
+*.pem
+*.key
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Local tooling
+node_modules/
+__pycache__/
+*.log

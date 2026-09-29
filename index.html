@@ -3,21 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Suyeong Kim · Portfolio</title>
-<meta name="description" content="Suyeong Kim — data engineer and Master of Professional Engineering (Software) student at the University of Sydney. Data platform and applied LLM projects.">
-<meta property="og:title" content="Suyeong Kim · Portfolio">
+<title>Suyeong Kim, data engineer</title>
+<meta name="description" content="Suyeong Kim — data engineer and Master of Computer Science student at the University of Sydney. Data platform and applied LLM projects.">
+<meta property="og:title" content="Suyeong Kim, data engineer">
 <meta property="og:description" content="Data engineering and applied LLM research projects.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230f766e'/><text x='16' y='22' font-family='Arial' font-weight='700' font-size='15' text-anchor='middle' fill='white'>SK</text></svg>">
+<link rel="stylesheet" href="assets/arch.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%2314203a'/><text x='16' y='22' font-family='Arial' font-weight='700' font-size='15' text-anchor='middle' fill='white'>SK</text></svg>">
 </head>
 <body>
 
 <div class="topbar">
   <div class="wrap">
     <a class="brand" href="#">Suyeong Kim</a>
-    <nav>
+    <nav aria-label="Sections">
       <a href="#projects">Projects</a>
       <a href="#experience">Experience</a>
       <a class="hide-sm" href="#skills">Skills</a>
@@ -27,118 +29,111 @@
 </div>
 
 <header class="hero wrap">
-  <div class="eyebrow">Data engineer · Sydney</div>
-  <h1>I build data platforms<br>people can trust.</h1>
-  <p class="lede">Five years at LG CNS on on-premise big data platforms: metadata, lineage, data APIs and GPU sandboxes.
-    Now studying software engineering at the University of Sydney, working across data engineering and applied LLM research.</p>
-  <div class="links">
-    <a class="btn primary" href="#projects">See projects</a>
-    <a class="btn" href="https://github.com/hello-iam-sy">GitHub</a>
-    <a class="btn" href="mailto:sy.from.kr@gmail.com">Email</a>
+  <h1>Reliable data, from integrity to governance.</h1>
+  <div class="hero-foot">
+    <p class="lede">Data engineer and data platform engineer with 5+ years of experience building scalable, reliable data infrastructure.
+      I focus on how data is used across an organization: keeping it reliable, from consistency and integrity to governance,
+      and making sure stakeholders can access and use it effectively.</p>
+    <div class="links">
+      <a class="btn primary" href="#projects">See projects</a>
+      <a class="btn" href="https://github.com/hello-iam-sy">GitHub</a>
+      <a class="btn" href="mailto:sy.from.kr@gmail.com">Email</a>
+    </div>
   </div>
+  <ol class="lineage-strip" aria-label="Career so far">
+    <li><time>2014</time>Mechanical and system design, Hongik University</li>
+    <li><time>2019–2024</time>Data engineer on enterprise big data platforms, Seoul</li>
+    <li class="now"><time>2025–2026</time>Master of Computer Science, University of Sydney</li>
+  </ol>
 </header>
 
 <section id="projects">
-  <div class="wrap">
-    <div class="eyebrow">Selected projects</div>
+  <div class="wrap railed">
     <h2>Projects</h2>
-    <p class="sub">Two end-to-end projects: a production-style data platform, and a research study on controlling LLM tutors.</p>
+    <div class="content">
+      <p class="sub">Two end-to-end projects: a production-style data platform, and a research study on controlling LLM tutors.</p>
 
-    <div class="projects">
-      <a class="project" href="projects/ev-platform/">
-        <div class="body">
-          <div class="kind">Data engineering</div>
-          <h3>NSW EV Charger Data Platform</h3>
+      <article class="project with-arch">
+        <div>
+          <p class="kind">Data engineering</p>
+          <h3><a href="projects/ev-platform/">NSW EV Charger Data Platform</a></h3>
           <p>An on-premise ELT platform that merges four public and operator sources into one reliable view of EV charging in
             New South Wales. It runs daily, only processes what changed, and monitors itself with metrics, alerts and lineage.</p>
           <div class="stats">
             <div class="stat"><b>1,958</b><span>chargers modelled</span></div>
             <div class="stat"><b>4</b><span>sources linked</span></div>
-            <div class="stat"><b>41.8→56.4%</b><span>DC chargers enriched</span></div>
+            <div class="stat"><b>56.4%</b><span>DC chargers enriched (from 41.8%)</span></div>
           </div>
-          <div class="tags">
-            <span class="tag">PostgreSQL / PostGIS</span><span class="tag">Airflow</span><span class="tag">Kafka</span>
-            <span class="tag">Spark Streaming</span><span class="tag">Prometheus</span><span class="tag">OpenLineage</span><span class="tag">LangChain</span>
-          </div>
-          <span class="more">Explore the live demo →</span>
+          <ul class="stack" aria-label="Stack">
+            <li>PostgreSQL / PostGIS</li><li>Airflow</li><li>Kafka + Spark</li><li>Prometheus</li>
+          </ul>
+          <a class="more" href="projects/ev-platform/">Open the live demo</a>
         </div>
-        <div class="visual" aria-hidden="true">
-          <div class="medallion">
-            <div class="src"><b>Sources</b><span>TfNSW · ABS · OCM · Evie</span></div>
-            <div class="bronze"><b>Bronze</b><span>append-only, versioned</span></div>
-            <div class="silver"><b>Silver</b><span>spatial join · linkage · SCD2</span></div>
-            <div class="gold"><b>Gold</b><span>analysis-ready</span></div>
-          </div>
-        </div>
-      </a>
+        <div class="arch" data-arch="ev"></div>
+      </article>
 
-      <a class="project" href="projects/edu-sv/">
-        <div class="body">
-          <div class="kind">Applied LLM research</div>
-          <h3>Stopping AI Tutors from Giving Away the Answer</h3>
+      <article class="project with-arch">
+        <div>
+          <p class="kind">Applied LLM research</p>
+          <h3><a href="projects/edu-sv/">Stopping AI Tutors from Giving Away the Answer</a></h3>
           <p>Even RL-aligned tutor models reveal the final answer when a student keeps asking for it. One fixed activation-steering
             vector, with no retraining, cuts that leakage by 91% while tutoring quality scores go up.</p>
           <div class="stats">
-            <div class="stat"><b>62.6→5.4%</b><span>answer leakage under attack</span></div>
-            <div class="stat"><b>+3.05</b><span>pedagogical reward score</span></div>
-            <div class="stat"><b>4,320</b><span>multi-turn dialogues per condition</span></div>
+            <div class="stat"><b>−91%</b><span>answer leakage (62.6% to 5.4%)</span></div>
+            <div class="stat"><b>+3.05</b><span>tutoring quality score</span></div>
+            <div class="stat"><b>4,320</b><span>dialogues per condition</span></div>
           </div>
-          <div class="tags">
-            <span class="tag">Activation steering</span><span class="tag">vLLM</span><span class="tag">PyTorch</span>
-            <span class="tag">Sparse autoencoders</span><span class="tag">LLM-as-judge</span>
-          </div>
-          <span class="more">Read the case study →</span>
+          <ul class="stack" aria-label="Stack">
+            <li>Activation steering</li><li>PyTorch</li><li>vLLM</li><li>LLM-as-judge</li>
+          </ul>
+          <a class="more" href="projects/edu-sv/">Read the case study</a>
         </div>
-        <div class="visual" aria-hidden="true">
-          <div class="bars">
-            <div class="caption">TutorRL-7B · answer leakage after 20 adversarial turns</div>
-            <div>
-              <div class="label"><span>Without steering</span><b>62.64%</b></div>
-              <div class="track"><div class="fill base" style="width:62.64%"></div></div>
-            </div>
-            <div>
-              <div class="label"><span>With one fixed vector</span><b>5.35%</b></div>
-              <div class="track"><div class="fill steer" style="width:5.35%"></div></div>
-            </div>
-          </div>
-        </div>
-      </a>
+        <div class="arch" data-arch="edusv"></div>
+      </article>
     </div>
   </div>
 </section>
 
 <section id="experience">
-  <div class="wrap">
-    <div class="eyebrow">Background</div>
+  <div class="wrap railed">
     <h2>Experience &amp; education</h2>
-    <p class="sub">Five years building and running enterprise data platforms, now back in study.</p>
-    <div class="timeline">
-      <div class="item">
-        <div class="when">Feb 2025 – present</div>
-        <div>
-          <h3>Master of Professional Engineering (Software Engineering)</h3>
-          <div class="org">The University of Sydney</div>
-          <p class="muted" style="margin:0">Data engineering (COMP5339) and research on LLM tutoring, where the EDU-SV study was done.</p>
+    <div class="content">
+      <p class="sub">Five years as a data engineer in Seoul, now at the University of Sydney.</p>
+      <div class="timeline">
+        <div class="item">
+          <div class="when">Jul 2019 – Oct 2024</div>
+          <div>
+            <h3>Data Engineer Specialist, Bigdata Engineer Team</h3>
+            <div class="org">Enterprise IT services, Seoul, Republic of Korea</div>
+            <ul>
+              <li><b>Metadata &amp; lineage.</b> Led DataHub adoption in a commercial Big Data Platform product, moving it from Kubernetes onto Ambari-managed services, with lineage across S3, Hive and Delta Lake.</li>
+              <li><b>Governed data access.</b> Architected an S3/Athena-compatible API over on-prem Hadoop and Greenplum so users could use the standard AWS SDK, and defined its tenancy, access and retention model.</li>
+              <li><b>ML forecasting pipeline.</b> Built bronze, silver and gold ETL into BigQuery for a demand-forecasting mart, and fitted <b>1,600+ models</b> into a <b>2-hour</b> window of the weekly overnight batch.</li>
+              <li><b>GPU sandbox.</b> Designed self-service GPU environments on VMware Aria, with images for A40/A100 across three Linux distributions.</li>
+            </ul>
+          </div>
         </div>
-      </div>
-      <div class="item">
-        <div class="when">Jul 2019 – Oct 2024</div>
-        <div>
-          <h3>Data Engineer, Data Platform Architecture Team</h3>
-          <div class="org">LG CNS · Seoul</div>
-          <ul>
-            <li>Assessed DataHub for metadata, lineage and quality on an on-premise Hadoop platform. Adapted its Docker/Kubernetes deployment to run inside the Hadoop ecosystem, and connected it to S3, Hive, Kafka, Delta Lake and PostgreSQL.</li>
-            <li>Tested and validated data access APIs for security and access control, and simulated AWS behaviour on-premise with boto3 across HDFS, S3, Greenplum, DynamoDB, Hive and Athena.</li>
-            <li>Automated GPU-enabled user sandboxes: OS image templates for CentOS, Rocky and Ubuntu, with NVIDIA A40/A100 drivers, CUDA and PyTorch.</li>
-            <li>Ran LG Electronics' weekly home-appliance demand forecasting pipeline (Informatica, BigQuery). Added features for data scientists, fixed data integrity issues and set up Slack alerts for the pipeline.</li>
-          </ul>
+        <div class="item">
+          <div class="when">Feb 2025 – Dec 2026<small>(expected)</small></div>
+          <div>
+            <h3>Master of Computer Science</h3>
+            <div class="org">The University of Sydney, WAM 84.0</div>
+            <p>Coursework: Data Engineering, Database Management Systems, Parallel and Distributed Computing, Design of Networks and Distributed Systems, Machine Learning and Data Mining.</p>
+          </div>
         </div>
-      </div>
-      <div class="item">
-        <div class="when">Mar 2014 – Aug 2019</div>
-        <div>
-          <h3>B.Eng. Mechanical and System Design Engineering</h3>
-          <div class="org">Hongik University · Seoul</div>
+        <div class="item">
+          <div class="when">Mar 2014 – Aug 2019</div>
+          <div>
+            <h3>Bachelor in Mechanical and System Design Engineering</h3>
+            <div class="org">Hongik University, Seoul, Republic of Korea</div>
+          </div>
+        </div>
+        <div class="item">
+          <div class="when">Sep 2026</div>
+          <div>
+            <h3>Databricks Certified Data Engineer Professional</h3>
+            <div class="org">Certification</div>
+          </div>
         </div>
       </div>
     </div>
@@ -146,41 +141,37 @@
 </section>
 
 <section id="skills">
-  <div class="wrap">
-    <div class="eyebrow">Toolbox</div>
+  <div class="wrap railed">
     <h2>Skills</h2>
-    <p class="sub">What I have used in production or in the projects above.</p>
-    <div class="skills">
-      <div class="skill"><h3>Data engineering</h3><div class="tags">
-        <span class="tag">SQL</span><span class="tag">PostgreSQL / PostGIS</span><span class="tag">Airflow</span><span class="tag">Kafka</span>
-        <span class="tag">Spark</span><span class="tag">Parquet</span><span class="tag">Hive</span><span class="tag">HDFS</span><span class="tag">BigQuery</span><span class="tag">Informatica</span></div></div>
-      <div class="skill"><h3>Platform &amp; operations</h3><div class="tags">
-        <span class="tag">Docker</span><span class="tag">Linux</span><span class="tag">Prometheus</span><span class="tag">Grafana</span>
-        <span class="tag">DataHub</span><span class="tag">OpenLineage / Marquez</span><span class="tag">S3</span><span class="tag">Shell</span></div></div>
-      <div class="skill"><h3>ML &amp; LLMs</h3><div class="tags">
-        <span class="tag">PyTorch</span><span class="tag">Transformers</span><span class="tag">vLLM</span><span class="tag">Activation steering</span>
-        <span class="tag">SAEs</span><span class="tag">LangChain</span><span class="tag">OpenAI API</span><span class="tag">CUDA</span></div></div>
-      <div class="skill"><h3>Languages</h3><div class="tags">
-        <span class="tag">Python</span><span class="tag">SQL</span><span class="tag">Bash</span><span class="tag">JavaScript</span></div></div>
+    <div class="content">
+      <p class="sub">What I have used at work and in the projects above.</p>
+      <dl class="skills">
+        <dt>Languages</dt><dd>Python, SQL, Shell</dd>
+        <dt>Data platforms</dt><dd>Hadoop, Hive, HDFS, Delta Lake, S3, PostgreSQL, Greenplum, DynamoDB, Athena, Informatica, DataHub</dd>
+        <dt>Cloud &amp; infra</dt><dd>AWS, GCP (BigQuery), Docker, Kubernetes, Ambari</dd>
+        <dt>From the projects</dt><dd>Airflow, Kafka, Spark Streaming, PostGIS, Prometheus, Grafana, OpenLineage, PyTorch, Transformers, vLLM</dd>
+      </dl>
     </div>
   </div>
 </section>
 
 <section id="contact">
-  <div class="wrap narrow">
-    <div class="eyebrow">Contact</div>
-    <h2>Let's talk</h2>
-    <p class="sub">I'm open to data engineering and ML engineering roles in Sydney. The code for both projects is available on request.</p>
-    <div class="links" style="margin-top:0">
-      <a class="btn primary" href="mailto:sy.from.kr@gmail.com">sy.from.kr@gmail.com</a>
-      <a class="btn" href="https://github.com/hello-iam-sy">github.com/hello-iam-sy</a>
+  <div class="wrap railed">
+    <h2>Contact</h2>
+    <div class="content">
+      <p class="sub">I'm open to data engineering and ML engineering roles in Sydney. The code for both projects is available on request.</p>
+      <a class="contact-mail" href="mailto:sy.from.kr@gmail.com">sy.from.kr@gmail.com</a>
+      <div class="links">
+        <a class="btn" href="https://github.com/hello-iam-sy">github.com/hello-iam-sy</a>
+      </div>
     </div>
   </div>
 </section>
 
 <footer>
-  <div class="wrap">© 2026 Suyeong Kim · Sydney, NSW</div>
+  <div class="wrap">© 2026 Suyeong Kim, Sydney NSW</div>
 </footer>
 
+<script src="assets/arch.js" defer></script>
 </body>
 </html>

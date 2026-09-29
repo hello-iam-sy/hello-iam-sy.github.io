@@ -4,42 +4,54 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>NSW EV Charger Platform · Suyeong Kim</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%2314203a'/><text x='16' y='22' font-family='Arial' font-weight='700' font-size='15' text-anchor='middle' fill='white'>SK</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="../../assets/arch.css">
 <style>
 :root {
-  --bg: #fbfaf8; --surface: #ffffff; --ink: #1c1c1e; --muted: #6b6b70; --line: #e6e3de;
-  --accent: #0f766e; --accent-soft: #ccfbf1; --dc: #0f766e; --ac: #ea580c; --warn: #b45309; --err: #b91c1c;
-  --ramp-0: #f0fdfa; --ramp-1: #99f6e4; --ramp-2: #2dd4bf; --ramp-3: #0d9488; --ramp-4: #134e4a;
+  --bg: #f3f5f7; --surface: #ffffff; --ink: #14203a; --text: #37435a; --muted: #5f6b7e; --line: #d4dbe4; --rule: #14203a;
+  --accent: #2a48c8; --accent-soft: #e3e8fb; --dc: #2a48c8; --ac: #d2601a; --warn: #a15c07; --err: #b42318;
+  --ramp-0: #eef1fb; --ramp-1: #c3cdf3; --ramp-2: #8497e3; --ramp-3: #4661cf; --ramp-4: #1d2f86;
+  --bronze: #a8662b; --silver: #8d99a8; --gold: #c4991a;
+  --sans: 'Schibsted Grotesk', system-ui, sans-serif; --mono: 'IBM Plex Mono', ui-monospace, monospace;
+  color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #111113; --surface: #1a1a1d; --ink: #ececee; --muted: #9a9aa0; --line: #2a2a2e;
-    --accent: #2dd4bf; --accent-soft: #134e4a; --dc: #2dd4bf; --ac: #fb923c; --warn: #f59e0b; --err: #f87171;
-    --ramp-0: #1a2e2c; --ramp-1: #134e4a; --ramp-2: #0f766e; --ramp-3: #14b8a6; --ramp-4: #5eead4;
+    --bg: #0e1522; --surface: #162034; --ink: #e9eef6; --text: #c3ccda; --muted: #8e9ab0; --line: #2a3650; --rule: #e9eef6;
+    --accent: #93a8ff; --accent-soft: #1f2b52; --dc: #93a8ff; --ac: #fb923c; --warn: #f5b041; --err: #ff8a7a;
+    --ramp-0: #18223a; --ramp-1: #22336b; --ramp-2: #34509e; --ramp-3: #5c78d6; --ramp-4: #a9baff;
+    color-scheme: dark;
   }
 }
 * { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.6 Inter, system-ui, sans-serif; }
-code, .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: .88em; }
-.wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
-section { padding: 72px 0; border-top: 1px solid var(--line); }
-h1 { font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.1; letter-spacing: -.02em; margin: 0 0 16px; }
-h2 { font-size: 1.6rem; letter-spacing: -.01em; margin: 0 0 8px; }
-.eyebrow { color: var(--accent); font-weight: 600; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; }
-.lede { color: var(--muted); max-width: 680px; font-size: 1.1rem; }
-.sub { color: var(--muted); margin: 0 0 32px; max-width: 720px; }
-header { padding: 96px 0 56px; }
-.tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
-.tag { border: 1px solid var(--line); background: var(--surface); padding: 4px 10px; border-radius: 999px; font-size: .82rem; color: var(--muted); }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); text-underline-offset: .2em; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+b, strong { font-weight: 650; }
+code, .mono { font-family: var(--mono); font-size: .86em; }
+.wrap { max-width: 1160px; margin: 0 auto; padding: 0 16px; }
+@media (min-width: 761px) { .wrap { padding: 0 32px; } }
+section { padding: 72px 0; }
+section > .wrap > h2:first-child { border-top: 2px solid var(--rule); padding-top: 20px; }
+h1 { font-size: clamp(2.4rem, 6vw, 4.4rem); line-height: .98; letter-spacing: -.035em; font-weight: 800; margin: 0 0 28px; max-width: 12ch; }
+h2 { font-size: clamp(1.6rem, 2.6vw, 2.1rem); line-height: 1.15; letter-spacing: -.02em; font-weight: 750; margin: 0 0 12px; }
+h3 { letter-spacing: -.01em; }
+.meta { color: var(--muted); font-size: .95rem; margin: 0 0 20px; }
+.lede { color: var(--text); max-width: 36em; font-size: 1.2rem; line-height: 1.55; }
+.sub { color: var(--text); margin: 0 0 32px; max-width: 42em; }
+header.wrap { padding-top: 88px; padding-bottom: 56px; }
+.stack { list-style: none; margin: 28px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: .9rem; color: var(--muted); max-width: 52em; }
 .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
-.kpi { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
-.kpi b { display: block; font-size: 2rem; font-weight: 700; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.kpi { border-top: 1px solid var(--line); padding: 14px 0 0; }
+.kpi b { display: block; font-size: 2.2rem; font-weight: 800; letter-spacing: -.03em; }
 .kpi span { color: var(--muted); font-size: .88rem; }
 .map-shell { display: grid; grid-template-columns: 1fr 300px; gap: 16px; }
-#map { height: 560px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); }
-.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; font-size: .9rem; overflow: auto; max-height: 560px; }
+#map { height: 560px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 16px; font-size: .9rem; overflow: auto; max-height: 560px; }
 .panel h3 { margin: 0 0 8px; font-size: 1rem; }
 .controls { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
 .controls button { font: inherit; font-size: .85rem; border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 6px 12px; border-radius: 8px; cursor: pointer; }
@@ -50,21 +62,21 @@ header { padding: 96px 0 56px; }
 dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0; }
 dt { color: var(--muted); } dd { margin: 0; overflow-wrap: anywhere; }
 .flow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; align-items: stretch; }
-.stage { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; position: relative; }
+.stage { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 16px; position: relative; }
 .stage h4 { margin: 0 0 4px; font-size: .95rem; }
 .stage p { margin: 0; color: var(--muted); font-size: .84rem; }
 .stage:not(:last-child)::after { content: '→'; position: absolute; right: -12px; top: 50%; transform: translate(50%, -50%); color: var(--muted); }
-.stage.bronze { border-top: 3px solid #b45309; } .stage.silver { border-top: 3px solid #94a3b8; } .stage.gold { border-top: 3px solid #ca8a04; }
+.stage.bronze { border-top: 4px solid var(--bronze); } .stage.silver { border-top: 4px solid var(--silver); } .stage.gold { border-top: 4px solid var(--gold); }
 .sources { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 16px; }
-.src { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
-.src .kind { display: inline-block; font-size: .75rem; font-weight: 600; color: var(--accent); background: var(--accent-soft); padding: 2px 10px; border-radius: 999px; margin-bottom: 10px; }
+.src { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 20px; }
+.src .kind { display: block; font-size: .88rem; color: var(--muted); margin-bottom: 6px; }
 .src h3 { margin: 0 0 4px; font-size: 1.05rem; } .src h3 a { color: inherit; }
 .src .what { color: var(--muted); font-size: .9rem; margin: 0 0 12px; }
 .src dl { font-size: .85rem; }
-.dag { margin: 0 0 16px; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; overflow-x: auto; }
-.dag figcaption { color: #6b6b70; font-size: .85rem; margin-bottom: 8px; } .dag figcaption b { color: #1c1c1e; }
+.dag { margin: 0 0 16px; background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 12px 16px; overflow-x: auto; }
+.dag figcaption { color: #5f6b7e; font-size: .85rem; margin-bottom: 8px; } .dag figcaption b { color: #14203a; }
 .dag img { display: block; max-width: 100%; min-width: 640px; height: auto; }
-.app { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.app { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
 .app-tabs { display: flex; align-items: center; gap: 4px; padding: 0 16px; border-bottom: 1px solid var(--line); background: var(--bg); }
 .app-tabs button { font: inherit; font-size: .9rem; font-weight: 600; background: none; border: 0; border-bottom: 2px solid transparent; color: var(--muted); padding: 12px 14px; margin-bottom: -1px; cursor: pointer; }
 .app-tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
@@ -72,7 +84,7 @@ dt { color: var(--muted); } dd { margin: 0; overflow-wrap: anywhere; }
 .app-pane { padding: 20px; }
 .app-lede, .app-note { color: var(--muted); font-size: .9rem; margin: 0 0 8px; max-width: 760px; }
 .app-note { margin-top: 16px; }
-.app-h { margin: 24px 0 8px; font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.app-h { margin: 28px 0 8px; font-size: .95rem; font-weight: 700; color: var(--ink); }
 .app-panel { border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; }
 .app input, .app select, .app .btn { font: inherit; font-size: .82rem; border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; background: var(--surface); color: var(--ink); }
 .app .btn { cursor: pointer; } .app .btn.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
@@ -90,20 +102,21 @@ dt { color: var(--muted); } dd { margin: 0; overflow-wrap: anywhere; }
 .dims { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
 .dim { border: 1px solid var(--line); border-top: 3px solid var(--accent); border-radius: 10px; padding: 10px 12px; font-size: .8rem; color: var(--muted); }
 .dim.warn { border-top-color: var(--warn); } .dim.fail { border-top-color: var(--err); }
-.dim b { display: block; color: var(--ink); text-transform: uppercase; letter-spacing: .06em; font-size: .75rem; } .dim .n { color: var(--ink); font-size: 1.3rem; font-weight: 700; }
+.dim b { display: block; color: var(--ink); font-size: .85rem; } .dim .n { color: var(--ink); font-size: 1.3rem; font-weight: 700; }
 .sev.pass { color: var(--accent); } .sev.fail { color: var(--err); } .sev.measured { color: var(--muted); }
-tr.dimrow td { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; background: var(--bg); }
+tr.dimrow td { font-size: .85rem; color: var(--ink); font-weight: 700; background: var(--bg); }
 tr.fail .bar { background: var(--err); } tr.warn .bar { background: var(--warn); } tr.measured .bar { background: var(--muted); }
 @media (max-width: 860px) { .op summary { grid-template-columns: 1fr; gap: 2px; } .app-pane { padding: 14px; } }
-.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
-.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 36px 40px; }
+.card { border-top: 1px solid var(--line); padding: 16px 0 0; }
 .card h3 { margin: 0 0 12px; font-size: 1.05rem; }
-.card .row { margin: 0 0 8px; font-size: .9rem; } .card .row b { color: var(--accent); font-weight: 600; margin-right: 6px; }
+.card .row { margin: 0 0 8px; font-size: .9rem; } .card .row { color: var(--text); } .card .row b { color: var(--ink); font-weight: 700; margin-right: 6px; }
 .card .rej { color: var(--muted); font-size: .85rem; margin: 0; }
 table { width: 100%; border-collapse: collapse; font-size: .88rem; }
 th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
-th { color: var(--muted); font-weight: 500; }
-td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+th { color: var(--muted); font-weight: 600; }
+thead th { border-bottom: 2px solid var(--rule); }
+td.num, th.num { text-align: right; }
 .bar { height: 8px; background: var(--accent); border-radius: 4px; }
 .sev { font-size: .75rem; padding: 2px 8px; border-radius: 999px; border: 1px solid currentColor; }
 .sev.error { color: var(--err); } .sev.warn { color: var(--warn); } .sev.info { color: var(--muted); }
@@ -111,52 +124,53 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .funnel { display: grid; gap: 10px; }
 .funnel div { display: grid; grid-template-columns: 170px 1fr 60px; gap: 12px; align-items: center; font-size: .9rem; }
 .funnel .track { background: var(--line); border-radius: 4px; height: 10px; }
-footer { padding: 48px 0; color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); }
-.lineage { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; position: relative; }
-.lineage .col h4 { margin: 0 0 8px; font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-.lineage .node { display: block; width: 100%; text-align: left; font: inherit; font-family: 'JetBrains Mono', monospace; font-size: .74rem;
-  background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; margin-bottom: 6px; cursor: pointer; overflow-wrap: anywhere; }
-.lineage .node.up { border-color: var(--ac); } .lineage .node.down { border-color: var(--accent); }
-.lineage .node.sel { background: var(--accent); color: var(--bg); border-color: var(--accent); }
-.lineage.focus .node:not(.up):not(.down):not(.sel) { opacity: .35; }
+footer { padding: 32px 0 56px; color: var(--muted); font-size: .9rem; } footer .wrap { border-top: 1px solid var(--line); padding-top: 24px; }
+.lin-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.lin { display: block; width: 100%; min-width: 860px; height: auto; font-family: var(--mono); user-select: none; }
+.lin .head { font-family: var(--sans); font-size: 12.5px; font-weight: 600; fill: var(--muted); }
+.lin .edge { fill: none; stroke: var(--muted); stroke-width: 1.1; opacity: .45; transition: opacity .15s; }
+.lin .ah { fill: var(--muted); }
+.lin .n { cursor: pointer; outline: none; transition: opacity .15s; }
+.lin .n rect.box { fill: var(--surface); stroke: var(--line); stroke-width: 1.2; }
+.lin .n.job rect.box { fill: var(--bg); stroke: var(--ink); stroke-dasharray: 3 3; }
+.lin .n text { font-size: 11.5px; fill: var(--ink); }
+.lin .bar.landing { fill: var(--line); } .lin .bar.bronze { fill: var(--bronze); } .lin .bar.silver { fill: var(--silver); }
+.lin .bar.gold { fill: var(--gold); } .lin .bar.ref { fill: var(--accent); } .lin .bar.job { fill: none; }
+.lin .n:focus-visible rect.box { stroke: var(--accent); stroke-width: 2.5; }
+.lin.focus .n:not(.sel):not(.up):not(.down) { opacity: .3; }
+.lin.focus .edge { opacity: .08; }
+.lin .edge.up { opacity: 1; stroke: var(--ac); stroke-width: 1.8; } .lin .edge.down { opacity: 1; stroke: var(--accent); stroke-width: 1.8; }
+.lin .n.up rect.box { stroke: var(--ac); stroke-width: 2; } .lin .n.down rect.box { stroke: var(--accent); stroke-width: 2; }
+.lin .n.sel rect.box { fill: var(--ink); stroke: var(--ink); } .lin .n.sel text { fill: var(--bg); }
 .leaflet-container { font: inherit; background: var(--surface); }
 .leaflet-popup-content-wrapper, .leaflet-popup-tip { background: var(--surface); color: var(--ink); }
 @media (max-width: 860px) {
   .map-shell, .two { grid-template-columns: 1fr; }
   #map { height: 420px; }
-  .flow, .lineage { grid-template-columns: 1fr; } .stage:not(:last-child)::after { content: '↓'; right: 50%; top: auto; bottom: -18px; transform: translateX(50%); }
+  .flow { grid-template-columns: 1fr; } .stage:not(:last-child)::after { content: '↓'; right: 50%; top: auto; bottom: -18px; transform: translateX(50%); }
   .funnel div { grid-template-columns: 120px 1fr 48px; }
 }
 </style>
 </head>
 <body>
-<nav style="border-bottom:1px solid var(--line);font-size:.92rem"><div class="wrap" style="display:flex;justify-content:space-between;align-items:center;height:52px"><a href="../../" style="color:var(--ink);font-weight:600;text-decoration:none">&larr; Suyeong Kim</a><a href="../../#projects" style="color:var(--muted);text-decoration:none">All projects</a></div></nav>
+<nav aria-label="Site" style="font-size:.92rem"><div class="wrap" style="display:flex;justify-content:space-between;align-items:center;height:60px"><a href="../../" style="color:var(--ink);font-weight:750;text-decoration:none">Suyeong Kim</a><a href="../../#projects" style="color:var(--muted);text-decoration:none">All projects</a></div></nav>
 
 <header class="wrap">
-  <div class="eyebrow">Data engineering portfolio</div>
-  <h1>NSW EV Charger<br>Data Platform</h1>
+  <p class="meta">Data engineering project</p>
+  <h1>NSW EV Charger Data Platform</h1>
   <p class="lede">An on-premise ELT platform that turns four messy sources (open government data, a community API and an
     operator's own site data) into one trustworthy view of electric-vehicle charging in New South Wales, keeps it current
     with daily, change-aware runs, and watches itself with metrics, alerts and lineage.</p>
-  <div class="tags">
-    <span class="tag">PostgreSQL / PostGIS</span><span class="tag">Airflow 3</span><span class="tag">Medallion ELT</span>
-    <span class="tag">Parquet</span><span class="tag">SCD Type 2</span><span class="tag">Record linkage</span><span class="tag">Kafka</span><span class="tag">Spark Structured Streaming</span>
-    <span class="tag">Prometheus / Grafana</span><span class="tag">OpenLineage / Marquez</span><span class="tag">LangChain</span><span class="tag">Slack</span>
-  </div>
+  <ul class="stack" aria-label="Stack">
+    <li>PostgreSQL / PostGIS</li><li>Airflow 3</li><li>Medallion ELT</li><li>Parquet</li><li>SCD Type 2</li><li>Record linkage</li><li>Kafka</li><li>Spark Structured Streaming</li><li>Prometheus / Grafana</li><li>OpenLineage / Marquez</li><li>LangChain</li><li>Slack</li>
+  </ul>
 </header>
 
 <section>
   <div class="wrap">
-    <div class="eyebrow">Architecture</div>
     <h2>Medallion ELT, all in SQL after landing</h2>
     <p class="sub">Python only retrieves and lands files; every transformation is a versioned SQL model that owns one table.</p>
-    <div class="flow">
-      <div class="stage"><h4>Sources</h4><p>4 sources</p></div>
-      <div class="stage"><h4>Landing</h4><p>Raw file archive</p></div>
-      <div class="stage bronze"><h4>Bronze</h4><p>Raw records as tables</p></div>
-      <div class="stage silver"><h4>Silver</h4><p>Cleaned, joined, matched</p></div>
-      <div class="stage gold"><h4>Gold</h4><p>Analysis-ready outputs</p></div>
-    </div>
+    <div data-arch="ev"></div>
     <h3 style="margin:40px 0 16px">Sources</h3>
     <div class="sources">
       <div class="src"><span class="kind">Open government data</span>
@@ -199,7 +213,6 @@ footer { padding: 48px 0; color: var(--muted); font-size: .85rem; border-top: 1p
 
 <section>
   <div class="wrap">
-    <div class="eyebrow">Result</div>
     <h2>Every charger, placed in its region</h2>
     <p class="sub">TfNSW charger points joined to ABS SA4 boundaries with <code>ST_Covers</code>, then enriched with
       plug types, prices and bay counts from Evie's own data or Open Charge Map. Click a region or a charger.</p>
@@ -224,7 +237,6 @@ footer { padding: 48px 0; color: var(--muted); font-size: .85rem; border-top: 1p
 
 <section>
   <div class="wrap">
-    <div class="eyebrow">Design decisions</div>
     <h2>The trade-offs behind it</h2>
     <p class="sub">Each choice is written up as a decision record in <code>docs/decisions/</code>.</p>
     <div class="cards">
@@ -270,7 +282,6 @@ footer { padding: 48px 0; color: var(--muted); font-size: .85rem; border-top: 1p
 
 <section>
   <div class="wrap">
-    <div class="eyebrow">Metadata</div>
     <h2>One screen for reference data and quality</h2>
     <p class="sub">The local metadata app (Flask, port 8790) has two tabs: <b>Meta</b>, the standard term dictionary people curate,
       and <b>Dashboard</b>, the data quality result of every run. This is a working copy on the snapshot data:
@@ -279,7 +290,7 @@ footer { padding: 48px 0; color: var(--muted); font-size: .85rem; border-top: 1p
       <nav class="app-tabs" role="tablist">
         <button role="tab" aria-selected="true" data-tab="meta">Meta</button>
         <button role="tab" aria-selected="false" data-tab="dash">Dashboard</button>
-        <span class="app-url mono">localhost:8790</span>
+        <span class="app-url">Demo on snapshot data</span>
       </nav>
 
       <div class="app-pane" id="pane-meta">
@@ -321,7 +332,6 @@ footer { padding: 48px 0; color: var(--muted); font-size: .85rem; border-top: 1p
 
 <section>
   <div class="wrap">
-    <div class="eyebrow">Gold output</div>
     <h2>Operators across NSW</h2>
     <p class="sub">From <code>gold.operator_summary</code>, after operator names were standardized. Top 12 by operational chargers.</p>
     <div style="overflow-x:auto"><table id="operators"><thead><tr><th>Operator</th><th class="num">Chargers</th><th style="width:30%"></th><th class="num">DC</th><th class="num">Regions</th><th class="num">Max kW</th><th class="num">Avg $/kWh</th></tr></thead><tbody></tbody></table></div>
@@ -330,7 +340,6 @@ footer { padding: 48px 0; color: var(--muted); font-size: .85rem; border-top: 1p
 
 <section>
   <div class="wrap">
-    <div class="eyebrow">Streaming</div>
     <h2>Price changes between batch runs</h2>
     <p class="sub">The daily snapshot sees Open Charge Map once a day. A producer polls it every 15 minutes for POIs modified
       since the last poll and streams them through Kafka and Spark Structured Streaming. Raw events land like batch Bronze;
@@ -362,7 +371,6 @@ footer { padding: 48px 0; color: var(--muted); font-size: .85rem; border-top: 1p
 
 <section>
   <div class="wrap">
-    <div class="eyebrow">Operations</div>
     <h2>Metrics, alerts and lineage</h2>
     <p class="sub">Airflow sends StatsD metrics; a small exporter reads the data's own state from PostgreSQL (freshness,
       volume, quality, augmentation). Prometheus evaluates the alert rules and Alertmanager posts to Slack; Grafana shows
@@ -378,13 +386,14 @@ footer { padding: 48px 0; color: var(--muted); font-size: .85rem; border-top: 1p
     <div style="overflow-x:auto"><table id="alerts"><thead><tr><th>Alert</th><th>Severity</th><th>Fires when</th></tr></thead><tbody></tbody></table></div>
     <h3 style="margin:32px 0 8px">Table-level lineage</h3>
     <p class="sub" style="margin-bottom:12px">The same declarations the tasks send to Marquez (<code>orchestration/lineage.py</code>). Select a table to trace what feeds it and what it feeds.</p>
-    <div class="lineage" id="lineage"></div>
+    <div class="lin-scroll" id="lineage"></div>
     <p id="lineage-note" style="color:var(--muted);font-size:.85rem"></p>
   </div>
 </section>
 
 <footer><div class="wrap" id="foot"></div></footer>
 
+<script src="../../assets/arch.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -579,40 +588,136 @@ function ops(s) {
   document.getElementById('alert-count').textContent = s.alerts.length;
   document.querySelector('#alerts tbody').innerHTML = s.alerts.map(a => `<tr><td class="mono">${esc(a.alert)}</td>
     <td><span class="sev ${a.severity === 'critical' ? 'fail' : 'warn'}">${a.severity}</span></td><td>${esc(a.summary)}</td></tr>`).join('');
-  const { nodes, edges } = s.lineage;
-  const cols = [['landing', 'Landing'], ['bronze', 'Bronze'], ['ref', 'Reference'], ['silver', 'Silver'], ['gold', 'Gold']];
+  lineage(s.lineage);
+}
+
+// Table-level lineage as a graph. A task that reads many tables and writes many (the Gold build) is drawn
+// as one task node, as Marquez does, instead of an edge for every input-output pair.
+function lineage({ nodes, edges }) {
+  const jobs = {};
+  for (const [a, b, j] of edges) { (jobs[j] ||= { ins: new Set(), outs: new Set() }); jobs[j].ins.add(a); jobs[j].outs.add(b); }
+  const collapsed = Object.keys(jobs).filter(j => jobs[j].ins.size * jobs[j].outs.size > 6);
+  const N = nodes.map(n => ({ ...n }));
+  const G = [];
+  for (const j of collapsed) {
+    N.push({ id: 'task:' + j, layer: 'job', label: j === 'gold' ? 'build_gold' : j });
+    jobs[j].ins.forEach(a => G.push([a, 'task:' + j]));
+    jobs[j].outs.forEach(b => G.push(['task:' + j, b]));
+  }
+  for (const e of edges) if (!collapsed.includes(e[2])) G.push([e[0], e[1]]);
+  const byId = Object.fromEntries(N.map(n => [n.id, n]));
+  const parents = id => G.filter(e => e[1] === id).map(e => e[0]);
+
+  // column = processing depth, so Silver tables built from other Silver tables sit one column further right
+  const rank = id => {
+    const n = byId[id];
+    if (n.rank == null) {
+      const ps = parents(id);
+      n.rank = n.layer === 'landing' ? 0 : n.layer === 'ref' || !ps.length ? 1 : Math.max(...ps.map(rank)) + 1;
+    }
+    return n.rank;
+  };
+  N.forEach(n => rank(n.id));
+  const cols = [];
+  N.forEach(n => (cols[n.rank] ||= []).push(n));
+  const order = { landing: 0, bronze: 1, ref: 2, silver: 3, job: 4, gold: 5 };
+  cols.forEach(c => c.sort((a, b) => order[a.layer] - order[b.layer] || a.id.localeCompare(b.id)));
+  const children = id => G.filter(e => e[0] === id).map(e => e[1]);
+  const sweep = (c, ref, links) => {               // order a column by the mean position of its linked nodes
+    const pos = Object.fromEntries(ref.map((n, k) => [n.id, k]));
+    const bc = n => { const ls = links(n.id).filter(p => p in pos); return ls.length ? ls.reduce((t, p) => t + pos[p], 0) / ls.length : -1; };
+    c.sort((a, b) => bc(a) - bc(b));
+  };
+  for (let pass = 0; pass < 6; pass++) {           // barycentre sweeps, both directions, to reduce crossings
+    for (let i = 1; i < cols.length; i++) sweep(cols[i], cols[i - 1], parents);
+    for (let i = cols.length - 2; i >= 0; i--) sweep(cols[i], cols[i + 1], children);
+  }
+
+  const W = 172, JW = 100, H = 28, GAP = 10, TOP = 34, WIDTH = 1100;
+  const widths = cols.map(c => c.every(n => n.layer === 'job') ? JW : W);
+  const step = (WIDTH - widths.reduce((a, b) => a + b, 0)) / (cols.length - 1);
+  const xs = [];
+  widths.reduce((x, w, i) => (xs[i] = x, x + w + step), 0);
+  const rows = Math.max(...cols.map(c => c.length));
+  const height = TOP + rows * (H + GAP);
+  cols.forEach((c, i) => {
+    const off = (rows - c.length) * (H + GAP) / 2;
+    c.forEach((n, k) => Object.assign(n, { x: xs[i], y: TOP + off + k * (H + GAP), w: widths[i] }));
+  });
+  const names = { landing: 'Landing', bronze: 'Bronze', ref: 'Reference', silver: 'Silver', gold: 'Gold', job: 'Task' };
+  const heads = cols.map((c, i) => {
+    const ls = [...new Set(c.map(n => n.layer))];
+    const joined = ls.includes('silver') && i > 0 && cols[i - 1].some(n => n.layer === 'silver');
+    return joined ? 'Silver, joined' : ls.map(l => names[l]).join(', ');
+  });
+
+  const out = [`<svg class="lin" viewBox="-2 0 ${WIDTH + 4} ${height}" role="group" aria-label="Table-level lineage graph">
+    <defs><marker id="lin-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 9 5 0 9z" class="ah"/></marker></defs>`];
+  cols.forEach((c, i) => out.push(`<text class="head" x="${xs[i]}" y="14">${heads[i]}</text>`));
+  for (const [a, b] of G) {
+    const p = byId[a], q = byId[b];
+    const x1 = p.x + p.w, y1 = p.y + H / 2, x2 = q.x - 1, y2 = q.y + H / 2, dx = (x2 - x1) / 2;
+    out.push(`<path class="edge" data-a="${esc(a)}" data-b="${esc(b)}" d="M${x1} ${y1} C${x1 + dx} ${y1} ${x2 - dx} ${y2} ${x2} ${y2}" marker-end="url(#lin-ah)"/>`);
+  }
+  for (const n of N) {
+    out.push(`<g class="n ${n.layer === 'job' ? 'job' : ''}" data-id="${esc(n.id)}" tabindex="0" role="button" aria-label="${esc(n.label || n.id)}">
+      <rect class="box" x="${n.x}" y="${n.y}" width="${n.w}" height="${H}" rx="4"/>
+      <rect class="bar ${n.layer}" x="${n.x}" y="${n.y}" width="4" height="${H}" rx="2"/>
+      <text x="${n.x + 12}" y="${n.y + 18}">${esc(n.label || n.id.replace(/^[a-z]+[./]/, ''))}</text></g>`);
+  }
+  out.push('</svg>');
   const box = document.getElementById('lineage');
-  box.innerHTML = cols.map(([layer, title]) => `<div class="col"><h4>${title}</h4>${nodes.filter(n => n.layer === layer)
-    .map(n => `<button class="node" data-id="${esc(n.id)}">${esc(n.id.replace(/^[a-z]+[./]/, ''))}</button>`).join('')}</div>`).join('');
+  box.innerHTML = out.join('');
+  const root = box.querySelector('svg');
+
   const walk = (start, dir) => {
     const seen = new Set(), todo = [start];
     while (todo.length) {
       const id = todo.pop();
-      edges.filter(e => (dir === 'down' ? e[0] : e[1]) === id).forEach(e => {
+      G.filter(e => (dir === 'down' ? e[0] : e[1]) === id).forEach(e => {
         const next = dir === 'down' ? e[1] : e[0];
         if (!seen.has(next)) { seen.add(next); todo.push(next); }
       });
     }
     return seen;
   };
+  const tables = set => [...set].filter(id => !id.startsWith('task:')).length;
   const note = document.getElementById('lineage-note');
-  const idle = `${nodes.length} datasets, ${edges.length} edges. Orange: upstream, teal: downstream.`;
+  const idle = `${nodes.length} datasets, ${edges.length} dataset-to-dataset edges. The Gold build is drawn as one task. Orange: upstream, blue: downstream.`;
   note.textContent = idle;
-  box.addEventListener('click', e => {
-    const id = e.target.dataset.id;
-    if (!id) return;
-    const was = e.target.classList.contains('sel');
-    box.querySelectorAll('.node').forEach(n => n.classList.remove('sel', 'up', 'down'));
-    box.classList.toggle('focus', !was);
-    if (was) { note.textContent = idle; return; }
+  let sel = null;
+  const show = id => {
+    root.classList.toggle('focus', !!id);
+    root.querySelectorAll('.sel, .up, .down').forEach(el => el.classList.remove('sel', 'up', 'down'));
+    if (!id) { note.textContent = idle; return; }
     const up = walk(id, 'up'), down = walk(id, 'down');
-    box.querySelectorAll('.node').forEach(n => {
-      if (n.dataset.id === id) n.classList.add('sel');
-      else if (up.has(n.dataset.id)) n.classList.add('up');
-      else if (down.has(n.dataset.id)) n.classList.add('down');
+    const upS = new Set([...up, id]), downS = new Set([...down, id]);
+    root.querySelectorAll('.n').forEach(g => {
+      const k = g.dataset.id;
+      g.classList.toggle('sel', k === id); g.classList.toggle('up', up.has(k)); g.classList.toggle('down', down.has(k));
     });
-    const jobs = [...new Set(edges.filter(x => x[1] === id).map(x => x[2]))];
-    note.textContent = `${id}: ${up.size} upstream, ${down.size} downstream` + (jobs.length ? `; written by ${jobs.join(', ')}` : '');
+    root.querySelectorAll('.edge').forEach(p => {
+      const { a, b } = p.dataset;
+      if (upS.has(a) && upS.has(b)) p.classList.add('up');
+      else if (downS.has(a) && downS.has(b)) p.classList.add('down');
+    });
+    // draw highlighted edges above the dimmed ones
+    const firstNode = root.querySelector('.n');
+    root.querySelectorAll('.edge.up, .edge.down').forEach(p => root.insertBefore(p, firstNode));
+    if (id.startsWith('task:')) {
+      const j = id.slice(5);
+      note.textContent = `Task ${byId[id].label}: reads ${jobs[j].ins.size} tables, writes ${jobs[j].outs.size}.`;
+    } else {
+      const by = [...new Set(edges.filter(x => x[1] === id).map(x => x[2]))];
+      note.textContent = `${id}: ${tables(up)} upstream, ${tables(down)} downstream` + (by.length ? `; written by ${by.join(', ')}` : '');
+    }
+  };
+  const pick = id => { sel = sel === id ? null : id; show(sel); };
+  root.addEventListener('click', e => { const g = e.target.closest('.n'); if (g) pick(g.dataset.id); else { sel = null; show(null); } });
+  root.addEventListener('keydown', e => {
+    const g = e.target.closest('.n');
+    if (g && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); pick(g.dataset.id); }
+    if (e.key === 'Escape') { sel = null; show(null); }
   });
 }
 
