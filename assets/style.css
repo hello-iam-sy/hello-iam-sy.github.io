@@ -6,13 +6,7 @@
   --sans: 'Schibsted Grotesk', system-ui, sans-serif; --mono: 'IBM Plex Mono', ui-monospace, monospace;
   color-scheme: light;
 }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0e1522; --surface: #162034; --ink: #e9eef6; --text: #c3ccda; --muted: #8e9ab0; --line: #2a3650; --rule: #e9eef6;
-    --accent: #93a8ff; --accent-soft: #1f2b52; --good: #93a8ff; --bad: #ff8a7a;
-    color-scheme: dark;
-  }
-}
+/* Dark is opt-in: assets/theme.js sets data-theme from the toggle, never from the OS setting. */
 :root[data-theme="dark"] {
   --bg: #0e1522; --surface: #162034; --ink: #e9eef6; --text: #c3ccda; --muted: #8e9ab0; --line: #2a3650; --rule: #e9eef6;
   --accent: #93a8ff; --accent-soft: #1f2b52; --good: #93a8ff; --bad: #ff8a7a;
@@ -34,11 +28,16 @@ b, strong { font-weight: 650; color: var(--ink); }
 
 /* top bar */
 .topbar { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 90%, transparent); backdrop-filter: blur(8px); }
-.topbar .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; gap: 16px; }
+.topbar .wrap { display: flex; align-items: center; height: 60px; gap: 16px; }
+.topbar nav { margin-left: auto; }
 .brand { font-weight: 750; color: var(--ink); text-decoration: none; letter-spacing: -.01em; }
 .topbar nav { display: flex; gap: 22px; font-size: .9rem; }
 .topbar nav a { color: var(--muted); text-decoration: none; }
 .topbar nav a:hover { color: var(--ink); }
+.theme-toggle { display: inline-grid; place-items: center; width: 36px; height: 36px; padding: 0; flex: none; border: 1px solid var(--line); border-radius: 6px;
+  background: transparent; color: var(--muted); cursor: pointer; }
+.theme-toggle:hover { color: var(--ink); border-color: var(--ink); }
+.theme-toggle[hidden] { display: none; }
 
 /* type scale */
 h1 { font-size: clamp(2.6rem, 7.2vw, 5.4rem); line-height: .98; letter-spacing: -.035em; font-weight: 800; margin: 0; }

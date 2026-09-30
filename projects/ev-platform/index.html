@@ -10,6 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="stylesheet" href="../../assets/arch.css">
+<script src="../../assets/theme.js"></script>
 <style>
 :root {
   --bg: #f3f5f7; --surface: #ffffff; --ink: #14203a; --text: #37435a; --muted: #5f6b7e; --line: #d4dbe4; --rule: #14203a;
@@ -19,14 +20,17 @@
   --sans: 'Schibsted Grotesk', system-ui, sans-serif; --mono: 'IBM Plex Mono', ui-monospace, monospace;
   color-scheme: light;
 }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0e1522; --surface: #162034; --ink: #e9eef6; --text: #c3ccda; --muted: #8e9ab0; --line: #2a3650; --rule: #e9eef6;
-    --accent: #93a8ff; --accent-soft: #1f2b52; --dc: #93a8ff; --ac: #fb923c; --warn: #f5b041; --err: #ff8a7a;
-    --ramp-0: #18223a; --ramp-1: #22336b; --ramp-2: #34509e; --ramp-3: #5c78d6; --ramp-4: #a9baff;
-    color-scheme: dark;
-  }
+/* Dark is opt-in: assets/theme.js sets data-theme from the toggle, never from the OS setting. */
+:root[data-theme="dark"] {
+  --bg: #0e1522; --surface: #162034; --ink: #e9eef6; --text: #c3ccda; --muted: #8e9ab0; --line: #2a3650; --rule: #e9eef6;
+  --accent: #93a8ff; --accent-soft: #1f2b52; --dc: #93a8ff; --ac: #fb923c; --warn: #f5b041; --err: #ff8a7a;
+  --ramp-0: #18223a; --ramp-1: #22336b; --ramp-2: #34509e; --ramp-3: #5c78d6; --ramp-4: #a9baff;
+  color-scheme: dark;
 }
+.theme-toggle { display: inline-grid; place-items: center; width: 36px; height: 36px; padding: 0; flex: none; border: 1px solid var(--line); border-radius: 6px;
+  background: transparent; color: var(--muted); cursor: pointer; }
+.theme-toggle:hover { color: var(--ink); border-color: var(--ink); }
+.theme-toggle[hidden] { display: none; }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
 a { color: var(--accent); text-underline-offset: .2em; }
@@ -153,7 +157,7 @@ footer { padding: 32px 0 56px; color: var(--muted); font-size: .9rem; } footer .
 </style>
 </head>
 <body>
-<nav aria-label="Site" style="font-size:.92rem"><div class="wrap" style="display:flex;justify-content:space-between;align-items:center;height:60px"><a href="../../" style="color:var(--ink);font-weight:750;text-decoration:none">Suyeong Kim</a><a href="../../#projects" style="color:var(--muted);text-decoration:none">All projects</a></div></nav>
+<nav aria-label="Site" style="font-size:.92rem"><div class="wrap" style="display:flex;justify-content:space-between;align-items:center;height:60px"><a href="../../" style="color:var(--ink);font-weight:750;text-decoration:none">Suyeong Kim</a><span style="display:flex;align-items:center;gap:16px"><a href="../../#projects" style="color:var(--muted);text-decoration:none">All projects</a><button class="theme-toggle" type="button" hidden></button></span></div></nav>
 
 <header class="wrap">
   <p class="meta">Data engineering project</p>
@@ -417,16 +421,15 @@ function kpis(chargers, sa4, s) {
 }
 
 function map(chargers, sa4) {
-  const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+  const tileUrl = () => `https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_${document.documentElement.dataset.theme === 'dark' ? 'Dark' : 'Light'}_Gray_Base/MapServer/tile/{z}/{y}/{x}`;
   const m = L.map('map', { scrollWheelZoom: false }).setView([-32.8, 147.5], 6);
   // Esri gray canvas: no API key needed (CARTO basemaps now require one).
-  L.tileLayer(`https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_${dark ? 'Dark' : 'Light'}_Gray_Base/MapServer/tile/{z}/{y}/{x}`, {
+  const tiles = L.tileLayer(tileUrl(), {
     attribution: 'Tiles &copy; Esri, HERE, Garmin, &copy; OpenStreetMap contributors', maxZoom: 16 }).addTo(m);
-  const ramp = [0, 1, 2, 3, 4].map(i => css(`--ramp-${i}`));
   const step = d => d >= 20 ? 4 : d >= 5 ? 3 : d >= 1 ? 2 : d >= 0.3 ? 1 : 0;
   const detail = document.getElementById('detail');
   const regions = L.geoJSON(sa4, {
-    style: f => ({ fillColor: ramp[step(f.properties.dc_chargers_per_1000_sqkm)], fillOpacity: .55, color: css('--line'), weight: 1 }),
+    style: f => ({ fillColor: css(`--ramp-${step(f.properties.dc_chargers_per_1000_sqkm)}`), fillOpacity: .55, color: css('--line'), weight: 1 }),
     onEachFeature: (f, layer) => layer.on('click', () => {
       const p = f.properties;
       detail.innerHTML = `<h3>${esc(p.sa4_name)}</h3><dl>
@@ -437,8 +440,9 @@ function map(chargers, sa4) {
     }),
   }).addTo(m);
   const canvas = L.canvas({ padding: .5 });
-  let points;
+  let points, current = 'all';
   const draw = filter => {
+    current = filter;
     if (points) m.removeLayer(points);
     points = L.geoJSON(chargers, {
       filter: f => filter === 'all' || f.properties.current_type === filter,
@@ -466,6 +470,8 @@ function map(chargers, sa4) {
     draw(b.dataset.filter);
   }));
   m.fitBounds(regions.getBounds(), { padding: [8, 8] });
+  // map colours are read from the CSS tokens at draw time, so repaint when the theme toggles
+  document.addEventListener('themechange', () => { tiles.setUrl(tileUrl()); regions.resetStyle(); draw(current); });
 }
 
 function operators(s) {

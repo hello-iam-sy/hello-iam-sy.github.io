@@ -3,10 +3,6 @@
   --brand-grafana: #f46800; --brand-flask: var(--ink); --brand-slack: #4a154b; --brand-langchain: #1c3c3c; --brand-apachekafka: var(--ink);
   --brand-apacheparquet: #3f8fd2; --brand-python: #3776ab; --brand-lineage: var(--muted);
   --brand-huggingface: #e0a100; --brand-pytorch: #ee4c2c; --brand-openai: var(--ink); --brand-meta: #0467df; --brand-googlesheets: #188038; }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .arch { --brand-postgresql: #8fb3e0; --brand-slack: #e8b4e6; --brand-langchain: #9fd6c7; --brand-python: #7fb2e5; --brand-apacheparquet: #79b8ef;
-    --brand-huggingface: #ffd21e; --brand-meta: #6aa6ff; --brand-googlesheets: #5bc27a; }
-}
 :root[data-theme="dark"] .arch { --brand-postgresql: #8fb3e0; --brand-slack: #e8b4e6; --brand-langchain: #9fd6c7; --brand-python: #7fb2e5; --brand-apacheparquet: #79b8ef;
   --brand-huggingface: #ffd21e; --brand-meta: #6aa6ff; --brand-googlesheets: #5bc27a; }
 
