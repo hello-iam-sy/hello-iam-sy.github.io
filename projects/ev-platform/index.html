@@ -128,6 +128,8 @@ small { color: var(--muted); }
 .shot figcaption { color: var(--muted); font-size: .88rem; margin-top: 10px; max-width: 60em; } .shot figcaption b { color: var(--ink); margin-right: 4px; }
 .shot.tall .scroll { max-height: 760px; overflow-y: auto; border: 1px solid var(--line); border-radius: 6px; }
 .shot.tall .scroll img { border: 0; border-radius: 0; }
+.shot.half { max-width: calc(50% - 12px); }
+@media (max-width: 900px) { .shot.half { max-width: none; } }
 .shots-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; }
 .layer { display: inline-block; font-size: .8rem; font-weight: 700; padding: 2px 10px; border-radius: 4px; border-left: 4px solid var(--line); background: var(--surface); }
 .layer.bronze { border-color: var(--bronze); } .layer.silver { border-color: var(--silver); } .layer.gold { border-color: var(--gold); } .layer.ref { border-color: var(--accent); }
@@ -206,7 +208,7 @@ small { color: var(--muted); }
     <div class="toc-group"><a href="#data-ops"><span>06</span>Data operations dashboard</a>
       <a class="toc-sub" href="#dq"><span>6.1</span>Data quality · run gate</a>
       <a class="toc-sub" href="#profiling"><span>6.2</span>Table data quality · profiling</a>
-      <a class="toc-sub" href="#lineage-full"><span>6.3</span>Full data lineage</a>
+      <a class="toc-sub" href="#dq-monitoring"><span>6.3</span>Data quality monitoring</a>
       <a class="toc-sub" href="#bi"><span>6.4</span>BI report</a></div>
     <a href="#job-ops"><span>07</span>Job operations dashboard · Grafana</a>
     <a href="#decisions"><span>A</span>Design decisions</a>
@@ -413,7 +415,7 @@ small { color: var(--muted); }
     <p class="kicker"><span>06</span>Data operations dashboard</p>
     <h2>One data workspace answers whether today's data can be trusted, where it came from, and what it shows</h2>
     <p class="sub">A small Flask app on the same database (port 8790) for the people who own the data: run-level data quality,
-      table profiling, full lineage, the dictionary and the BI report. It is read-only except for the dictionary.</p>
+      table profiling, data quality monitoring with table lineage, the dictionary and the BI report. It is read-only except for the dictionary.</p>
 
     <h3 class="h3 sub-kicker" id="dq"><span>6.1</span>Data quality · run gate</h3>
     <div class="two">
@@ -465,19 +467,20 @@ small { color: var(--muted); }
       </figure>
     </div>
 
-    <h3 class="h3 sub-kicker" id="lineage-full"><span>6.3</span>Full data lineage</h3>
-    <p class="sub">Every Airflow task declares the tables it reads and writes; the same declarations go to Marquez as OpenLineage
-      events, and a test fails if a model's SQL touches a table it did not declare. Operators read lineage in two places.</p>
-    <div class="shots-2">
-      <figure class="shot">
-        <a href="img/ops/lineage-quality.jpg?v=243ac0eb" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/lineage-quality.jpg?v=243ac0eb" alt="Lineage and quality: silver.ev_charger with its upstream Bronze and dictionary tables and downstream tables, plus a column profile" loading="lazy" width="1600" height="1000"></a>
-        <figcaption><b>Figure 6.4</b> Structural lineage in the data workspace: one table at a time, its inputs and dependents, next to its profile.</figcaption>
-      </figure>
-      <figure class="shot">
+    <h3 class="h3 sub-kicker" id="dq-monitoring"><span>6.3</span>Data quality monitoring</h3>
+    <p class="sub">The <b>Lineage &amp; quality</b> workspace (<code>http://localhost:8790/dashboard</code>) is where an operator follows a
+      problem through the tables. Pick a table to see its table lineage, what it reads from and what it feeds, next to the
+      distribution of each column and the rule checks that cover it. A null rate that jumps in Silver can be traced to the Bronze
+      version that caused it and to every Gold table and report it reaches.</p>
+    <figure class="shot">
+      <a href="img/ops/quality-workspace.jpg?v=1ec94e01" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/quality-workspace.jpg?v=1ec94e01" alt="Lineage and quality workspace with silver.ev_charger selected: its inputs and the tables it feeds on the left, its column profile with nulls, distinct values and ranges, and the max_power_kw distribution on the right" loading="lazy" width="1600" height="1667"></a>
+      <figcaption><b>Figure 6.4</b> <code>silver.ev_charger</code> in the workspace: table lineage on the left, column profile and the
+        <code>max_power_kw</code> distribution on the right. Selecting a neighbour moves to that table.</figcaption>
+    </figure>
+      <figure class="shot half">
         <a href="img/ops/marquez-jobs.jpg?v=7fa0fea8" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/marquez-jobs.jpg?v=7fa0fea8" alt="Marquez DataOps view: ev_sources and its task jobs with completed runs" loading="lazy" width="1600" height="1000"></a>
-        <figcaption><b>Figure 6.5</b> Execution lineage in Marquez: each task is a job with its own runs, in namespace <code>ev-platform</code>.</figcaption>
+        <figcaption><b>Figure 6.5</b> Marquez, linked from the workspace: execution lineage per task, with each run's status and duration.</figcaption>
       </figure>
-    </div>
 
     <h3 class="h3 sub-kicker" id="bi"><span>6.4</span>BI report</h3>
     <p class="sub">Regional coverage and pricing for analysts, read from one consistent Gold snapshot. Filters drive the map,
