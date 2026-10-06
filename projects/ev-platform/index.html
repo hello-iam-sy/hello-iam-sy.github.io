@@ -270,10 +270,6 @@ small { color: var(--muted); }
       </div>
     </div>
 
-    <figure class="shot tall">
-        <div class="scroll"><a href="img/ops/bronze-ledger-profile.jpg?v=281636be" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/bronze-ledger-profile.jpg?v=281636be" alt="Table quality of bronze.source_files: 12 columns profiled, row_count distribution, sample ledger rows" loading="lazy" width="1600" height="2883"></a></div>
-      <figcaption><b>Figure 2.1</b> The ingestion ledger <code>bronze.source_files</code> in the data workspace (scroll inside the frame): a profile of every column, the distribution of rows per version, and the ledger rows themselves.</figcaption>
-    </figure>
   </div>
 </section>
 
@@ -483,11 +479,6 @@ small { color: var(--muted); }
     <h3 class="h3 sub-kicker" id="bi"><span>6.4</span>BI report</h3>
     <p class="sub">Regional coverage and pricing for analysts, read from one consistent Gold snapshot. Filters drive the map,
       KPIs and records together, and the filtered rows export as CSV.</p>
-    <figure class="shot">
-      <a href="img/ops/bi-map.jpg?v=1e12b2d8" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/bi-map.jpg?v=1e12b2d8" alt="Map screen: filters, KPI cards for 1,860 operational charger entries, a shaded map of NSW SA4 regions and a ranking of top regions" loading="lazy" width="1600" height="1000"></a>
-      <figcaption><b>Figure 6.6</b> The Map tab on the running system: operational chargers, AC/DC split, density, median charging price and rated power, with the top regions to drill into.</figcaption>
-    </figure>
-    <h4 class="h4">Interactive copy on the snapshot data</h4>
     <div class="controls" role="group" aria-label="Map layers">
       <button data-filter="all" aria-pressed="true">All chargers</button>
       <button data-filter="DC" aria-pressed="false">DC fast (24&ndash;400 kW)</button>
@@ -504,6 +495,8 @@ small { color: var(--muted); }
         <span class="ramp"><i style="background:var(--ramp-0)"></i><i style="background:var(--ramp-1)"></i><i style="background:var(--ramp-2)"></i><i style="background:var(--ramp-3)"></i><i style="background:var(--ramp-4)"></i></span>
       </span>
     </div>
+    <p class="note"><b style="color:var(--ink)">Figure 6.6</b> The BI map, live on the Gold snapshot of <span class="snap-date">6 Oct 2026</span>: select a
+      region or a charger, or filter to DC or AC.</p>
   </div>
 </section>
 
@@ -878,6 +871,7 @@ function lightbox() {
 function foot(s) {
   const d = new Date(s.exported_at).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
   document.getElementById('snapshot').textContent = d;
+  document.querySelectorAll('.snap-date').forEach(e => e.textContent = d);
   document.getElementById('foot').innerHTML = `Snapshot exported ${d} from the Gold layer. Data: Transport for NSW, Australian Bureau of Statistics (ASGS Edition 4), Open Charge Map contributors, Evie Networks (public site map).`;
 }
 </script>
