@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>NSW EV Charger Platform · Suyeong Kim</title>
+<title>NSW EV Charger Platform · Operations handbook</title>
+<meta name="description" content="Operations handbook of an on-premise EV charger data platform: architecture, Bronze/Silver/Gold layers, Airflow scheduling, data quality, lineage, BI and Grafana monitoring.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%2314203a'/><text x='16' y='22' font-family='Arial' font-weight='700' font-size='15' text-anchor='middle' fill='white'>SK</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -65,52 +66,8 @@ header.wrap { padding-top: 88px; padding-bottom: 56px; }
 .ramp { display: inline-flex; vertical-align: middle; } .ramp i { width: 22px; height: 10px; }
 dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0; }
 dt { color: var(--muted); } dd { margin: 0; overflow-wrap: anywhere; }
-.flow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; align-items: stretch; }
-.stage { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 16px; position: relative; }
-.stage h4 { margin: 0 0 4px; font-size: .95rem; }
-.stage p { margin: 0; color: var(--muted); font-size: .84rem; }
-.stage:not(:last-child)::after { content: '→'; position: absolute; right: -12px; top: 50%; transform: translate(50%, -50%); color: var(--muted); }
-.stage.bronze { border-top: 4px solid var(--bronze); } .stage.silver { border-top: 4px solid var(--silver); } .stage.gold { border-top: 4px solid var(--gold); }
-.sources { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 16px; }
-.src { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 20px; }
-.src .kind { display: block; font-size: .88rem; color: var(--muted); margin-bottom: 6px; }
-.src h3 { margin: 0 0 4px; font-size: 1.05rem; } .src h3 a { color: inherit; }
-.src .what { color: var(--muted); font-size: .9rem; margin: 0 0 12px; }
-.src dl { font-size: .85rem; }
-.dag { margin: 0 0 16px; background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 12px 16px; overflow-x: auto; }
-.dag figcaption { color: #5f6b7e; font-size: .85rem; margin-bottom: 8px; } .dag figcaption b { color: #14203a; }
-.dag img { display: block; max-width: 100%; min-width: 640px; height: auto; }
-.app { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
-.app-tabs { display: flex; align-items: center; gap: 4px; padding: 0 16px; border-bottom: 1px solid var(--line); background: var(--bg); }
-.app-tabs button { font: inherit; font-size: .9rem; font-weight: 600; background: none; border: 0; border-bottom: 2px solid transparent; color: var(--muted); padding: 12px 14px; margin-bottom: -1px; cursor: pointer; }
-.app-tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
-.app-url { margin-left: auto; color: var(--muted); font-size: .78rem; }
-.app-pane { padding: 20px; }
-.app-lede, .app-note { color: var(--muted); font-size: .9rem; margin: 0 0 8px; max-width: 760px; }
-.app-note { margin-top: 16px; }
-.app-h { margin: 28px 0 8px; font-size: .95rem; font-weight: 700; color: var(--ink); }
-.app-panel { border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; }
-.app input, .app select, .app .btn { font: inherit; font-size: .82rem; border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; background: var(--surface); color: var(--ink); }
-.app .btn { cursor: pointer; } .app .btn.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
-.app .inline { display: flex; gap: 6px; flex-wrap: nowrap; align-items: center; }
-#dict-q { width: 100%; max-width: 320px; margin: 6px 0 10px; }
-#dict-list { max-height: 420px; overflow-y: auto; }
-.op { border-top: 1px solid var(--line); } .op summary { display: grid; grid-template-columns: minmax(140px, 1.2fr) minmax(110px, .8fr) 3fr; gap: 12px; padding: 8px 4px; cursor: pointer; list-style: none; font-size: .9rem; }
-.op summary::-webkit-details-marker { display: none; } .op summary b::before { content: '▸ '; color: var(--muted); } .op[open] summary b::before { content: '▾ '; }
-.op .body { padding: 4px 4px 12px 22px; font-size: .85rem; color: var(--muted); }
-.chip { display: inline-block; border: 1px solid var(--line); border-radius: 999px; padding: 0 8px; margin: 1px 4px 1px 0; font-size: .8rem; }
-.chip.new { border-color: var(--accent); color: var(--accent); }
-.gate { display: flex; flex-wrap: wrap; gap: 12px; align-items: baseline; border-radius: 10px; padding: 14px 16px; }
-.gate.pass { background: var(--accent-soft); } .gate.fail { background: color-mix(in srgb, var(--err) 14%, transparent); }
-.gate b { font-size: 1.1rem; } .gate.fail b { color: var(--err); }
-.dims { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
-.dim { border: 1px solid var(--line); border-top: 3px solid var(--accent); border-radius: 10px; padding: 10px 12px; font-size: .8rem; color: var(--muted); }
-.dim.warn { border-top-color: var(--warn); } .dim.fail { border-top-color: var(--err); }
-.dim b { display: block; color: var(--ink); font-size: .85rem; } .dim .n { color: var(--ink); font-size: 1.3rem; font-weight: 700; }
 .sev.pass { color: var(--accent); } .sev.fail { color: var(--err); } .sev.measured { color: var(--muted); }
-tr.dimrow td { font-size: .85rem; color: var(--ink); font-weight: 700; background: var(--bg); }
 tr.fail .bar { background: var(--err); } tr.warn .bar { background: var(--warn); } tr.measured .bar { background: var(--muted); }
-@media (max-width: 860px) { .op summary { grid-template-columns: 1fr; gap: 2px; } .app-pane { padding: 14px; } }
 .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 36px 40px; }
 .card { border-top: 1px solid var(--line); padding: 16px 0 0; }
 .card h3 { margin: 0 0 12px; font-size: 1.05rem; }
@@ -125,9 +82,6 @@ td.num, th.num { text-align: right; }
 .sev { font-size: .75rem; padding: 2px 8px; border-radius: 999px; border: 1px solid currentColor; }
 .sev.error { color: var(--err); } .sev.warn { color: var(--warn); } .sev.info { color: var(--muted); }
 .two { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-.funnel { display: grid; gap: 10px; }
-.funnel div { display: grid; grid-template-columns: 170px 1fr 60px; gap: 12px; align-items: center; font-size: .9rem; }
-.funnel .track { background: var(--line); border-radius: 4px; height: 10px; }
 footer { padding: 32px 0 56px; color: var(--muted); font-size: .9rem; } footer .wrap { border-top: 1px solid var(--line); padding-top: 24px; }
 .lin-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 .lin { display: block; width: 100%; min-width: 860px; height: auto; font-family: var(--mono); user-select: none; }
@@ -151,75 +105,328 @@ footer { padding: 32px 0 56px; color: var(--muted); font-size: .9rem; } footer .
 @media (max-width: 860px) {
   .map-shell, .two { grid-template-columns: 1fr; }
   #map { height: 420px; }
-  .flow { grid-template-columns: 1fr; } .stage:not(:last-child)::after { content: '↓'; right: 50%; top: auto; bottom: -18px; transform: translateX(50%); }
-  .funnel div { grid-template-columns: 120px 1fr 48px; }
 }
+
+/* operations handbook */
+.doc-head { padding-top: 88px; padding-bottom: 40px; }
+.doc-meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 0; margin: 32px 0; border-top: 2px solid var(--rule); border-bottom: 1px solid var(--line); }
+.doc-meta div { padding: 12px 16px 12px 0; } .doc-meta dt { color: var(--muted); font-size: .8rem; } .doc-meta dd { margin: 2px 0 0; font-size: .92rem; color: var(--ink); }
+.toc { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0 24px; margin-top: 40px; counter-reset: none; }
+.toc a { display: flex; gap: 12px; align-items: baseline; padding: 10px 0; border-bottom: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 600; font-size: .95rem; }
+.toc a:hover { color: var(--accent); } .toc span { font-family: var(--mono); font-size: .8rem; color: var(--accent); min-width: 2ch; }
+.kicker { display: flex; gap: 12px; align-items: baseline; margin: 0 0 14px; padding-top: 18px; border-top: 2px solid var(--rule); color: var(--muted); font-weight: 600; font-size: .92rem; text-transform: uppercase; letter-spacing: .06em; }
+.kicker span { font-family: var(--mono); color: var(--accent); }
+section > .wrap > h2 { max-width: 30em; }
+.h3 { font-size: 1.1rem; margin: 40px 0 12px; } .h3.first { margin-top: 0; } .h4 { font-size: 1rem; margin: 28px 0 6px; }
+.sub-kicker { display: flex; gap: 10px; align-items: baseline; font-size: 1.3rem; margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--line); }
+.sub-kicker span { font-family: var(--mono); font-size: .9rem; color: var(--accent); }
+.note { color: var(--muted); font-size: .88rem; margin: 10px 0 0; }
+.table-wrap { overflow-x: auto; }
+small { color: var(--muted); }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 40px; margin-top: 32px; }
+.two > *, .shots-2 > * { min-width: 0; }
+.shot { margin: 32px 0 0; }
+.shot a { display: block; cursor: zoom-in; }
+.shot img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+.shot figcaption { color: var(--muted); font-size: .88rem; margin-top: 10px; max-width: 60em; } .shot figcaption b { color: var(--ink); margin-right: 4px; }
+.shot.tall .scroll { max-height: 760px; overflow-y: auto; border: 1px solid var(--line); border-radius: 6px; }
+.shot.tall .scroll img { border: 0; border-radius: 0; }
+.shots-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; }
+.layer { display: inline-block; font-size: .8rem; font-weight: 700; padding: 2px 10px; border-radius: 4px; border-left: 4px solid var(--line); background: var(--surface); }
+.layer.bronze { border-color: var(--bronze); } .layer.silver { border-color: var(--silver); } .layer.gold { border-color: var(--gold); } .layer.ref { border-color: var(--accent); }
+.gate-now { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline; background: var(--accent-soft); border-radius: 6px; padding: 16px 18px; }
+.gate-now b { font-size: 1.15rem; } .gate-now span { color: var(--text); font-size: .92rem; }
+.sev.pass { color: var(--accent); } .sev.fail { color: var(--err); }
+.controls { margin-top: 12px; }
+@media (max-width: 900px) { .two, .shots-2 { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
 <nav aria-label="Site" style="font-size:.92rem"><div class="wrap" style="display:flex;justify-content:space-between;align-items:center;height:60px"><a href="../../" style="color:var(--ink);font-weight:750;text-decoration:none">Suyeong Kim</a><span style="display:flex;align-items:center;gap:16px"><a href="../../#projects" style="color:var(--muted);text-decoration:none">All projects</a><button class="theme-toggle" type="button" hidden></button></span></div></nav>
 
-<header class="wrap">
-  <p class="meta">Data engineering project</p>
+<header class="wrap doc-head">
+  <p class="meta">Data engineering project · Operations handbook</p>
   <h1>NSW EV Charger Data Platform</h1>
-  <p class="lede">An on-premise ELT platform that turns four messy sources (open government data, a community API and an
-    operator's own site data) into one trustworthy view of electric-vehicle charging in New South Wales, keeps it current
-    with daily, change-aware runs, and watches itself with metrics, alerts and lineage.</p>
-  <ul class="stack" aria-label="Stack">
-    <li>PostgreSQL / PostGIS</li><li>Airflow 3</li><li>Medallion ELT</li><li>Parquet</li><li>SCD Type 2</li><li>Record linkage</li><li>Kafka</li><li>Spark Structured Streaming</li><li>Prometheus / Grafana</li><li>OpenLineage / Marquez</li><li>LangChain</li><li>Slack</li>
-  </ul>
+  <p class="lede">An on-premise ELT platform that merges four public and operator sources into one trusted view of
+    electric-vehicle charging in New South Wales. This page is written the way the platform is run: architecture first,
+    then each data layer, the schedule, and the two dashboards an operator watches every day.</p>
+  <dl class="doc-meta">
+    <div><dt>Environment</dt><dd>On-premise: Docker (PostgreSQL/PostGIS, Kafka, monitoring) + local Airflow 3</dd></div>
+    <div><dt>Operating since</dt><dd>27 Sep 2026, daily at 06:00 Sydney</dd></div>
+    <div><dt>Snapshot</dt><dd id="snapshot">6 Oct 2026</dd></div>
+    <div><dt>Screens</dt><dd>Captured from the running system</dd></div>
+  </dl>
+  <div class="kpis" id="kpis"></div>
+  <nav class="toc" aria-label="Contents">
+    <a href="#architecture"><span>01</span>Architecture</a>
+    <a href="#bronze"><span>02</span>Bronze</a>
+    <a href="#silver"><span>03</span>Silver</a>
+    <a href="#gold"><span>04</span>Gold</a>
+    <a href="#scheduling"><span>05</span>Scheduling · Airflow</a>
+    <a href="#data-ops"><span>06</span>Data operations dashboard</a>
+    <a href="#job-ops"><span>07</span>Job operations dashboard</a>
+    <a href="#decisions"><span>A</span>Design decisions</a>
+  </nav>
 </header>
 
-<section>
+<section id="architecture">
   <div class="wrap">
-    <h2>Medallion ELT, all in SQL after landing</h2>
-    <p class="sub">Python only retrieves and lands files; every transformation is a versioned SQL model that owns one table.</p>
+    <p class="kicker"><span>01</span>Architecture</p>
+    <h2>Four sources flow through one medallion pipeline on PostgreSQL, watched by its own monitoring stack</h2>
+    <p class="sub">Python only retrieves and lands files; every transformation after that is a versioned SQL model that owns
+      one table. Select a component to see what it does and what it connects to.</p>
     <div data-arch="ev"></div>
-    <h3 style="margin:40px 0 16px">Sources</h3>
-    <div class="sources">
-      <div class="src"><span class="kind">Open government data</span>
-        <h3><a href="https://opendata.transport.nsw.gov.au/">Transport for NSW</a></h3>
-        <p class="what">EV Charging Locations: every public charger in NSW with operator, address, coordinates and rating.</p>
-        <dl><dt>Provides</dt><dd>The charger list (the spine of the model)</dd>
-          <dt>Format</dt><dd>CSV from the TfNSW Open Data Hub (CKAN), no login</dd>
-          <dt>Change check</dt><dd>CKAN API <code>last_modified</code> before download, then SHA-256</dd>
-          <dt>Rows</dt><dd>1,958 chargers</dd></dl></div>
-      <div class="src"><span class="kind">Official statistics</span>
-        <h3><a href="https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs">Australian Bureau of Statistics</a></h3>
-        <p class="what">ASGS Edition 4 (2026) Statistical Area Level 4 boundaries, GDA2020.</p>
-        <dl><dt>Provides</dt><dd>Regions for the spatial join and density per km²</dd>
-          <dt>Format</dt><dd>Shapefile (zip) from the ABS digital boundary downloads</dd>
-          <dt>Change check</dt><dd>HTTP conditional GET (304 Not Modified)</dd>
-          <dt>Rows</dt><dd>108 SA4 regions in Australia, 28 in NSW</dd></dl></div>
-      <div class="src"><span class="kind">Community open data API</span>
-        <h3><a href="https://openchargemap.org/">Open Charge Map</a></h3>
-        <p class="what">Crowd-sourced global registry of charging sites, queried for the NSW bounding box.</p>
-        <dl><dt>Provides</dt><dd>Plug types, pricing text, bay count, status history</dd>
-          <dt>Format</dt><dd>JSON from the REST API (<code>/v3/poi</code>), free API key</dd>
-          <dt>Change check</dt><dd>Full daily snapshot; SHA-256 decides if it is new</dd>
-          <dt>Rows</dt><dd>525 sites in and around NSW</dd></dl></div>
-      <div class="src"><span class="kind">Operator website data</span>
-        <h3><a href="https://evie.com.au/find-a-charger/">Evie Networks</a></h3>
-        <p class="what">The operator's own charger map: every site with its chargers, connector standards, power and tariff.</p>
-        <dl><dt>Provides</dt><dd>Plug types, power, AC/DC tariffs with peak surcharges, where OCM has no data</dd>
-          <dt>Format</dt><dd>JSON from the site's public store-locator endpoint, no key</dd>
-          <dt>Change check</dt><dd>Grid of queries (50 sites each, split when capped), 10 s apart per robots.txt; SHA-256</dd>
-          <dt>Rows</dt><dd><span id="evie-sites">—</span> sites</dd></dl></div>
-    </div>
-<h3 style="margin:40px 0 8px">Airflow DAGs</h3>
-    <p class="sub" style="margin-bottom:16px">Rendered by Airflow from the DAG code (<code>airflow dags show</code>). <code>publish_sa4</code> emits an Asset event that starts <code>ev_sources</code> when new boundaries arrive.</p>
-    <figure class="dag"><figcaption><b>ev_reference</b> · manual, SA4 boundaries</figcaption><img src="img/ev_reference.svg" alt="ev_reference DAG: retrieve, load Bronze, stage SA4 boundaries, publish asset event"></figure>
-    <figure class="dag"><figcaption><b>ev_sources</b> · daily 06:00 Sydney, or on the SA4 asset event</figcaption><img src="img/ev_sources.svg" alt="ev_sources DAG: TfNSW, OCM and Evie chains in parallel, joined by record linkage, then Gold and quality checks"></figure>
-    <h3 style="margin:40px 0 16px">What it produces</h3>
-    <div class="kpis" id="kpis"></div>
+
+    <h3 class="h3">Source inventory</h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Source</th><th>Type</th><th>Format</th><th>Change detection</th><th class="num">Rows in use</th></tr></thead>
+      <tbody>
+        <tr><td><b>Transport for NSW</b><br><small>EV Charging Locations</small></td><td>Open government data</td><td>CSV via CKAN, no login</td><td>Portal <code>last_modified</code>, then SHA-256</td><td class="num">1,958 chargers</td></tr>
+        <tr><td><b>Australian Bureau of Statistics</b><br><small>ASGS Ed. 4 SA4 boundaries</small></td><td>Official statistics</td><td>Shapefile (zip)</td><td>HTTP conditional GET (304)</td><td class="num">108 regions</td></tr>
+        <tr><td><b>Open Charge Map</b><br><small>NSW bounding box</small></td><td>Community API</td><td>JSON, REST <code>/v3/poi</code></td><td>Full daily snapshot, SHA-256</td><td class="num">537 sites</td></tr>
+        <tr><td><b>Evie Networks</b><br><small>Operator site map</small></td><td>Operator website data</td><td>JSON store-locator, 10 s crawl delay</td><td>SHA-256 of the snapshot</td><td class="num">231 sites</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3 class="h3">Layer contract</h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Layer</th><th>Storage</th><th>Rule</th></tr></thead>
+      <tbody>
+        <tr><td><span class="layer landing">Landing</span></td><td><code>data/landing/&lt;source&gt;/ingest_date=…/</code></td><td>Every changed version, byte for byte</td></tr>
+        <tr><td><span class="layer bronze">Bronze</span></td><td>Parquet per version + <code>bronze.&lt;source&gt;</code></td><td>Append-only, text columns, one record per row, ingestion ledger</td></tr>
+        <tr><td><span class="layer silver">Silver</span></td><td><code>silver.*</code></td><td>Typed and cleaned current state, SCD2 history, spatial join and record linkage</td></tr>
+        <tr><td><span class="layer gold">Gold</span></td><td><code>gold.*</code></td><td>Star schema and analysis views, the only layer reports read</td></tr>
+        <tr><td><span class="layer ref">Reference</span></td><td><code>ref.standard_term</code></td><td>Curated by people on a screen; never rebuilt, every change audited</td></tr>
+      </tbody>
+    </table></div>
   </div>
 </section>
 
-<section>
+<section id="bronze">
   <div class="wrap">
-    <h2>Every charger, placed in its region</h2>
-    <p class="sub">TfNSW charger points joined to ABS SA4 boundaries with <code>ST_Covers</code>, then enriched with
-      plug types, prices and bay counts from Evie's own data or Open Charge Map. Click a region or a charger.</p>
+    <p class="kicker"><span>02</span>Bronze</p>
+    <h2>Every source version is kept as delivered, and nothing is reloaded unless its content changed</h2>
+    <p class="sub">Sources overwrite themselves, so Bronze is the only place their history survives. Each version is stored
+      as Parquet and as text rows in PostgreSQL, with one row in the ingestion ledger <code>bronze.source_files</code>.</p>
+
+    <div class="two">
+      <div>
+        <h3 class="h3 first">Ingestion ledger · <code>bronze.source_files</code></h3>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Source</th><th class="num">Versions</th><th>First</th><th>Latest</th><th class="num">Rows per version</th></tr></thead>
+          <tbody>
+            <tr><td><code>tfnsw_ev_chargers</code></td><td class="num">1</td><td>27 Sep</td><td>27 Sep</td><td class="num">1,958</td></tr>
+            <tr><td><code>abs_sa4_2026</code></td><td class="num">1</td><td>27 Sep</td><td>27 Sep</td><td class="num">108</td></tr>
+            <tr><td><code>ocm_poi</code></td><td class="num">2</td><td>27 Sep</td><td>6 Oct</td><td class="num">525 → 537</td></tr>
+            <tr><td><code>evie_sites</code></td><td class="num">3</td><td>29 Sep</td><td>6 Oct</td><td class="num">231 · 231 · 231</td></tr>
+          </tbody>
+        </table></div>
+        <p class="note">Each row records the SHA-256, landing and Parquet paths, source URL, upstream last-modified time,
+          row count and the Airflow run that loaded it.</p>
+      </div>
+      <div>
+        <h3 class="h3 first">Nothing is redone without a change</h3>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Level</th><th>Check</th><th>Effect</th></tr></thead>
+          <tbody>
+            <tr><td>Retrieve</td><td>Portal <code>last_modified</code>, HTTP 304, then the bytes' hash</td><td>No download or no new version</td></tr>
+            <tr><td>Bronze</td><td>Ledger already holds this hash</td><td>No parsing or reload</td></tr>
+            <tr><td>Models</td><td><code>meta.model_state</code> holds the input versions each model was built from</td><td>Task shown as skipped</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <figure class="shot">
+      <a href="img/ops/bronze-ledger-profile.jpg" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/bronze-ledger-profile.jpg" alt="Lineage and Quality screen with bronze.source_files selected: its downstream views and a column profile" loading="lazy" width="1600" height="1000"></a>
+      <figcaption><b>Figure 2.1</b> The ingestion ledger in the data workspace: what reads it downstream, and a profile of its columns.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="silver">
+  <div class="wrap">
+    <p class="kicker"><span>03</span>Silver</p>
+    <h2>Silver cleans, historises and links the sources in ten SQL models, each rebuilt only when its inputs change</h2>
+    <p class="sub">Staging models type and clean one source each. History models keep SCD Type 2 periods for prices and
+      status. Intermediate models place every charger in its region and link it to the other sources, which share no key.</p>
+
+    <h3 class="h3">Model inventory</h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Model</th><th>Kind</th><th>Built from</th><th>What it does</th><th class="num">Rows</th></tr></thead>
+      <tbody>
+        <tr><td><code>ev_charger</code></td><td>staging</td><td>TfNSW, dictionary</td><td>Types ratings and status, standardises operators, flags duplicates</td><td class="num">1,958</td></tr>
+        <tr><td><code>sa4_boundary</code></td><td>staging</td><td>ABS</td><td>Region polygons in GDA2020</td><td class="num">108</td></tr>
+        <tr><td><code>ocm_poi_history</code></td><td>SCD2 history</td><td>OCM snapshots + streamed events</td><td>One period per change of a site's price or status</td><td class="num">542</td></tr>
+        <tr><td><code>ocm_connection</code></td><td>staging</td><td>OCM</td><td>Plug type, power and quantity per connection</td><td class="num">953</td></tr>
+        <tr><td><code>evie_site</code></td><td>staging</td><td>Evie</td><td>Current site list</td><td class="num">231</td></tr>
+        <tr><td><code>evie_offer_history</code></td><td>SCD2 history</td><td>Evie</td><td>Tariff, connectors and power per site and AC/DC</td><td class="num">256</td></tr>
+        <tr><td><code>charger_sa4</code></td><td>intermediate</td><td>ev_charger, sa4_boundary</td><td>Spatial join with <code>ST_Covers</code>, nearest boundary as fallback</td><td class="num">1,958</td></tr>
+        <tr><td><code>charger_ocm_match</code></td><td>intermediate</td><td>ev_charger, ocm_connection</td><td>Record linkage: within 300 m; beyond 50 m operator or address must agree</td><td class="num">186</td></tr>
+        <tr><td><code>charger_evie_match</code></td><td>intermediate</td><td>ev_charger, evie_site</td><td>Evie chargers to Evie DC sites within 300 m</td><td class="num">97</td></tr>
+        <tr><td><code>rejected_records</code></td><td>quarantine</td><td>all staging</td><td>Source rows excluded, with the reason</td><td class="num">0</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="shots-2">
+      <figure class="shot">
+        <a href="img/ops/silver-history-profile.jpg" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/silver-history-profile.jpg" alt="silver.evie_offer_history in the data workspace: built from bronze.evie_sites, feeding gold.charger_price_history; valid_to is null for current periods" loading="lazy" width="1600" height="1000"></a>
+        <figcaption><b>Figure 3.1</b> An SCD2 history table: built from Bronze, read by the Gold price history. Open periods have no <code>valid_to</code>.</figcaption>
+      </figure>
+      <figure class="shot">
+        <a href="img/ops/silver-term-dictionary.jpg" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/silver-term-dictionary.jpg" alt="Standard term dictionary screen listing seven unregistered operator spellings with map and create actions" loading="lazy" width="1600" height="1000"></a>
+        <figcaption><b>Figure 3.2</b> The standard term dictionary. Spellings the pipeline does not know wait here; a person maps or creates them and the next run applies the change.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section id="gold">
+  <div class="wrap">
+    <p class="kicker"><span>04</span>Gold</p>
+    <h2>Gold publishes one star schema, so every report counts chargers, operators and regions the same way</h2>
+    <p class="sub">One fact table at the grain of a TfNSW charger, three conformed dimensions, and views for the questions
+      the reports ask. Reports and the BI screen read Gold only.</p>
+
+    <div class="table-wrap"><table>
+      <thead><tr><th>Object</th><th>Type</th><th>Grain / content</th><th class="num">Rows</th></tr></thead>
+      <tbody>
+        <tr><td><code>gold.charger</code></td><td>fact</td><td>One row per charger: type, status, plugs, rated power, location</td><td class="num">1,958</td></tr>
+        <tr><td><code>gold.charger_enrichment</code></td><td>fact extension</td><td>Matched Evie or OCM attributes: price, peak surcharge, bays, match distance</td><td class="num">249</td></tr>
+        <tr><td><code>gold.charger_connector</code></td><td>fact extension</td><td>One row per connector type and source</td><td class="num">405</td></tr>
+        <tr><td><code>gold.dim_location</code></td><td>dimension</td><td>Address, postcode, LGA and SA4 of a site</td><td class="num">1,877</td></tr>
+        <tr><td><code>gold.dim_operator</code></td><td>dimension</td><td>Standardised operator from the dictionary</td><td class="num">42</td></tr>
+        <tr><td><code>gold.dim_sa4</code></td><td>dimension</td><td>ABS region with area for density</td><td class="num">108</td></tr>
+        <tr><td><code>charger_flat</code> · <code>sa4_coverage</code> · <code>operator_summary</code></td><td>views</td><td>Report-ready joins and aggregates</td><td class="num">—</td></tr>
+        <tr><td><code>augmentation_coverage</code> · <code>charger_price_history</code> · <code>ocm_price_latest</code></td><td>views</td><td>Coverage target, price periods, streamed latest prices</td><td class="num">—</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3 class="h3">Output sample · <code>gold.operator_summary</code>, top 12 by operational chargers</h3>
+    <div class="table-wrap"><table id="operators"><thead><tr><th>Operator</th><th class="num">Chargers</th><th style="width:30%"></th><th class="num">DC</th><th class="num">Regions</th><th class="num">Max kW</th><th class="num">Avg $/kWh</th></tr></thead><tbody></tbody></table></div>
+  </div>
+</section>
+
+<section id="scheduling">
+  <div class="wrap">
+    <p class="kicker"><span>05</span>Scheduling · Airflow</p>
+    <h2>Two DAGs split by how often a source changes; the daily run takes about 11 minutes and skips what is unchanged</h2>
+    <p class="sub">Boundaries change once per ASGS edition, chargers and prices daily. A rarely changing reference load has a
+      different schedule and failure impact, so it is its own DAG, linked to the daily one by an Airflow Asset.</p>
+
+    <h3 class="h3">Job schedule</h3>
+    <div class="table-wrap"><table class="spec">
+      <thead><tr><th>Job</th><th>Trigger</th><th class="num">Tasks</th><th>Retries</th><th>Concurrency · catchup</th><th>On failure</th></tr></thead>
+      <tbody>
+        <tr><td><code>ev_sources</code><br><small>TfNSW, OCM, Evie → Gold → quality</small></td><td><b>Daily 06:00 Australia/Sydney</b><br>or when <code>silver_sa4_boundary</code> is updated</td><td class="num">16</td><td>3, exponential from 2 min<br><small>quality check: 0</small></td><td>1 active run · no catchup</td><td>Run failed → <code>DagRunFailed</code> alert</td></tr>
+        <tr><td><code>ev_reference</code><br><small>ABS SA4 boundaries</small></td><td>Manual: on setup and on a new ASGS edition</td><td class="num">4</td><td>3, exponential from 2 min</td><td>1 active run · no catchup</td><td>Run failed → <code>DagRunFailed</code> alert</td></tr>
+        <tr><td><code>ocm_producer</code><br><small>Price stream</small></td><td>Every 15 min (long-running service)</td><td class="num">—</td><td>Next poll</td><td>Single process</td><td>Heartbeat older than 180 s on Grafana</td></tr>
+        <tr><td>Spark Structured Streaming<br><small>Kafka → Parquet + PostgreSQL</small></td><td>Continuous micro-batches</td><td class="num">2 queries</td><td>From checkpoint</td><td>Exactly-once sinks</td><td>Heartbeat older than 60 s on Grafana</td></tr>
+      </tbody>
+    </table></div>
+
+    <figure class="shot">
+      <a href="img/ops/airflow-dags.jpg" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/airflow-dags.jpg" alt="Airflow DAG list: ev_reference manual, ev_sources scheduled on the silver_sa4_boundary asset, next run 7 Oct 06:00" loading="lazy" width="1600" height="640"></a>
+      <figcaption><b>Figure 5.1</b> Airflow 3: both DAGs, their latest runs and the next scheduled run of <code>ev_sources</code>.</figcaption>
+    </figure>
+    <figure class="shot">
+      <a href="img/ops/airflow-graph.jpg" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/airflow-graph.jpg" alt="ev_sources graph for one run: three parallel source chains, skipped models in pink, build_gold and check_quality succeeded" loading="lazy" width="1600" height="367"></a>
+      <figcaption><b>Figure 5.2</b> One run of <code>ev_sources</code>. Three source chains run in parallel. Pink tasks were <i>skipped</i>
+        because their inputs had not changed since the last build; only the Evie models and Gold were rebuilt.</figcaption>
+    </figure>
+
+    <div class="two">
+      <div>
+        <h3 class="h3 first">Run log · 6 Oct 2026</h3>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Run</th><th>Type</th><th>Started (AEDT)</th><th class="num">Duration</th><th>State</th></tr></thead>
+          <tbody>
+            <tr><td><code>scheduled__2026-10-05T19:00</code></td><td>scheduled</td><td>15:18</td><td class="num">11 m 26 s</td><td><span class="sev pass">success</span></td></tr>
+            <tr><td><code>manual__2026-10-06T04:18</code></td><td>manual</td><td>15:30</td><td class="num">11 m 17 s</td><td><span class="sev pass">success</span></td></tr>
+          </tbody>
+        </table></div>
+        <p class="note">The longest task is <code>retrieve_evie_sites</code> (9 m 42 s): the operator's robots.txt asks for 10 s
+          between requests. It runs in parallel, so it sets the run time but blocks nothing else.</p>
+      </div>
+      <div>
+        <h3 class="h3 first">Runbook</h3>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Situation</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td>SQL model changed</td><td>Trigger <code>ev_sources</code> with <code>{"force": true}</code>; history models replay every version</td></tr>
+            <tr><td>New ASGS edition</td><td>Trigger <code>ev_reference</code>; its Asset event starts <code>ev_sources</code></td></tr>
+            <tr><td>Quality error fails the run</td><td>Result is recorded first; fix the data or dictionary, then clear and re-run</td></tr>
+            <tr><td>Day missed</td><td>No backfill: sources only serve current state. The next run loads it; the gap stays visible in the ledger</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+    <figure class="shot">
+      <a href="img/ops/airflow-run.jpg" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/airflow-run.jpg" alt="Airflow run detail with task instances, their states, start times and durations" loading="lazy" width="1600" height="1000"></a>
+      <figcaption><b>Figure 5.3</b> Task instances of the same run with their durations, as an operator checks them after a failure or a slow day.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="data-ops">
+  <div class="wrap">
+    <p class="kicker"><span>06</span>Data operations dashboard</p>
+    <h2>One data workspace answers whether today's data can be trusted, where it came from, and what it shows</h2>
+    <p class="sub">A small Flask app on the same database (port 8790) for the people who own the data: data quality, lineage
+      with table profiles, the dictionary, and the BI report. It is read-only except for the dictionary.</p>
+
+    <h3 class="h3 sub-kicker"><span>6.1</span>Data quality</h3>
+    <div class="two">
+      <div>
+        <p>26 checks in seven dimensions run at the end of every <code>ev_sources</code> run and are appended to
+          <code>meta.data_quality_result</code> before the gate decides, so failed runs are on record too.</p>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Severity</th><th>Effect</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td><span class="sev fail">error</span></td><td>Fails the run, fires <code>DataQualityError</code></td><td>Charger without an SA4 region; DC augmentation below 50%</td></tr>
+            <tr><td><span class="sev warn">warn</span></td><td>Reported, run continues</td><td>Operator spelling not in the dictionary</td></tr>
+            <tr><td><span class="sev info">info</span></td><td>Measured, describes the data</td><td>73% of TfNSW rows have no station name</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+      <div>
+        <div class="gate-now"><b>Gate passed</b><span>Latest run, 6 Oct 2026 · 0 blocking errors · 3 warnings</span></div>
+        <p class="note">The gate failed once, on 29 Sep: DC augmentation was below the 50% target until the Evie source
+          was added. Coverage is now 56.4%.</p>
+      </div>
+    </div>
+    <figure class="shot tall">
+      <div class="scroll"><a href="img/ops/dq-dashboard.jpg" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/dq-dashboard.jpg" alt="Quality dashboard: gate status, dimension cards, coverage, source timeliness and volume, every check with its trend, and the run list" loading="lazy" width="1600" height="3256"></a></div>
+      <figcaption><b>Figure 6.1</b> Quality dashboard (scroll inside the frame): gate, dimensions, coverage, source timeliness and
+        volume from the ledger, every check with its trend, and the run history including the failed run.</figcaption>
+    </figure>
+
+    <h3 class="h3 sub-kicker"><span>6.2</span>Data lineage</h3>
+    <p class="sub">Every Airflow task declares the tables it reads and writes. The same declarations go to Marquez as
+      OpenLineage events and drive the workspace's graph, and a test fails if a model's SQL touches a table it did not declare.</p>
+    <div class="shots-2">
+      <figure class="shot">
+        <a href="img/ops/lineage-quality.jpg" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/lineage-quality.jpg" alt="Lineage and Quality: silver.ev_charger with its upstream Bronze and dictionary tables and twelve downstream tables, plus a column profile" loading="lazy" width="1600" height="1000"></a>
+        <figcaption><b>Figure 6.2</b> Structural lineage with a table profile: upstream and downstream of <code>silver.ev_charger</code>.</figcaption>
+      </figure>
+      <figure class="shot">
+        <a href="img/ops/marquez-jobs.jpg" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/marquez-jobs.jpg" alt="Marquez DataOps view: ev_sources and its task jobs with completed runs" loading="lazy" width="1600" height="1000"></a>
+        <figcaption><b>Figure 6.3</b> Execution lineage in Marquez: each task is a job with its own runs, in namespace <code>ev-platform</code>.</figcaption>
+      </figure>
+    </div>
+    <h4 class="h4">Interactive copy of the declared lineage</h4>
+    <p class="note">Select a table to trace what feeds it (orange) and what it feeds (blue).</p>
+    <div class="lin-scroll" id="lineage"></div>
+    <p id="lineage-note" class="note"></p>
+
+    <h3 class="h3 sub-kicker"><span>6.3</span>BI report</h3>
+    <p class="sub">Regional coverage and pricing for analysts, read from one consistent Gold snapshot. Filters drive the map,
+      KPIs and records together, and the filtered rows export as CSV.</p>
+    <figure class="shot">
+      <a href="img/ops/bi-map.jpg" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/bi-map.jpg" alt="Map BI screen: filters, KPI cards for 1,860 operational charger entries, and a choropleth of NSW SA4 regions" loading="lazy" width="1600" height="1000"></a>
+      <figcaption><b>Figure 6.4</b> Map BI on the running system: operational chargers, AC/DC split, density, median tariff and rated power.</figcaption>
+    </figure>
+    <h4 class="h4">Interactive copy on the snapshot data</h4>
     <div class="controls" role="group" aria-label="Map layers">
       <button data-filter="all" aria-pressed="true">All chargers</button>
       <button data-filter="DC" aria-pressed="false">DC fast (24&ndash;400 kW)</button>
@@ -239,159 +446,76 @@ footer { padding: 32px 0 56px; color: var(--muted); font-size: .9rem; } footer .
   </div>
 </section>
 
-<section>
+<section id="job-ops">
   <div class="wrap">
-    <h2>The trade-offs behind it</h2>
+    <p class="kicker"><span>07</span>Job operations dashboard · Grafana</p>
+    <h2>Grafana and Slack alerts tell the operator when a run, a source or the stream goes wrong, before a user notices</h2>
+    <p class="sub">Airflow sends StatsD metrics; a small exporter reads the data's own state from PostgreSQL every 60 s
+      (freshness, volume, quality, model age, stream lag). Prometheus evaluates the alert rules and Alertmanager posts to Slack.</p>
+    <figure class="shot dark">
+      <a href="img/ops/grafana-health.jpg" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/grafana-health.jpg" alt="Grafana Pipeline health: hours since each source changed and each model was built, zero failing blocking checks, monitoring connectivity" loading="lazy" width="1600" height="584"></a>
+      <figcaption><b>Figure 7.1</b> Pipeline health. TfNSW and ABS legitimately stay unchanged for weeks, so their age is shown
+        but only Evie has a freshness alert; a missed day is caught by <code>DailyRunMissing</code> for every source.</figcaption>
+    </figure>
+    <figure class="shot dark">
+      <a href="img/ops/grafana-streaming.jpg" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/grafana-streaming.jpg" alt="Grafana OCM streaming: producer, Kafka and Spark health, time since the last fetch and micro-batch, sink lag, errors and checkpoint validity" loading="lazy" width="1600" height="1056"></a>
+      <figcaption><b>Figure 7.2</b> OCM price stream: producer and Spark heartbeats, committed-offset lag per sink, error counters
+        and checkpoint validity. An old batch with zero lag is normal when the source has no changes.</figcaption>
+    </figure>
+
+    <h3 class="h3">Alert rules and first response</h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Alert</th><th>Severity</th><th>Fires when</th><th>First response</th></tr></thead>
+      <tbody>
+        <tr><td><code>DagRunFailed</code></td><td><span class="sev fail">critical</span></td><td>A DAG run failed in the last hour</td><td>Open the run, read the failed task's log</td></tr>
+        <tr><td><code>DailyRunMissing</code></td><td><span class="sev fail">critical</span></td><td>No successful <code>ev_sources</code> run for 26 h</td><td>Check the DAG is unpaused and the scheduler is up</td></tr>
+        <tr><td><code>SchedulerDown</code></td><td><span class="sev fail">critical</span></td><td>No scheduler heartbeat for 10 min</td><td>Restart Airflow (<code>dev.sh up</code>)</td></tr>
+        <tr><td><code>DataQualityError</code></td><td><span class="sev fail">critical</span></td><td>An error-severity check has failing rows</td><td>Open the quality dashboard for the check and its trend</td></tr>
+        <tr><td><code>TaskFailed</code></td><td><span class="sev warn">warning</span></td><td>A task failed (retries may still recover it)</td><td>Watch the retry; read the log if it repeats</td></tr>
+        <tr><td><code>DagImportErrors</code></td><td><span class="sev warn">warning</span></td><td>A DAG file fails to import</td><td>Fix the deployment; no run starts until then</td></tr>
+        <tr><td><code>SourceRowsDropped</code></td><td><span class="sev warn">warning</span></td><td>Active version of a source &gt;20% below its 7-day maximum</td><td>Compare versions in the ledger; check the upstream file</td></tr>
+        <tr><td><code>EvieSnapshotStale</code></td><td><span class="sev warn">warning</span></td><td>No new Evie snapshot for 2 days</td><td>Check retrieval and the operator's endpoint</td></tr>
+        <tr><td><code>QualityChecksNotRun</code></td><td><span class="sev warn">warning</span></td><td>No recorded quality run for 26 h</td><td>Check whether the run stopped before the gate</td></tr>
+        <tr><td><code>AugmentationBelowTarget</code></td><td><span class="sev warn">warning</span></td><td>Under 50% of operational DC chargers augmented</td><td>Review matches and unregistered operators</td></tr>
+        <tr><td><code>PipelineMetricsDown</code></td><td><span class="sev warn">warning</span></td><td>Exporter or database unreachable</td><td>Check the database container and exporter</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">Critical alerts repeat every 4 h while unresolved, warnings every 12 h; resolved messages are sent too.
+      The Slack webhook is a secret in <code>.env</code>, not in the config.</p>
+  </div>
+</section>
+
+<section id="decisions">
+  <div class="wrap">
+    <p class="kicker"><span>A</span>Appendix · Design decisions</p>
+    <h2>The trade-offs behind the platform</h2>
     <p class="sub">Each choice is written up as a decision record in <code>docs/decisions/</code>.</p>
     <div class="cards">
       <div class="card"><h3>Detect change before downloading</h3>
         <p class="row"><b>Problem</b>Daily runs should not re-store or re-process identical data.</p>
-        <p class="row"><b>Choice</b>Per-source checks: CKAN <code>last_modified</code>, HTTP 304 for ABS, SHA-256 for OCM snapshots. Unchanged models are skipped too.</p>
+        <p class="row"><b>Choice</b>Per-source checks: CKAN <code>last_modified</code>, HTTP 304 for ABS, SHA-256 for snapshots. Unchanged models are skipped too.</p>
         <p class="rej">Rejected: trusting the portal's "Last Updated", which changed while the bytes did not.</p></div>
       <div class="card"><h3>DAGs split by change frequency</h3>
         <p class="row"><b>Problem</b>Boundaries change yearly, chargers daily.</p>
         <p class="row"><b>Choice</b>A manual reference DAG and a daily DAG linked by an Airflow Asset. Initial and incremental loads are the same idempotent run.</p>
         <p class="rej">Rejected: a separate initial-load DAG that would drift from the daily logic.</p></div>
-      <div class="card"><h3>Append-only Bronze with a ledger</h3>
-        <p class="row"><b>Problem</b>Sources overwrite themselves; history disappears.</p>
-        <p class="row"><b>Choice</b>Every version keeps its rows, keyed by file hash and row number; <code>_latest</code> views serve current state; one ledger row per version.</p>
-        <p class="rej">Rejected: overwriting one file per source.</p></div>
-      <div class="card"><h3>SCD2 price and status history</h3>
-        <p class="row"><b>Problem</b>OCM only publishes the current state of each site.</p>
-        <p class="row"><b>Choice</b><code>MERGE</code> closes changed rows and inserts new periods per snapshot; a forced run replays all versions.</p>
-        <p class="rej">Rejected: storing full daily copies and diffing at query time.</p></div>
       <div class="card"><h3>Record linkage in SQL</h3>
         <p class="row"><b>Problem</b>TfNSW and OCM share no key and spell operators differently.</p>
         <p class="row"><b>Choice</b>DC-capable OCM site within 300 m; beyond 50 m the operator or address (trigram) must agree.</p>
         <p class="rej">Rejected: substring operator matching, which paired unrelated operators.</p></div>
-      <div class="card"><h3>A standard term dictionary</h3>
-        <p class="row"><b>Problem</b><code>Tesla Motors&nbsp;</code>, <code>BP Pulse (AU)</code>, names truncated to 13 characters.</p>
-        <p class="row"><b>Choice</b><code>ref.standard_term</code> with TfNSW spellings as the standard, an editing screen and an audited history.</p>
-        <p class="rej">Rejected: alias lists hard-coded in SQL.</p></div>
       <div class="card"><h3>Operator data where the open registry falls short</h3>
-        <p class="row"><b>Problem</b>Open Charge Map covered 41.8% of DC chargers; most gaps had no OCM site within 300 m at all.</p>
-        <p class="row"><b>Choice</b>Evie's own site data, matched only to TfNSW chargers of the same operator, kept as SCD2 per site and AC/DC; Evie wins where both match. Coverage rose to <span id="aug-pct">—</span>.</p>
+        <p class="row"><b>Problem</b>Open Charge Map covered 41.8% of DC chargers, under the 50% target.</p>
+        <p class="row"><b>Choice</b>Evie's own site data, matched only to TfNSW chargers of the same operator; Evie wins where both match. Coverage rose to <span id="aug-pct">56.4%</span>.</p>
         <p class="rej">Rejected: loosening the OCM rules, which only paired chargers with other operators' sites.</p></div>
       <div class="card"><h3>A model proposes, a person decides</h3>
-        <p class="row"><b>Problem</b>Spellings like <code>GET Electric</code> defeat the rules; the trigram hint suggested the wrong operator.</p>
-        <p class="row"><b>Choice</b>LangChain sends the spellings and the dictionary to an OpenAI mini model with a structured-output schema; proposals are validated, then accepted or rejected on the screen or in Slack.</p>
+        <p class="row"><b>Problem</b>Spellings like <code>GET Electric</code> defeat the rules.</p>
+        <p class="row"><b>Choice</b>LangChain sends unregistered spellings to an OpenAI model with structured output; a person accepts or rejects on the screen or in Slack.</p>
         <p class="rej">Rejected: calling the model inside the daily pipeline, where a wrong answer would merge two operators unseen.</p></div>
-      <div class="card"><h3>Watch the data, not only the jobs</h3>
-        <p class="row"><b>Problem</b>A failed or skipped day, a stalled source or a dropped volume went unnoticed.</p>
-        <p class="row"><b>Choice</b>Airflow StatsD plus a database exporter in Prometheus, alert rules to Slack, and OpenLineage events so Marquez shows which task feeds which table.</p>
-        <p class="rej">Rejected: freshness alerts on every source, since TfNSW and ABS legitimately stay unchanged for months.</p></div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <h2>One screen for reference data and quality</h2>
-    <p class="sub">The local metadata app (Flask, port 8790) has two tabs: <b>Meta</b>, the standard term dictionary people curate,
-      and <b>Dashboard</b>, the data quality result of every run. This is a working copy on the snapshot data:
-      edits stay in your browser and reset on reload.</p>
-    <div class="app">
-      <nav class="app-tabs" role="tablist">
-        <button role="tab" aria-selected="true" data-tab="meta">Meta</button>
-        <button role="tab" aria-selected="false" data-tab="dash">Dashboard</button>
-        <span class="app-url">Demo on snapshot data</span>
-      </nav>
-
-      <div class="app-pane" id="pane-meta">
-        <p class="app-lede">Each spelling seen in a source maps to one standard; TfNSW spellings are the standard.
-          The pipeline lists spellings it does not know; a person maps each to a known operator or creates a new one,
-          and the next run applies it. Every change is audited by a trigger.</p>
-        <h4 class="app-h">Unregistered spellings (<span id="cand-count"></span>)</h4>
-        <div class="app-panel" style="overflow-x:auto"><table id="cand"><thead><tr><th>Spelling</th><th>Source</th><th class="num">Rows</th><th>A · another spelling of</th><th>B · a new operator</th></tr></thead><tbody></tbody></table></div>
-        <h4 class="app-h">LLM proposals (<span id="prop-count"></span>) · LangChain → OpenAI, decided here or in Slack</h4>
-        <div class="app-panel" style="overflow-x:auto">
-          <p class="app-lede" id="prop-lede"></p>
-          <table id="prop"><thead><tr><th>Spelling</th><th>Proposal</th><th class="num">Confidence</th><th>Reason</th><th>Decision</th></tr></thead><tbody></tbody></table>
-        </div>
-        <h4 class="app-h">Dictionary · <span id="dict-count"></span></h4>
-        <div class="app-panel">
-          <input id="dict-q" type="search" placeholder="Search term, name or code" aria-label="Search the dictionary">
-          <div id="dict-list"></div>
-        </div>
-        <h4 class="app-h">Recent changes</h4>
-        <div class="app-panel" style="overflow-x:auto"><table id="hist"><thead><tr><th>When</th><th>Who</th><th>Change</th><th>Term</th><th>Code</th></tr></thead><tbody></tbody></table></div>
-      </div>
-
-      <div class="app-pane" id="pane-dash" hidden>
-        <div class="gate" id="gate"></div>
-        <h4 class="app-h">Dimensions · worst status of their checks</h4>
-        <div class="dims" id="dims"></div>
-        <h4 class="app-h">Coverage · operational DC chargers augmented from Evie or Open Charge Map</h4>
-        <div class="app-panel"><div class="funnel" id="funnel"></div></div>
-        <h4 class="app-h">Sources · timeliness and volume</h4>
-        <div class="app-panel" style="overflow-x:auto"><table id="fresh"><thead><tr><th>Source</th><th>Version in use loaded</th><th>Upstream last modified</th><th class="num">Rows</th><th class="num">vs previous</th><th class="num">Versions</th></tr></thead><tbody></tbody></table></div>
-        <h4 class="app-h">Checks · latest run</h4>
-        <div class="app-panel" style="overflow-x:auto"><table id="checks"><thead><tr><th>Check</th><th>Dataset</th><th>Severity</th><th>Status</th><th class="num">Failed</th><th class="num">%</th><th style="width:18%"></th></tr></thead><tbody></tbody></table></div>
-        <p class="app-note">An <i>error</i> check that finds rows fails the Airflow run; <i>warn</i> and <i>info</i> are reported.
-          "Measured" is an info check describing the data, not a defect. Each run is appended to <code>meta.data_quality_result</code>, which the local app draws as a trend.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <h2>Operators across NSW</h2>
-    <p class="sub">From <code>gold.operator_summary</code>, after operator names were standardized. Top 12 by operational chargers.</p>
-    <div style="overflow-x:auto"><table id="operators"><thead><tr><th>Operator</th><th class="num">Chargers</th><th style="width:30%"></th><th class="num">DC</th><th class="num">Regions</th><th class="num">Max kW</th><th class="num">Avg $/kWh</th></tr></thead><tbody></tbody></table></div>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <h2>Price changes between batch runs</h2>
-    <p class="sub">The daily snapshot sees Open Charge Map once a day. A producer polls it every 15 minutes for POIs modified
-      since the last poll and streams them through Kafka and Spark Structured Streaming. Raw events land like batch Bronze;
-      a view serves the latest state at once, and the next batch merges them into the same SCD2 history.</p>
-    <div class="flow stream-flow">
-      <div class="stage"><h4>Producer</h4><p>OCM <code>modifiedsince</code>, every 15 min</p></div>
-      <div class="stage"><h4>Kafka</h4><p><code>ev.ocm.poi.changes</code>, key = OCM ID</p></div>
-      <div class="stage"><h4>Spark</h4><p>Structured Streaming, 2 checkpointed queries</p></div>
-      <div class="stage bronze"><h4>Bronze</h4><p>Parquet by <code>event_date</code> + <code>bronze.ocm_poi_events</code></p></div>
-      <div class="stage gold"><h4>Serve</h4><p>Hot: latest-price view<br>Cold: SCD2 history</p></div>
-    </div>
-    <div class="cards" style="margin-top:16px">
-      <div class="card"><h3>Exactly once, twice</h3>
-        <p class="row">The Parquet file sink commits through <code>_spark_metadata</code>; the PostgreSQL writer relies on a unique
-          (topic, partition, offset), so a micro-batch replayed after a crash is a no-op.</p></div>
-      <div class="card"><h3>One writer per table</h3>
-        <p class="row">The stream only appends raw events. The history model stays the only writer of the SCD2 table and reads
-          snapshots and events in arrival order, so a full replay equals the incremental result.</p>
+      <div class="card"><h3>The stream lands, the batch decides</h3>
+        <p class="row"><b>Problem</b>Prices change between daily runs.</p>
+        <p class="row"><b>Choice</b>Kafka + Spark land OCM change events in Bronze with exactly-once sinks; the history model stays the only writer of the SCD2 table.</p>
         <p class="rej">Rejected: the stream merging into the history itself, racing the batch.</p></div>
-      <div class="card"><h3>The topic is the replay log</h3>
-        <p class="row">Key = OCM ID keeps each site's changes in order; retention is unlimited, so after a database reset the
-          stream re-lands every event from offset 0.</p></div>
     </div>
-    <h3 style="margin:32px 0 8px">Latest streamed state <span id="stream-meta" style="color:var(--muted);font-weight:400;font-size:.9rem"></span></h3>
-    <div style="overflow-x:auto"><table id="stream"><thead><tr><th>OCM site</th><th>Operator</th><th>Price text</th><th class="num">$/kWh</th><th>Status</th><th>In history</th></tr></thead><tbody></tbody></table></div>
-    <p style="color:var(--muted);font-size:.85rem">From <code>gold.ocm_price_latest</code>. "In history" means the next batch has merged it into the SCD2 history.</p>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <h2>Metrics, alerts and lineage</h2>
-    <p class="sub">Airflow sends StatsD metrics; a small exporter reads the data's own state from PostgreSQL (freshness,
-      volume, quality, augmentation). Prometheus evaluates the alert rules and Alertmanager posts to Slack; Grafana shows
-      one provisioned dashboard. Every task declares what it reads and writes, and OpenLineage sends it to Marquez.</p>
-    <div class="flow">
-      <div class="stage"><h4>Airflow</h4><p>StatsD: runs, tasks, scheduler</p></div>
-      <div class="stage"><h4>Exporter</h4><p>Data metrics from the database</p></div>
-      <div class="stage"><h4>Prometheus</h4><p>30 days, <span id="alert-count"></span> alert rules</p></div>
-      <div class="stage"><h4>Alertmanager</h4><p>Slack, resolved messages too</p></div>
-      <div class="stage"><h4>Grafana · Marquez</h4><p>Dashboard · lineage graph</p></div>
-    </div>
-    <h3 style="margin:32px 0 8px">Alert rules</h3>
-    <div style="overflow-x:auto"><table id="alerts"><thead><tr><th>Alert</th><th>Severity</th><th>Fires when</th></tr></thead><tbody></tbody></table></div>
-    <h3 style="margin:32px 0 8px">Table-level lineage</h3>
-    <p class="sub" style="margin-bottom:12px">The same declarations the tasks send to Marquez (<code>orchestration/lineage.py</code>). Select a table to trace what feeds it and what it feeds.</p>
-    <div class="lin-scroll" id="lineage"></div>
-    <p id="lineage-note" style="color:var(--muted);font-size:.85rem"></p>
   </div>
 </section>
 
@@ -405,7 +529,7 @@ const fmt = n => n == null ? '—' : Number(n).toLocaleString('en-AU');
 const esc = s => String(s ?? '—').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
 Promise.all(['chargers.geojson', 'sa4.geojson', 'summary.json'].map(f => fetch('data/' + f).then(r => r.json())))
-  .then(([chargers, sa4, summary]) => { kpis(chargers, sa4, summary); map(chargers, sa4); operators(summary); metadata(summary); stream(summary); ops(summary); foot(summary); });
+  .then(([chargers, sa4, summary]) => { kpis(chargers, sa4, summary); map(chargers, sa4); operators(summary); lineage(summary.lineage); foot(summary); });
 
 function kpis(chargers, sa4, s) {
   const operational = chargers.features.filter(f => f.properties.status === 'operational').length;
@@ -416,7 +540,6 @@ function kpis(chargers, sa4, s) {
     [s.augmentation.matched_pct + '%', `DC chargers augmented (${s.augmentation.matched}/${s.augmentation.dc_chargers}: ${s.augmentation.from_evie} from Evie, ${s.augmentation.from_ocm} from Open Charge Map)`],
     [s.quality.length, `quality checks on every run, ${blocking} of them able to stop it`],
   ].map(([b, t]) => `<div class="kpi"><b>${b}</b><span>${t}</span></div>`).join('');
-  document.getElementById('evie-sites').textContent = fmt(s.evie.sites);
   document.getElementById('aug-pct').textContent = s.augmentation.matched_pct + '%';
 }
 
@@ -480,121 +603,6 @@ function operators(s) {
     <td class="num">${fmt(o.operational_chargers)}</td><td><div class="bar" style="width:${o.operational_chargers / max * 100}%"></div></td>
     <td class="num">${fmt(o.dc_chargers)}</td><td class="num">${o.sa4_regions}</td><td class="num">${fmt(o.max_power_kw)}</td>
     <td class="num">${o.avg_price_per_kwh ?? '—'}</td></tr>`).join('');
-}
-
-function metadata(s) {
-  document.querySelectorAll('.app-tabs button').forEach(b => b.addEventListener('click', () => {
-    document.querySelectorAll('.app-tabs button').forEach(o => o.setAttribute('aria-selected', o === b));
-    document.getElementById('pane-meta').hidden = b.dataset.tab !== 'meta';
-    document.getElementById('pane-dash').hidden = b.dataset.tab !== 'dash';
-  }));
-  metaTab(s.dictionary);
-  proposalsPane(s.proposals, s.dictionary.candidates);
-  dashTab(s.quality_dashboard, s.augmentation);
-}
-
-function metaTab(d) {
-  const terms = d.terms.map(t => ({ ...t })), candidates = d.candidates.map(c => ({ ...c })), history = d.history.map(h => ({ ...h }));
-  const date = v => new Date(v).toISOString().slice(0, 16).replace('T', ' ');
-  const codeOf = t => t.toUpperCase().replace(/[^A-Z0-9]+/g, '_').replace(/^_|_$/g, '');
-  const standards = () => terms.filter(t => t.is_standard).sort((a, b) => a.standard_name.localeCompare(b.standard_name));
-  const log = (op, term, oldCode, newCode) => history.unshift({ changed_at: new Date().toISOString(), changed_by: 'you (demo)', operation: op, term, old_code: oldCode, new_code: newCode, fresh: true });
-  const render = () => {
-    const std = standards();
-    document.getElementById('cand-count').textContent = candidates.length;
-    document.querySelector('#cand tbody').innerHTML = candidates.length ? candidates.map((c, i) => {
-      const close = c.similarity >= 0.5;
-      return `<tr><td><b>${esc(c.term)}</b></td><td>${esc(c.source)}</td><td class="num">${c.rows}</td>
-        <td><span class="inline"><select data-i="${i}" aria-label="Operator for ${esc(c.term)}"><option value="">Choose operator…</option>${std.map(t =>
-          `<option value="${t.standard_code}" ${close && t.standard_code === c.suggested_code ? 'selected' : ''}>${esc(t.standard_name)}</option>`).join('')}</select>
-          <button class="btn ${close ? 'primary' : ''}" data-map="${i}">Map</button></span></td>
-        <td><span class="inline"><input value="${codeOf(c.term)}" size="14" data-code="${i}" aria-label="New code"><button class="btn ${close ? '' : 'primary'}" data-new="${i}">Create</button></span></td></tr>`;
-    }).join('') : '<tr><td colspan="5" style="color:var(--muted)">Every spelling in the data is registered.</td></tr>';
-    const q = document.getElementById('dict-q').value.trim().toLowerCase();
-    const groups = std.map(t => ({ std: t, syn: terms.filter(x => !x.is_standard && x.standard_code === t.standard_code) }))
-      .filter(g => !q || [g.std, ...g.syn].some(x => (x.term + ' ' + x.standard_name + ' ' + x.standard_code).toLowerCase().includes(q)));
-    document.getElementById('dict-count').textContent = `${std.length} operators · ${terms.length} terms`;
-    document.getElementById('dict-list').innerHTML = groups.map(g => `<details class="op" ${q ? 'open' : ''}><summary>
-        <b>${esc(g.std.standard_name)}</b><span class="mono">${esc(g.std.standard_code)}</span>
-        <span>${g.syn.length ? g.syn.map(x => `<span class="chip ${x.fresh ? 'new' : ''}">${esc(x.term)} <small>${esc(x.source)}</small></span>`).join('') : '<span style="color:var(--muted)">—</span>'}</span></summary>
-        <div class="body">Source ${esc(g.std.source)} · updated ${date(g.std.updated_at)}${g.std.note ? ' · ' + esc(g.std.note) : ''}</div></details>`).join('')
-      || `<p style="color:var(--muted)">No operator matches "${esc(q)}".</p>`;
-    document.querySelector('#hist tbody').innerHTML = history.slice(0, 12).map(h => `<tr${h.fresh ? ' style="color:var(--accent)"' : ''}>
-      <td class="mono">${date(h.changed_at)}</td><td>${esc(h.changed_by)}</td><td>${h.operation}</td><td>${esc(h.term)}</td>
-      <td class="mono">${h.old_code && h.old_code !== h.new_code ? esc(h.old_code) + ' → ' : ''}${esc(h.new_code || h.old_code)}</td></tr>`).join('');
-  };
-  document.getElementById('cand').addEventListener('click', e => {
-    const map = e.target.dataset.map, fresh = e.target.dataset.new;
-    if (map !== undefined) {
-      const c = candidates[map], code = document.querySelector(`select[data-i="${map}"]`).value;
-      if (!code) return;
-      const std = terms.find(t => t.is_standard && t.standard_code === code);
-      terms.push({ term: c.term, standard_code: code, standard_name: std.standard_name, is_standard: false, source: c.source, updated_at: new Date().toISOString(), fresh: true });
-      log('INSERT', c.term, null, code); candidates.splice(map, 1); render();
-    } else if (fresh !== undefined) {
-      const c = candidates[fresh], code = document.querySelector(`input[data-code="${fresh}"]`).value.trim().toUpperCase();
-      if (!/^[A-Z0-9_]+$/.test(code) || terms.some(t => t.is_standard && t.standard_code === code)) return;
-      terms.push({ term: c.term, standard_code: code, standard_name: c.term, is_standard: true, source: c.source, updated_at: new Date().toISOString(), fresh: true });
-      log('INSERT', c.term, null, code); candidates.splice(fresh, 1); render();
-    }
-  });
-  document.getElementById('dict-q').addEventListener('input', render);
-  render();
-}
-
-function dashTab(q, a) {
-  const l = q.latest;
-  document.getElementById('gate').className = 'gate ' + (l.passed ? 'pass' : 'fail');
-  document.getElementById('gate').innerHTML = `<b>${l.passed ? 'Gate passed' : 'Gate failed'}</b><span>Last check ${new Date(l.checked_at).toISOString().slice(0, 16).replace('T', ' ')} UTC · ${l.errors} blocking error(s), ${l.warnings} warning(s)</span>`;
-  document.getElementById('dims').innerHTML = q.dimensions.map(d => `<div class="dim ${d.status}"><b>${d.name}</b><span class="n">${d.checks}</span> check${d.checks > 1 ? 's' : ''}<br>
-    ${d.pass} pass${d.fail ? ` · ${d.fail} failed` : ''}${d.warn ? ` · ${d.warn} warning` : ''}${d.measured ? ` · ${d.measured} measured` : ''}</div>`).join('')
-    + `<div class="dim"><b>timeliness · volume</b><span class="n">${q.sources.length}</span> sources<br>from the ingestion ledger</div>`;
-  document.getElementById('funnel').innerHTML = [
-    ['DC chargers', a.dc_chargers], ['Augmented', a.matched], ['… from Evie', a.from_evie], ['… from OCM', a.from_ocm], ['With plug types', a.with_plug_types],
-    ['With bay count', a.with_bay_count], ['With usage cost', a.with_usage_cost], ['With parsed $/kWh', a.with_parsed_price],
-  ].map(([t, n]) => `<div><span>${t}</span><span class="track"><span class="bar" style="display:block;width:${n / a.dc_chargers * 100}%"></span></span><span class="mono" style="text-align:right">${n}</span></div>`).join('');
-  document.querySelector('#fresh tbody').innerHTML = q.sources.map(r => `<tr><td class="mono">${r.source_name}</td>
-    <td>${r.loaded_at.slice(0, 10)}</td><td>${r.upstream_last_modified ? r.upstream_last_modified.slice(0, 10) : '—'}</td>
-    <td class="num">${fmt(r.row_count)}</td><td class="num">${r.volume_change == null ? '<span style="color:var(--muted)">first version</span>' : (r.volume_change > 0 ? '+' : '') + r.volume_change + '%'}</td>
-    <td class="num">${r.versions}</td></tr>`).join('');
-  let dim = null;
-  document.querySelector('#checks tbody').innerHTML = q.checks.map(c => {
-    const head = c.dimension !== dim ? `<tr class="dimrow"><td colspan="7">${(dim = c.dimension)}</td></tr>` : '';
-    return head + `<tr class="${c.status}"><td class="mono">${esc(c.check_name)}</td><td>${esc(c.dataset)}</td><td>${c.severity}</td>
-      <td><span class="sev ${c.status}">${c.status}</span></td><td class="num">${fmt(c.failed_rows)}</td><td class="num">${c.failed_pct ?? '—'}</td>
-      <td><div class="bar" style="width:${Math.min(c.failed_pct || 0, 100)}%"></div></td></tr>`;
-  }).join('');
-}
-
-function stream(s) {
-  const e = s.stream.events;
-  document.getElementById('stream-meta').textContent = `· ${e.events} event(s) for ${e.pois} site(s), last poll ${e.last_polled ? e.last_polled.slice(0, 10) : '—'}`;
-  document.querySelector('#stream tbody').innerHTML = s.stream.latest.map(r => `<tr><td>${esc(r.title)}<br><small style="color:var(--muted)">#${r.ocm_id} · ${esc(r.town)}</small></td>
-    <td>${esc(r.operator_title)}</td><td>${esc(r.usage_cost)}</td><td class="num">${r.price_per_kwh == null ? '—' : Number(r.price_per_kwh).toFixed(2)}</td>
-    <td>${esc(r.status_title)}</td><td><span class="sev ${r.merged_into_history ? 'pass' : 'warn'}">${r.merged_into_history ? 'merged' : 'pending'}</span></td></tr>`).join('');
-}
-
-function proposalsPane(props, candidates) {
-  const open = props.filter(p => p.status === 'pending');
-  document.getElementById('prop-count').textContent = open.length;
-  document.getElementById('prop-lede').innerHTML = props.length
-    ? `The model's proposals for the unregistered spellings. Accepting one writes the same audited dictionary change as a manual registration.`
-    : `No model run in this snapshot yet. The button on the Meta tab (or <code>python -m pipelines.dictionary.proposals</code>) sends the
-       ${candidates.length} unregistered spellings above and the dictionary to the model; each proposal then waits here and in Slack for a person.`;
-  const what = p => p.action === 'map' ? `Another spelling of <b>${esc(p.standard_name)}</b> <span class="mono">${esc(p.standard_code)}</span>`
-    : p.action === 'new' ? `New operator <span class="mono">${esc(p.standard_code)}</span> "${esc(p.standard_name)}"` : '<span style="color:var(--muted)">Unsure</span>';
-  document.querySelector('#prop tbody').innerHTML = props.map(p => `<tr><td><b>${esc(p.term)}</b></td>
-    <td>${what(p)}${p.problem ? `<br><small style="color:var(--err)">${esc(p.problem)}</small>` : ''}</td>
-    <td class="num">${p.confidence == null ? '—' : Number(p.confidence).toFixed(2)}</td><td style="color:var(--muted)">${esc(p.reason)}</td>
-    <td><span class="sev ${p.status === 'accepted' ? 'pass' : p.status === 'rejected' ? 'fail' : 'warn'}">${p.status}${p.decided_in ? ' · ' + p.decided_in : ''}</span></td></tr>`).join('')
-    || '<tr><td colspan="5" style="color:var(--muted)">Awaiting a model run.</td></tr>';
-}
-
-function ops(s) {
-  document.getElementById('alert-count').textContent = s.alerts.length;
-  document.querySelector('#alerts tbody').innerHTML = s.alerts.map(a => `<tr><td class="mono">${esc(a.alert)}</td>
-    <td><span class="sev ${a.severity === 'critical' ? 'fail' : 'warn'}">${a.severity}</span></td><td>${esc(a.summary)}</td></tr>`).join('');
-  lineage(s.lineage);
 }
 
 // Table-level lineage as a graph. A task that reads many tables and writes many (the Gold build) is drawn
@@ -729,6 +737,7 @@ function lineage({ nodes, edges }) {
 
 function foot(s) {
   const d = new Date(s.exported_at).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
+  document.getElementById('snapshot').textContent = d;
   document.getElementById('foot').innerHTML = `Snapshot exported ${d} from the Gold layer. Data: Transport for NSW, Australian Bureau of Statistics (ASGS Edition 4), Open Charge Map contributors, Evie Networks (public site map).`;
 }
 </script>
