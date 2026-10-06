@@ -139,6 +139,34 @@ small { color: var(--muted); }
 .gate-now b { font-size: 1.15rem; } .gate-now span { color: var(--text); font-size: .92rem; }
 .sev.pass { color: var(--accent); } .sev.fail { color: var(--err); }
 .controls { margin-top: 12px; }
+
+.toc-group { display: contents; }
+.toc a.toc-sub { font-weight: 500; font-size: .9rem; color: var(--text); padding-left: 0; }
+.tour { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin: 8px 0 12px; }
+.tour button { font: inherit; font-size: .88rem; font-weight: 600; border: 1.5px solid var(--ink); background: var(--ink); color: var(--bg); padding: 6px 14px; border-radius: 6px; cursor: pointer; }
+.tour button[aria-pressed="true"] { background: transparent; color: var(--ink); }
+.tour-step { font-family: var(--mono); font-size: .82rem; color: var(--accent); }
+.tour-hint { color: var(--muted); font-size: .86rem; }
+.lin-full { width: min(calc(100vw - 32px), 1640px); margin-left: 50%; transform: translateX(-50%); }
+.lin-full .lin { min-width: 1240px; }
+.lin-note { min-height: 3.2em; margin: 10px 0 0; color: var(--text); font-size: .95rem; max-width: 60em; }
+.lin-note b { color: var(--ink); }
+.lin .bar.source { fill: var(--muted); } .lin .bar.view { fill: var(--gold); } .lin .bar.app { fill: var(--accent); }
+.lin .n.source rect.box { fill: transparent; stroke: var(--muted); stroke-dasharray: 4 3; }
+.lin .n.view rect.box { stroke-dasharray: 4 3; }
+.lin .n.app rect.box { fill: var(--accent-soft); stroke: var(--accent); }
+.lin .n.sel rect.box { animation: lin-pulse 1.2s ease-out infinite; }
+@keyframes lin-pulse { 0% { stroke-width: 6; stroke-opacity: .5; } 100% { stroke-width: 1.2; stroke-opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .lin .n.sel rect.box { animation: none; } }
+
+.lightbox { width: min(96vw, 1680px); max-width: none; max-height: 94vh; padding: 0; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); overflow: auto; }
+.lightbox::backdrop { background: rgba(10, 16, 28, .72); }
+.lightbox figure { margin: 0; padding: 48px 16px 16px; }
+.lightbox img { display: block; width: 100%; height: auto; border-radius: 4px; }
+.lightbox figcaption { color: var(--muted); font-size: .9rem; margin-top: 10px; } .lightbox figcaption b { color: var(--ink); margin-right: 4px; }
+.lb-close { position: sticky; top: 8px; float: right; margin: 8px 8px -48px 0; z-index: 1; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line);
+  background: var(--surface); color: var(--ink); font-size: 1.6rem; line-height: 1; cursor: pointer; }
+.lb-close:hover { border-color: var(--ink); }
 @media (max-width: 900px) { .two, .shots-2 { grid-template-columns: 1fr; } }
 </style>
 </head>
@@ -164,8 +192,12 @@ small { color: var(--muted); }
     <a href="#silver"><span>03</span>Silver</a>
     <a href="#gold"><span>04</span>Gold</a>
     <a href="#scheduling"><span>05</span>Scheduling · Airflow</a>
-    <a href="#data-ops"><span>06</span>Data operations dashboard</a>
-    <a href="#job-ops"><span>07</span>Job operations dashboard</a>
+    <div class="toc-group"><a href="#data-ops"><span>06</span>Data operations dashboard</a>
+      <a class="toc-sub" href="#dq"><span>6.1</span>Data quality · run gate</a>
+      <a class="toc-sub" href="#profiling"><span>6.2</span>Table data quality · profiling</a>
+      <a class="toc-sub" href="#lineage-full"><span>6.3</span>Full data lineage</a>
+      <a class="toc-sub" href="#bi"><span>6.4</span>BI report</a></div>
+    <a href="#job-ops"><span>07</span>Job operations dashboard · Grafana</a>
     <a href="#decisions"><span>A</span>Design decisions</a>
   </nav>
 </header>
@@ -238,9 +270,9 @@ small { color: var(--muted); }
       </div>
     </div>
 
-    <figure class="shot">
-      <a href="img/ops/bronze-ledger-profile.jpg?v=ee7c269d" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/bronze-ledger-profile.jpg?v=ee7c269d" alt="Lineage and Quality screen with bronze.source_files selected: its downstream views and a column profile" loading="lazy" width="1600" height="1000"></a>
-      <figcaption><b>Figure 2.1</b> The ingestion ledger in the data workspace: what reads it downstream, and a profile of its columns.</figcaption>
+    <figure class="shot tall">
+        <div class="scroll"><a href="img/ops/bronze-ledger-profile.jpg?v=281636be" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/bronze-ledger-profile.jpg?v=281636be" alt="Table quality of bronze.source_files: 12 columns profiled, row_count distribution, sample ledger rows" loading="lazy" width="1600" height="2883"></a></div>
+      <figcaption><b>Figure 2.1</b> The ingestion ledger <code>bronze.source_files</code> in the data workspace (scroll inside the frame): a profile of every column, the distribution of rows per version, and the ledger rows themselves.</figcaption>
     </figure>
   </div>
 </section>
@@ -270,13 +302,13 @@ small { color: var(--muted); }
     </table></div>
 
     <div class="shots-2">
-      <figure class="shot">
-        <a href="img/ops/silver-history-profile.jpg?v=b30852ee" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/silver-history-profile.jpg?v=b30852ee" alt="silver.evie_offer_history in the data workspace: built from bronze.evie_sites, feeding gold.charger_price_history; valid_to is null for current periods" loading="lazy" width="1600" height="1000"></a>
-        <figcaption><b>Figure 3.1</b> An SCD2 history table: built from Bronze, read by the Gold price history. Open periods have no <code>valid_to</code>.</figcaption>
+      <figure class="shot tall">
+        <div class="scroll"><a href="img/ops/silver-history-profile.jpg?v=d043284a" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/silver-history-profile.jpg?v=d043284a" alt="Table quality of silver.evie_offer_history: 17 columns profiled, distribution of base_price_per_kwh, sample SCD2 rows" loading="lazy" width="1600" height="3248"></a></div>
+        <figcaption><b>Figure 3.1</b> An SCD2 history table, <code>silver.evie_offer_history</code> (scroll inside the frame): open periods have no <code>valid_to</code> (93.4%), and the tariff distribution shows most DC sites at $0.58–0.63/kWh.</figcaption>
       </figure>
-      <figure class="shot">
-        <a href="img/ops/silver-term-dictionary.jpg?v=1226d69e" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/silver-term-dictionary.jpg?v=1226d69e" alt="Standard term dictionary screen listing seven unregistered operator spellings with map and create actions" loading="lazy" width="1600" height="1000"></a>
-        <figcaption><b>Figure 3.2</b> The term dictionary tab. Spellings the pipeline does not know wait here; a person maps or creates them and the next run applies the change.</figcaption>
+      <figure class="shot tall">
+        <div class="scroll"><a href="img/ops/silver-term-dictionary.jpg?v=3b2485e2" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/silver-term-dictionary.jpg?v=3b2485e2" alt="Standard term dictionary screen listing seven unregistered operator spellings with map and create actions" loading="lazy" width="1600" height="6154"></a></div>
+        <figcaption><b>Figure 3.2</b> The term dictionary tab (scroll inside the frame). Spellings the pipeline does not know wait here; a person maps or creates them and the next run applies the change.</figcaption>
       </figure>
     </div>
   </div>
@@ -292,11 +324,11 @@ small { color: var(--muted); }
     <div class="table-wrap"><table>
       <thead><tr><th>Object</th><th>Type</th><th>Grain / content</th><th class="num">Rows</th></tr></thead>
       <tbody>
-        <tr><td><code>gold.charger</code></td><td>fact</td><td>One row per charger: type, status, plugs, rated power, location</td><td class="num">1,958</td></tr>
-        <tr><td><code>gold.charger_enrichment</code></td><td>fact extension</td><td>Matched Evie or OCM attributes: price, peak surcharge, bays, match distance</td><td class="num">249</td></tr>
-        <tr><td><code>gold.charger_connector</code></td><td>fact extension</td><td>One row per connector type and source</td><td class="num">405</td></tr>
-        <tr><td><code>gold.dim_location</code></td><td>dimension</td><td>Address, postcode, LGA and SA4 of a site</td><td class="num">1,877</td></tr>
-        <tr><td><code>gold.dim_operator</code></td><td>dimension</td><td>Standardised operator from the dictionary</td><td class="num">42</td></tr>
+        <tr><td><code>gold.charger</code></td><td>fact</td><td>One row per operational charger (duplicates and upcoming sites stay in Silver): type, plugs, rated power, location</td><td class="num">1,860</td></tr>
+        <tr><td><code>gold.charger_enrichment</code></td><td>fact extension</td><td>Matched Evie or OCM attributes: price, peak surcharge, bays, match distance</td><td class="num">325</td></tr>
+        <tr><td><code>gold.charger_connector</code></td><td>fact extension</td><td>One row per connector type and source</td><td class="num">495</td></tr>
+        <tr><td><code>gold.dim_location</code></td><td>dimension</td><td>Address, postcode, LGA and SA4 of a site</td><td class="num">1,785</td></tr>
+        <tr><td><code>gold.dim_operator</code></td><td>dimension</td><td>Standardised operator from the dictionary</td><td class="num">40</td></tr>
         <tr><td><code>gold.dim_sa4</code></td><td>dimension</td><td>ABS region with area for density</td><td class="num">108</td></tr>
         <tr><td><code>charger_flat</code> · <code>sa4_coverage</code> · <code>operator_summary</code></td><td>views</td><td>Report-ready joins and aggregates</td><td class="num">—</td></tr>
         <tr><td><code>augmentation_coverage</code> · <code>charger_price_history</code> · <code>ocm_price_latest</code></td><td>views</td><td>Coverage target, price periods, streamed latest prices</td><td class="num">—</td></tr>
@@ -373,10 +405,10 @@ small { color: var(--muted); }
   <div class="wrap">
     <p class="kicker"><span>06</span>Data operations dashboard</p>
     <h2>One data workspace answers whether today's data can be trusted, where it came from, and what it shows</h2>
-    <p class="sub">A small Flask app on the same database (port 8790) for the people who own the data: data quality, lineage
-      with table profiles, the dictionary, and the BI report. It is read-only except for the dictionary.</p>
+    <p class="sub">A small Flask app on the same database (port 8790) for the people who own the data: run-level data quality,
+      table profiling, full lineage, the dictionary and the BI report. It is read-only except for the dictionary.</p>
 
-    <h3 class="h3 sub-kicker"><span>6.1</span>Data quality</h3>
+    <h3 class="h3 sub-kicker" id="dq"><span>6.1</span>Data quality · run gate</h3>
     <div class="two">
       <div>
         <p>26 checks in seven dimensions run at the end of every <code>ev_sources</code> run and are appended to
@@ -402,30 +434,58 @@ small { color: var(--muted); }
         volume from the ledger, every check with its trend, and the run history including the failed run.</figcaption>
     </figure>
 
-    <h3 class="h3 sub-kicker"><span>6.2</span>Data lineage</h3>
-    <p class="sub">Every Airflow task declares the tables it reads and writes. The same declarations go to Marquez as
-      OpenLineage events and drive the workspace's graph, and a test fails if a model's SQL touches a table it did not declare.</p>
+    <h3 class="h3 sub-kicker" id="profiling"><span>6.2</span>Table data quality · profiling</h3>
+    <p class="sub">Rule checks say whether a run may publish; a profile says what is actually in a table. Any table or view can be
+      profiled on demand from one read-only snapshot, next to the rule checks that cover it.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Measured per column</th><th>Why an operator looks at it</th></tr></thead>
+      <tbody>
+        <tr><td>Nulls, null %, blank strings</td><td>Completeness before a column is used in a report (e.g. <code>max_power_kw</code> is 26.7% null in Silver)</td></tr>
+        <tr><td>Distinct values</td><td>Keys that should be unique, categories that should be few</td></tr>
+        <tr><td>Min, median, max, standard deviation</td><td>Units and ranges that look wrong (a 400 kW maximum is real; 4,000 would not be)</td></tr>
+        <tr><td>Distribution and 1.5 × IQR outlier candidates</td><td>Shape of a numeric column; candidates to review, not failed checks</td></tr>
+        <tr><td>Sample records and related saved checks</td><td>What a failing row looks like, and which rules already cover the table</td></tr>
+      </tbody>
+    </table></div>
+    <div class="shots-2">
+      <figure class="shot tall">
+        <div class="scroll"><a href="img/ops/table-profile.jpg?v=49b8d560" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/table-profile.jpg?v=49b8d560" alt="Table quality of silver.ev_charger: 24 columns with nulls, distinct values, min, median, max and standard deviation, and the distribution of max_power_kw with outlier candidates" loading="lazy" width="1600" height="2392"></a></div>
+        <figcaption><b>Figure 6.2</b> Profile of <code>silver.ev_charger</code> (scroll inside the frame): every column, and the distribution of <code>max_power_kw</code> with 1.5 × IQR outlier candidates.</figcaption>
+      </figure>
+      <figure class="shot">
+        <a href="img/ops/table-checks.jpg?v=c2634512" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/table-checks.jpg?v=c2634512" alt="Related quality checks for silver.ev_charger with scope, dimension, status, failed over total and check time" loading="lazy" width="1600" height="596"></a>
+        <figcaption><b>Figure 6.3</b> The saved rule checks that cover the same table, with their dimension, status and failed/total rows from the latest run.</figcaption>
+      </figure>
+    </div>
+
+    <h3 class="h3 sub-kicker" id="lineage-full"><span>6.3</span>Full data lineage</h3>
+    <p class="sub">Every Airflow task declares the tables it reads and writes; the same declarations go to Marquez as OpenLineage
+      events, and a test fails if a model's SQL touches a table it did not declare. Gold views and the screens that read them come
+      from PostgreSQL's dependency catalog and the apps' queries.</p>
+    <div class="tour" id="tour">
+      <button type="button" id="tour-btn" aria-pressed="false">Play tour</button>
+      <span class="tour-step" id="tour-step"></span>
+      <span class="tour-hint">Or select any box to trace what feeds it (orange) and what it feeds (blue).</span>
+    </div>
+    <div class="lin-full"><div class="lin-scroll" id="lineage"></div></div>
+    <p id="lineage-note" class="lin-note" aria-live="polite"></p>
     <div class="shots-2">
       <figure class="shot">
-        <a href="img/ops/lineage-quality.jpg?v=243ac0eb" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/lineage-quality.jpg?v=243ac0eb" alt="Lineage and Quality: silver.ev_charger with its upstream Bronze and dictionary tables and twelve downstream tables, plus a column profile" loading="lazy" width="1600" height="1000"></a>
-        <figcaption><b>Figure 6.2</b> Structural lineage with a table profile: upstream and downstream of <code>silver.ev_charger</code>.</figcaption>
+        <a href="img/ops/lineage-quality.jpg?v=243ac0eb" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/lineage-quality.jpg?v=243ac0eb" alt="Lineage and quality: silver.ev_charger with its upstream Bronze and dictionary tables and downstream tables, plus a column profile" loading="lazy" width="1600" height="1000"></a>
+        <figcaption><b>Figure 6.4</b> The same lineage in the workspace, one table at a time, next to its profile.</figcaption>
       </figure>
       <figure class="shot">
         <a href="img/ops/marquez-jobs.jpg?v=7fa0fea8" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/marquez-jobs.jpg?v=7fa0fea8" alt="Marquez DataOps view: ev_sources and its task jobs with completed runs" loading="lazy" width="1600" height="1000"></a>
-        <figcaption><b>Figure 6.3</b> Execution lineage in Marquez: each task is a job with its own runs, in namespace <code>ev-platform</code>.</figcaption>
+        <figcaption><b>Figure 6.5</b> Execution lineage in Marquez: each task is a job with its own runs, in namespace <code>ev-platform</code>.</figcaption>
       </figure>
     </div>
-    <h4 class="h4">Interactive copy of the declared lineage</h4>
-    <p class="note">Select a table to trace what feeds it (orange) and what it feeds (blue).</p>
-    <div class="lin-scroll" id="lineage"></div>
-    <p id="lineage-note" class="note"></p>
 
-    <h3 class="h3 sub-kicker"><span>6.3</span>BI report</h3>
+    <h3 class="h3 sub-kicker" id="bi"><span>6.4</span>BI report</h3>
     <p class="sub">Regional coverage and pricing for analysts, read from one consistent Gold snapshot. Filters drive the map,
       KPIs and records together, and the filtered rows export as CSV.</p>
     <figure class="shot">
       <a href="img/ops/bi-map.jpg?v=1e12b2d8" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/bi-map.jpg?v=1e12b2d8" alt="Map screen: filters, KPI cards for 1,860 operational charger entries, a shaded map of NSW SA4 regions and a ranking of top regions" loading="lazy" width="1600" height="1000"></a>
-      <figcaption><b>Figure 6.4</b> The Map tab on the running system: operational chargers, AC/DC split, density, median charging price and rated power, with the top regions to drill into.</figcaption>
+      <figcaption><b>Figure 6.6</b> The Map tab on the running system: operational chargers, AC/DC split, density, median charging price and rated power, with the top regions to drill into.</figcaption>
     </figure>
     <h4 class="h4">Interactive copy on the snapshot data</h4>
     <div class="controls" role="group" aria-label="Map layers">
@@ -530,13 +590,13 @@ const fmt = n => n == null ? '—' : Number(n).toLocaleString('en-AU');
 const esc = s => String(s ?? '—').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
 Promise.all(['chargers.geojson', 'sa4.geojson', 'summary.json'].map(f => fetch('data/' + f).then(r => r.json())))
-  .then(([chargers, sa4, summary]) => { kpis(chargers, sa4, summary); map(chargers, sa4); operators(summary); lineage(summary.lineage); foot(summary); });
+  .then(([chargers, sa4, summary]) => { kpis(chargers, sa4, summary); map(chargers, sa4); operators(summary); lineage(fullLineage(summary.lineage)); lightbox(); foot(summary); });
 
 function kpis(chargers, sa4, s) {
   const operational = chargers.features.filter(f => f.properties.status === 'operational').length;
   const blocking = s.quality.filter(q => q.severity === 'error').length;
   document.getElementById('kpis').innerHTML = [
-    [fmt(chargers.features.length), `chargers integrated (${fmt(operational)} operational)`],
+    [fmt(operational), 'operational chargers in Gold, from 1,958 TfNSW records'],
     [sa4.features.length, 'NSW SA4 regions, every charger assigned'],
     [s.augmentation.matched_pct + '%', `DC chargers augmented (${s.augmentation.matched}/${s.augmentation.dc_chargers}: ${s.augmentation.from_evie} from Evie, ${s.augmentation.from_ocm} from Open Charge Map)`],
     [s.quality.length, `quality checks on every run, ${blocking} of them able to stop it`],
@@ -606,6 +666,31 @@ function operators(s) {
     <td class="num">${o.avg_price_per_kwh ?? '—'}</td></tr>`).join('');
 }
 
+// The declared model lineage (landing → Gold), extended to the whole picture: the external sources and the price
+// stream on the left, Gold views (PostgreSQL view dependencies) and the screens that read them on the right.
+function fullLineage({ nodes, edges }) {
+  const N = nodes.map(n => ({ ...n })), E = edges.map(e => [...e]);
+  const add = (id, layer, label) => N.push({ id, layer, label });
+  [['source/tfnsw', 'Transport for NSW', 'tfnsw_ev_chargers'], ['source/abs', 'ABS boundaries', 'abs_sa4_2026'],
+   ['source/ocm', 'Open Charge Map API', 'ocm_poi'], ['source/evie', 'Evie site map', 'evie_sites']]
+    .forEach(([id, label, src]) => { add(id, 'source', label); E.push([id, 'landing/' + src, 'retrieve_' + src]); });
+  add('source/stream', 'source', 'OCM stream · Kafka'); add('bronze.ocm_poi_events', 'bronze');
+  E.push(['source/stream', 'bronze.ocm_poi_events', 'spark_ocm_events'], ['bronze.ocm_poi_events', 'silver.ocm_poi_history', 'ocm_poi_history']);
+  const views = {
+    charger_flat: ['gold.charger', 'gold.charger_connector', 'gold.charger_enrichment', 'gold.dim_location', 'gold.dim_operator', 'gold.dim_sa4'],
+    sa4_coverage: ['gold.charger', 'gold.dim_location', 'gold.dim_sa4'],
+    operator_summary: ['gold.charger', 'gold.charger_enrichment', 'gold.dim_location', 'gold.dim_operator'],
+    augmentation_coverage: ['gold.charger', 'gold.charger_connector', 'gold.charger_enrichment'],
+    charger_price_history: ['gold.charger', 'silver.charger_evie_match', 'silver.charger_ocm_match', 'silver.evie_offer_history', 'silver.ocm_poi_history'],
+    ocm_price_latest: ['silver.charger_ocm_match', 'silver.ocm_poi_history'],
+  };
+  for (const [v, ins] of Object.entries(views)) { add('gold.' + v, 'view'); ins.forEach(t => E.push([t, 'gold.' + v, 'view:' + v])); }
+  const apps = { 'app/map': ['Map BI', ['gold.charger_flat', 'gold.dim_sa4']], 'app/quality': ['Quality runs', ['gold.augmentation_coverage']],
+    'app/export': ['Portfolio export', ['gold.charger_flat', 'gold.sa4_coverage', 'gold.operator_summary', 'gold.ocm_price_latest']] };
+  for (const [id, [label, ins]] of Object.entries(apps)) { add(id, 'app', label); ins.forEach(t => E.push([t, id, 'read:' + id.slice(4)])); }
+  return { nodes: N, edges: E };
+}
+
 // Table-level lineage as a graph. A task that reads many tables and writes many (the Gold build) is drawn
 // as one task node, as Marquez does, instead of an edge for every input-output pair.
 function lineage({ nodes, edges }) {
@@ -628,14 +713,16 @@ function lineage({ nodes, edges }) {
     const n = byId[id];
     if (n.rank == null) {
       const ps = parents(id);
-      n.rank = n.layer === 'landing' ? 0 : n.layer === 'ref' || !ps.length ? 1 : Math.max(...ps.map(rank)) + 1;
+      n.rank = n.layer === 'source' ? 0 : n.layer === 'landing' ? 1 : ['ref', 'bronze'].includes(n.layer) || !ps.length ? 2 : Math.max(...ps.map(rank)) + 1;
     }
     return n.rank;
   };
   N.forEach(n => rank(n.id));
+  const last = Math.max(...N.filter(n => n.layer !== 'view' && n.layer !== 'app').map(n => n.rank));
+  N.forEach(n => { if (n.layer === 'view') n.rank = last + 1; if (n.layer === 'app') n.rank = last + 2; });
   const cols = [];
   N.forEach(n => (cols[n.rank] ||= []).push(n));
-  const order = { landing: 0, bronze: 1, ref: 2, silver: 3, job: 4, gold: 5 };
+  const order = { source: 0, landing: 1, bronze: 2, ref: 3, silver: 4, job: 5, gold: 6, view: 7, app: 8 };
   cols.forEach(c => c.sort((a, b) => order[a.layer] - order[b.layer] || a.id.localeCompare(b.id)));
   const children = id => G.filter(e => e[0] === id).map(e => e[1]);
   const sweep = (c, ref, links) => {               // order a column by the mean position of its linked nodes
@@ -648,7 +735,7 @@ function lineage({ nodes, edges }) {
     for (let i = cols.length - 2; i >= 0; i--) sweep(cols[i], cols[i + 1], children);
   }
 
-  const W = 172, JW = 100, H = 28, GAP = 10, TOP = 34, WIDTH = 1100;
+  const W = 160, JW = 96, H = 28, GAP = 10, TOP = 34, WIDTH = Math.max(1100, cols.length * 182);
   const widths = cols.map(c => c.every(n => n.layer === 'job') ? JW : W);
   const step = (WIDTH - widths.reduce((a, b) => a + b, 0)) / (cols.length - 1);
   const xs = [];
@@ -659,7 +746,7 @@ function lineage({ nodes, edges }) {
     const off = (rows - c.length) * (H + GAP) / 2;
     c.forEach((n, k) => Object.assign(n, { x: xs[i], y: TOP + off + k * (H + GAP), w: widths[i] }));
   });
-  const names = { landing: 'Landing', bronze: 'Bronze', ref: 'Reference', silver: 'Silver', gold: 'Gold', job: 'Task' };
+  const names = { source: 'Sources', landing: 'Landing', bronze: 'Bronze', ref: 'Reference', silver: 'Silver', gold: 'Gold', job: 'Task', view: 'Gold views', app: 'Screens' };
   const heads = cols.map((c, i) => {
     const ls = [...new Set(c.map(n => n.layer))];
     const joined = ls.includes('silver') && i > 0 && cols[i - 1].some(n => n.layer === 'silver');
@@ -675,7 +762,7 @@ function lineage({ nodes, edges }) {
     out.push(`<path class="edge" data-a="${esc(a)}" data-b="${esc(b)}" d="M${x1} ${y1} C${x1 + dx} ${y1} ${x2 - dx} ${y2} ${x2} ${y2}" marker-end="url(#lin-ah)"/>`);
   }
   for (const n of N) {
-    out.push(`<g class="n ${n.layer === 'job' ? 'job' : ''}" data-id="${esc(n.id)}" tabindex="0" role="button" aria-label="${esc(n.label || n.id)}">
+    out.push(`<g class="n ${['job', 'source', 'view', 'app'].includes(n.layer) ? n.layer : ''}" data-id="${esc(n.id)}" tabindex="0" role="button" aria-label="${esc(n.label || n.id)}">
       <rect class="box" x="${n.x}" y="${n.y}" width="${n.w}" height="${H}" rx="4"/>
       <rect class="bar ${n.layer}" x="${n.x}" y="${n.y}" width="4" height="${H}" rx="2"/>
       <text x="${n.x + 12}" y="${n.y + 18}">${esc(n.label || n.id.replace(/^[a-z]+[./]/, ''))}</text></g>`);
@@ -698,7 +785,7 @@ function lineage({ nodes, edges }) {
   };
   const tables = set => [...set].filter(id => !id.startsWith('task:')).length;
   const note = document.getElementById('lineage-note');
-  const idle = `${nodes.length} datasets, ${edges.length} dataset-to-dataset edges. The Gold build is drawn as one task. Orange: upstream, blue: downstream.`;
+  const idle = `${nodes.filter(n => !['source', 'app'].includes(n.layer)).length} datasets from 5 sources to 3 screens, ${edges.length} edges. The Gold build is drawn as one task.`;
   note.textContent = idle;
   let sel = null;
   const show = id => {
@@ -723,17 +810,69 @@ function lineage({ nodes, edges }) {
       const j = id.slice(5);
       note.textContent = `Task ${byId[id].label}: reads ${jobs[j].ins.size} tables, writes ${jobs[j].outs.size}.`;
     } else {
-      const by = [...new Set(edges.filter(x => x[1] === id).map(x => x[2]))];
-      note.textContent = `${id}: ${tables(up)} upstream, ${tables(down)} downstream` + (by.length ? `; written by ${by.join(', ')}` : '');
+      const by = [...new Set(edges.filter(x => x[1] === id).map(x => x[2]))].map(j => j.startsWith('view:') ? 'a SQL view' : j.startsWith('read:') ? 'its queries' : j);
+      note.textContent = `${byId[id].label || id}: ${tables(up)} upstream, ${tables(down)} downstream` + (by.length ? `; built by ${by.join(', ')}` : '');
     }
   };
   const pick = id => { sel = sel === id ? null : id; show(sel); };
-  root.addEventListener('click', e => { const g = e.target.closest('.n'); if (g) pick(g.dataset.id); else { sel = null; show(null); } });
+  const tour = [
+    ['source/tfnsw', 'Transport for NSW publishes the charger list. It is downloaded only when the portal reports a change.'],
+    ['bronze.tfnsw_ev_chargers', 'Each changed version is appended to Bronze as text rows and recorded in the ingestion ledger.'],
+    ['silver.ev_charger', 'Silver types and cleans it, and maps operator spellings through the standard term dictionary.'],
+    ['silver.charger_ocm_match', 'Record linkage pairs chargers with Open Charge Map sites within 300 m.'],
+    ['task:gold', 'build_gold reads the Silver models and rebuilds the star schema in one transaction.'],
+    ['gold.charger_flat', 'A Gold view joins the fact and its dimensions for reporting.'],
+    ['app/map', 'The Map BI screen reads that view, so every number on it traces back to the source file.'],
+  ].filter(([id]) => byId[id]);
+  const btn = document.getElementById('tour-btn'), stepEl = document.getElementById('tour-step');
+  let k = -1, timer = null, done = false;
+  const scrollTo = id => {
+    const sc = box, g = root.querySelector(`.n[data-id="${CSS.escape(id)}"]`);
+    if (!g || sc.scrollWidth <= sc.clientWidth) return;
+    const r = g.getBoundingClientRect(), c = sc.getBoundingClientRect();
+    sc.scrollTo({ left: sc.scrollLeft + r.left - c.left - c.width / 2 + r.width / 2, behavior: 'smooth' });
+  };
+  const advance = () => {
+    k = (k + 1) % tour.length;
+    const [id, text] = tour[k];
+    sel = id; show(id); scrollTo(id);
+    note.innerHTML = `<b>${k + 1}/${tour.length}</b> · ${esc(text)}`;
+    stepEl.textContent = tour.map((_, i) => i === k ? '●' : '○').join(' ');
+  };
+  const play = () => { if (timer) return; advance(); timer = setInterval(advance, 2600); btn.textContent = 'Pause tour'; btn.setAttribute('aria-pressed', 'true'); };
+  const stop = () => { clearInterval(timer); timer = null; btn.textContent = 'Play tour'; btn.setAttribute('aria-pressed', 'false'); };
+  btn.addEventListener('click', () => { done = true; timer ? stop() : play(); });
+  const quiet = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!quiet && 'IntersectionObserver' in window) {
+    new IntersectionObserver(([e]) => { if (done) return; e.isIntersecting ? play() : stop(); }, { threshold: .4 }).observe(box);
+  }
+  const takeOver = () => { done = true; stop(); stepEl.textContent = ''; };
+  root.addEventListener('click', e => { takeOver(); const g = e.target.closest('.n'); if (g) pick(g.dataset.id); else { sel = null; show(null); } });
   root.addEventListener('keydown', e => {
+    takeOver();
     const g = e.target.closest('.n');
     if (g && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); pick(g.dataset.id); }
     if (e.key === 'Escape') { sel = null; show(null); }
   });
+}
+
+// Screenshots open full size over the page, with a close button; Esc or a click outside closes them too.
+function lightbox() {
+  const dlg = document.createElement('dialog');
+  dlg.className = 'lightbox';
+  dlg.innerHTML = '<button type="button" class="lb-close" aria-label="Close">×</button><figure><img alt=""><figcaption></figcaption></figure>';
+  document.body.append(dlg);
+  const img = dlg.querySelector('img'), cap = dlg.querySelector('figcaption');
+  document.querySelectorAll('.shot a').forEach(a => a.addEventListener('click', e => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || typeof dlg.showModal !== 'function') return;
+    e.preventDefault();
+    const src = a.querySelector('img');
+    img.src = a.href; img.alt = src.alt;
+    cap.innerHTML = a.closest('figure').querySelector('figcaption')?.innerHTML || '';
+    dlg.showModal(); dlg.scrollTop = 0;
+  }));
+  dlg.querySelector('.lb-close').addEventListener('click', () => dlg.close());
+  dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
 }
 
 function foot(s) {

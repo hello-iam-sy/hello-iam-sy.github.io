@@ -60,16 +60,17 @@
           <p class="kind">Data engineering</p>
           <h3><a href="projects/ev-platform/">NSW EV Charger Data Platform</a></h3>
           <p>An on-premise ELT platform that merges four public and operator sources into one reliable view of EV charging in
-            New South Wales. It runs daily, only processes what changed, and monitors itself with metrics, alerts and lineage.</p>
+            New South Wales. It runs daily on Airflow, only processes what changed, gates every run on 26 data quality checks, profiles any table on
+            demand, and traces every number from source file to report with full lineage, Grafana and Slack alerts.</p>
           <div class="stats">
             <div class="stat"><b>1,958</b><span>chargers modelled</span></div>
             <div class="stat"><b>4</b><span>sources linked</span></div>
             <div class="stat"><b>56.4%</b><span>DC chargers enriched (from 41.8%)</span></div>
           </div>
           <ul class="stack" aria-label="Stack">
-            <li>PostgreSQL / PostGIS</li><li>Airflow</li><li>Kafka + Spark</li><li>Prometheus</li>
+            <li>PostgreSQL / PostGIS</li><li>Airflow</li><li>Data quality</li><li>OpenLineage</li><li>Kafka + Spark</li><li>Grafana</li>
           </ul>
-          <a class="more" href="projects/ev-platform/">Open the live demo</a>
+          <a class="more" href="projects/ev-platform/">Read the operations handbook</a>
         </div>
         <div class="arch" data-arch="ev"></div>
       </article>
