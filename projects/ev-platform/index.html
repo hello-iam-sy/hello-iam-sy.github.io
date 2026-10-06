@@ -188,19 +188,15 @@ small { color: var(--muted); }
     <div><dt>Screens</dt><dd>Captured from the running system</dd></div>
   </dl>
   <div class="kpis" id="kpis"></div>
-  <section class="flow-top" aria-labelledby="flow-title">
-    <h2 id="flow-title">Full data lineage</h2>
-    <p class="sub">Every number on the reports traces back to a source file: five sources, through Landing, Bronze, Silver and Gold,
-      to three screens. The tour follows one record; select any box to trace what feeds it (orange) and what it feeds (blue).</p>
-    <div class="tour" id="tour">
-      <button type="button" id="tour-btn" aria-pressed="false">Play tour</button>
-      <span class="tour-step" id="tour-step"></span>
-    </div>
-    <div class="lin-full"><div class="lin-scroll" id="lineage"></div></div>
-    <p id="lineage-note" class="lin-note" aria-live="polite"></p>
+  <section class="flow-top" id="architecture" aria-labelledby="arch-title">
+    <h2 id="arch-title">Architecture</h2>
+    <p class="sub">Four sources flow through one medallion pipeline on PostgreSQL, watched by its own monitoring stack. Python only
+      retrieves and lands files; every transformation after that is a versioned SQL model that owns one table. Select a component
+      to see what it does and what it connects to.</p>
+    <div data-arch="ev"></div>
   </section>
   <nav class="toc" aria-label="Contents">
-    <a href="#architecture"><span>01</span>Architecture</a>
+    <a href="#lineage-map"><span>01</span>Full data lineage</a>
     <a href="#bronze"><span>02</span>Bronze</a>
     <a href="#silver"><span>03</span>Silver</a>
     <a href="#gold"><span>04</span>Gold</a>
@@ -215,13 +211,18 @@ small { color: var(--muted); }
   </nav>
 </header>
 
-<section id="architecture">
+<section id="lineage-map">
   <div class="wrap">
-    <p class="kicker"><span>01</span>Architecture</p>
-    <h2>Four sources flow through one medallion pipeline on PostgreSQL, watched by its own monitoring stack</h2>
-    <p class="sub">Python only retrieves and lands files; every transformation after that is a versioned SQL model that owns
-      one table. Select a component to see what it does and what it connects to.</p>
-    <div data-arch="ev"></div>
+    <p class="kicker"><span>01</span>Full data lineage</p>
+    <h2>Every number on the reports traces back to a source file</h2>
+    <p class="sub">Five sources, through Landing, Bronze, Silver and Gold, to three screens. The tour follows one record; select any
+      box to trace what feeds it (orange) and what it feeds (blue).</p>
+    <div class="tour" id="tour">
+      <button type="button" id="tour-btn" aria-pressed="false">Play tour</button>
+      <span class="tour-step" id="tour-step"></span>
+    </div>
+    <div class="lin-full"><div class="lin-scroll" id="lineage"></div></div>
+    <p id="lineage-note" class="lin-note" aria-live="polite"></p>
 
     <h3 class="h3">Source inventory</h3>
     <div class="table-wrap"><table>
