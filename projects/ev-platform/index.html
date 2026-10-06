@@ -239,7 +239,7 @@ small { color: var(--muted); }
     </div>
 
     <figure class="shot">
-      <a href="img/ops/bronze-ledger-profile.jpg" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/bronze-ledger-profile.jpg" alt="Lineage and Quality screen with bronze.source_files selected: its downstream views and a column profile" loading="lazy" width="1600" height="1000"></a>
+      <a href="img/ops/bronze-ledger-profile.jpg?v=ee7c269d" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/bronze-ledger-profile.jpg?v=ee7c269d" alt="Lineage and Quality screen with bronze.source_files selected: its downstream views and a column profile" loading="lazy" width="1600" height="1000"></a>
       <figcaption><b>Figure 2.1</b> The ingestion ledger in the data workspace: what reads it downstream, and a profile of its columns.</figcaption>
     </figure>
   </div>
@@ -271,11 +271,11 @@ small { color: var(--muted); }
 
     <div class="shots-2">
       <figure class="shot">
-        <a href="img/ops/silver-history-profile.jpg" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/silver-history-profile.jpg" alt="silver.evie_offer_history in the data workspace: built from bronze.evie_sites, feeding gold.charger_price_history; valid_to is null for current periods" loading="lazy" width="1600" height="1000"></a>
+        <a href="img/ops/silver-history-profile.jpg?v=b30852ee" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/silver-history-profile.jpg?v=b30852ee" alt="silver.evie_offer_history in the data workspace: built from bronze.evie_sites, feeding gold.charger_price_history; valid_to is null for current periods" loading="lazy" width="1600" height="1000"></a>
         <figcaption><b>Figure 3.1</b> An SCD2 history table: built from Bronze, read by the Gold price history. Open periods have no <code>valid_to</code>.</figcaption>
       </figure>
       <figure class="shot">
-        <a href="img/ops/silver-term-dictionary.jpg" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/silver-term-dictionary.jpg" alt="Standard term dictionary screen listing seven unregistered operator spellings with map and create actions" loading="lazy" width="1600" height="1000"></a>
+        <a href="img/ops/silver-term-dictionary.jpg?v=1226d69e" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/silver-term-dictionary.jpg?v=1226d69e" alt="Standard term dictionary screen listing seven unregistered operator spellings with map and create actions" loading="lazy" width="1600" height="1000"></a>
         <figcaption><b>Figure 3.2</b> The term dictionary tab. Spellings the pipeline does not know wait here; a person maps or creates them and the next run applies the change.</figcaption>
       </figure>
     </div>
@@ -327,11 +327,11 @@ small { color: var(--muted); }
     </table></div>
 
     <figure class="shot">
-      <a href="img/ops/airflow-dags.jpg" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/airflow-dags.jpg" alt="Airflow DAG list: ev_reference manual, ev_sources scheduled on the silver_sa4_boundary asset, next run 7 Oct 06:00" loading="lazy" width="1600" height="640"></a>
+      <a href="img/ops/airflow-dags.jpg?v=50324926" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/airflow-dags.jpg?v=50324926" alt="Airflow DAG list: ev_reference manual, ev_sources scheduled on the silver_sa4_boundary asset, next run 7 Oct 06:00" loading="lazy" width="1600" height="640"></a>
       <figcaption><b>Figure 5.1</b> Airflow 3: both DAGs, their latest runs and the next scheduled run of <code>ev_sources</code>.</figcaption>
     </figure>
     <figure class="shot">
-      <a href="img/ops/airflow-graph.jpg" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/airflow-graph.jpg" alt="ev_sources graph for one run: three parallel source chains, skipped models in pink, build_gold and check_quality succeeded" loading="lazy" width="1600" height="367"></a>
+      <a href="img/ops/airflow-graph.jpg?v=248ab11e" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/airflow-graph.jpg?v=248ab11e" alt="ev_sources graph for one run: three parallel source chains, skipped models in pink, build_gold and check_quality succeeded" loading="lazy" width="1600" height="367"></a>
       <figcaption><b>Figure 5.2</b> One run of <code>ev_sources</code>. Three source chains run in parallel. Pink tasks were <i>skipped</i>
         because their inputs had not changed since the last build; only the Evie models and Gold were rebuilt.</figcaption>
     </figure>
@@ -363,7 +363,7 @@ small { color: var(--muted); }
       </div>
     </div>
     <figure class="shot">
-      <a href="img/ops/airflow-run.jpg" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/airflow-run.jpg" alt="Airflow run detail with task instances, their states, start times and durations" loading="lazy" width="1600" height="1000"></a>
+      <a href="img/ops/airflow-run.jpg?v=676821df" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/airflow-run.jpg?v=676821df" alt="Airflow run detail with task instances, their states, start times and durations" loading="lazy" width="1600" height="1000"></a>
       <figcaption><b>Figure 5.3</b> Task instances of the same run with their durations, as an operator checks them after a failure or a slow day.</figcaption>
     </figure>
   </div>
@@ -397,7 +397,7 @@ small { color: var(--muted); }
       </div>
     </div>
     <figure class="shot tall">
-      <div class="scroll"><a href="img/ops/dq-dashboard.jpg" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/dq-dashboard.jpg" alt="Quality runs screen: gate status, dimension cards, coverage, source timeliness and volume, every check with its trend, and the run list" loading="lazy" width="1600" height="3604"></a></div>
+      <div class="scroll"><a href="img/ops/dq-dashboard.jpg?v=4cee6947" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/dq-dashboard.jpg?v=4cee6947" alt="Quality runs screen: gate status, dimension cards, coverage, source timeliness and volume, every check with its trend, and the run list" loading="lazy" width="1600" height="3604"></a></div>
       <figcaption><b>Figure 6.1</b> The Quality runs screen (scroll inside the frame): gate, dimensions, coverage, source timeliness and
         volume from the ledger, every check with its trend, and the run history including the failed run.</figcaption>
     </figure>
@@ -407,11 +407,11 @@ small { color: var(--muted); }
       OpenLineage events and drive the workspace's graph, and a test fails if a model's SQL touches a table it did not declare.</p>
     <div class="shots-2">
       <figure class="shot">
-        <a href="img/ops/lineage-quality.jpg" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/lineage-quality.jpg" alt="Lineage and Quality: silver.ev_charger with its upstream Bronze and dictionary tables and twelve downstream tables, plus a column profile" loading="lazy" width="1600" height="1000"></a>
+        <a href="img/ops/lineage-quality.jpg?v=243ac0eb" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/lineage-quality.jpg?v=243ac0eb" alt="Lineage and Quality: silver.ev_charger with its upstream Bronze and dictionary tables and twelve downstream tables, plus a column profile" loading="lazy" width="1600" height="1000"></a>
         <figcaption><b>Figure 6.2</b> Structural lineage with a table profile: upstream and downstream of <code>silver.ev_charger</code>.</figcaption>
       </figure>
       <figure class="shot">
-        <a href="img/ops/marquez-jobs.jpg" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/marquez-jobs.jpg" alt="Marquez DataOps view: ev_sources and its task jobs with completed runs" loading="lazy" width="1600" height="1000"></a>
+        <a href="img/ops/marquez-jobs.jpg?v=7fa0fea8" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/marquez-jobs.jpg?v=7fa0fea8" alt="Marquez DataOps view: ev_sources and its task jobs with completed runs" loading="lazy" width="1600" height="1000"></a>
         <figcaption><b>Figure 6.3</b> Execution lineage in Marquez: each task is a job with its own runs, in namespace <code>ev-platform</code>.</figcaption>
       </figure>
     </div>
@@ -424,7 +424,7 @@ small { color: var(--muted); }
     <p class="sub">Regional coverage and pricing for analysts, read from one consistent Gold snapshot. Filters drive the map,
       KPIs and records together, and the filtered rows export as CSV.</p>
     <figure class="shot">
-      <a href="img/ops/bi-map.jpg" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/bi-map.jpg" alt="Map screen: filters, KPI cards for 1,860 operational charger entries, a shaded map of NSW SA4 regions and a ranking of top regions" loading="lazy" width="1600" height="1000"></a>
+      <a href="img/ops/bi-map.jpg?v=1e12b2d8" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/bi-map.jpg?v=1e12b2d8" alt="Map screen: filters, KPI cards for 1,860 operational charger entries, a shaded map of NSW SA4 regions and a ranking of top regions" loading="lazy" width="1600" height="1000"></a>
       <figcaption><b>Figure 6.4</b> The Map tab on the running system: operational chargers, AC/DC split, density, median charging price and rated power, with the top regions to drill into.</figcaption>
     </figure>
     <h4 class="h4">Interactive copy on the snapshot data</h4>
@@ -454,12 +454,12 @@ small { color: var(--muted); }
     <p class="sub">Airflow sends StatsD metrics; a small exporter reads the data's own state from PostgreSQL every 60 s
       (freshness, volume, quality, model age, stream lag). Prometheus evaluates the alert rules and Alertmanager posts to Slack.</p>
     <figure class="shot dark">
-      <a href="img/ops/grafana-health.jpg" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/grafana-health.jpg" alt="Grafana Pipeline health: hours since each source changed and each model was built, zero failing blocking checks, monitoring connectivity" loading="lazy" width="1600" height="584"></a>
+      <a href="img/ops/grafana-health.jpg?v=c0a406a0" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/grafana-health.jpg?v=c0a406a0" alt="Grafana Pipeline health: hours since each source changed and each model was built, zero failing blocking checks, monitoring connectivity" loading="lazy" width="1600" height="584"></a>
       <figcaption><b>Figure 7.1</b> Pipeline health. TfNSW and ABS legitimately stay unchanged for weeks, so their age is shown
         but only Evie has a freshness alert; a missed day is caught by <code>DailyRunMissing</code> for every source.</figcaption>
     </figure>
     <figure class="shot dark">
-      <a href="img/ops/grafana-streaming.jpg" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/grafana-streaming.jpg" alt="Grafana OCM streaming: producer, Kafka and Spark health, time since the last fetch and micro-batch, sink lag, errors and checkpoint validity" loading="lazy" width="1600" height="1056"></a>
+      <a href="img/ops/grafana-streaming.jpg?v=70793565" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/grafana-streaming.jpg?v=70793565" alt="Grafana OCM streaming: producer, Kafka and Spark health, time since the last fetch and micro-batch, sink lag, errors and checkpoint validity" loading="lazy" width="1600" height="1056"></a>
       <figcaption><b>Figure 7.2</b> OCM price stream: producer and Spark heartbeats, committed-offset lag per sink, error counters
         and checkpoint validity. An old batch with zero lag is normal when the source has no changes.</figcaption>
     </figure>
