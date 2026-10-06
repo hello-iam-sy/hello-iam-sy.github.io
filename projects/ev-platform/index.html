@@ -122,6 +122,7 @@ section > .wrap > h2 { max-width: 30em; }
 .sub-kicker span { font-family: var(--mono); font-size: .9rem; color: var(--accent); }
 .note { color: var(--muted); font-size: .88rem; margin: 10px 0 0; }
 .table-wrap { overflow-x: auto; }
+td b a { color: var(--ink); } td b a:hover { color: var(--accent); }
 small { color: var(--muted); }
 .two { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 40px; margin-top: 32px; }
 .two > *, .shots-2 > * { min-width: 0; }
@@ -181,10 +182,10 @@ small { color: var(--muted); }
     <div class="table-wrap"><table>
       <thead><tr><th>Source</th><th>Type</th><th>Format</th><th>Change detection</th><th class="num">Rows in use</th></tr></thead>
       <tbody>
-        <tr><td><b>Transport for NSW</b><br><small>EV Charging Locations</small></td><td>Open government data</td><td>CSV via CKAN, no login</td><td>Portal <code>last_modified</code>, then SHA-256</td><td class="num">1,958 chargers</td></tr>
-        <tr><td><b>Australian Bureau of Statistics</b><br><small>ASGS Ed. 4 SA4 boundaries</small></td><td>Official statistics</td><td>Shapefile (zip)</td><td>HTTP conditional GET (304)</td><td class="num">108 regions</td></tr>
-        <tr><td><b>Open Charge Map</b><br><small>NSW bounding box</small></td><td>Community API</td><td>JSON, REST <code>/v3/poi</code></td><td>Full daily snapshot, SHA-256</td><td class="num">537 sites</td></tr>
-        <tr><td><b>Evie Networks</b><br><small>Operator site map</small></td><td>Operator website data</td><td>JSON store-locator, 10 s crawl delay</td><td>SHA-256 of the snapshot</td><td class="num">231 sites</td></tr>
+        <tr><td><b><a href="https://opendata.transport.nsw.gov.au/data/dataset/be1c4de4-4517-4bd0-8a09-2965ddfc7179" target="_blank" rel="noopener">Transport for NSW</a></b><br><small>EV Charging Locations</small></td><td>Open government data</td><td>CSV via CKAN, no login</td><td>Portal <code>last_modified</code>, then SHA-256</td><td class="num">1,958 chargers</td></tr>
+        <tr><td><b><a href="https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs/edition-4-july-2026-june-2031/access-and-downloads/digital-boundary-files" target="_blank" rel="noopener">Australian Bureau of Statistics</a></b><br><small>ASGS Ed. 4 SA4 boundaries</small></td><td>Official statistics</td><td>Shapefile (zip)</td><td>HTTP conditional GET (304)</td><td class="num">108 regions</td></tr>
+        <tr><td><b><a href="https://openchargemap.org/site" target="_blank" rel="noopener">Open Charge Map</a></b><br><small>NSW bounding box · <a href="https://openchargemap.org/site/develop/api" target="_blank" rel="noopener">API docs</a></small></td><td>Community API</td><td>JSON, REST <code>/v3/poi</code></td><td>Full daily snapshot, SHA-256</td><td class="num">537 sites</td></tr>
+        <tr><td><b><a href="https://evie.com.au/find-a-charger/" target="_blank" rel="noopener">Evie Networks</a></b><br><small>Operator site map</small></td><td>Operator website data</td><td>JSON store-locator, 10 s crawl delay</td><td>SHA-256 of the snapshot</td><td class="num">231 sites</td></tr>
       </tbody>
     </table></div>
 
