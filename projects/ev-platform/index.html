@@ -88,7 +88,7 @@ footer { padding: 32px 0 56px; color: var(--muted); font-size: .9rem; } footer .
 .lin .n { cursor: pointer; outline: none; transition: opacity .15s; }
 .lin .n rect.box { fill: var(--surface); stroke: var(--line); stroke-width: 1.2; }
 .lin .n.job rect.box { fill: var(--bg); stroke: var(--ink); stroke-dasharray: 3 3; }
-.lin .n text { font-size: 11.5px; fill: var(--ink); }
+.lin .n text { font-size: 10.5px; fill: var(--ink); }
 .lin .bar.landing { fill: var(--line); } .lin .bar.bronze { fill: var(--bronze); } .lin .bar.silver { fill: var(--silver); }
 .lin .bar.gold { fill: var(--gold); } .lin .bar.ref { fill: var(--accent); } .lin .bar.job { fill: none; }
 .lin .n:focus-visible rect.box { stroke: var(--accent); stroke-width: 2.5; }
@@ -143,10 +143,8 @@ small { color: var(--muted); }
 .tour button[aria-pressed="true"] { background: transparent; color: var(--ink); }
 .tour-step { font-family: var(--mono); font-size: .82rem; color: var(--accent); }
 .tour-hint { color: var(--muted); font-size: .86rem; }
-.flow-top { margin-top: 48px; padding: 0; }
+.flow-top { margin-top: 48px; padding: 18px 0 0; border-top: 2px solid var(--rule); }
 .flow-top h2 { font-size: clamp(1.6rem, 2.6vw, 2.1rem); margin: 0 0 10px; }
-.lin-full { width: min(calc(100vw - 32px), 1640px); margin-left: 50%; transform: translateX(-50%); }
-.lin-full .lin { min-width: 1240px; }
 .lin-note { min-height: 3.2em; margin: 10px 0 0; color: var(--text); font-size: .95rem; max-width: 60em; }
 .lin-note b { color: var(--ink); }
 .lin .bar.source { fill: var(--muted); } .lin .bar.view { fill: var(--gold); } .lin .bar.app { fill: var(--accent); }
@@ -189,8 +187,7 @@ small { color: var(--muted); }
   </dl>
   <div class="kpis" id="kpis"></div>
   <section class="flow-top" aria-labelledby="flow-title">
-    <p class="kicker"><span>↳</span>Full data lineage</p>
-    <h2 id="flow-title">From source file to report</h2>
+    <h2 id="flow-title">Full data lineage</h2>
     <p class="sub">Every number on the reports traces back to a source file: five sources, through Landing, Bronze, Silver and Gold,
       to three screens. The tour follows one record; select any box to trace what feeds it (orange) and what it feeds (blue).</p>
     <div class="tour" id="tour">
@@ -623,6 +620,13 @@ function fullLineage({ nodes, edges }) {
   return { nodes: N, edges: E };
 }
 
+// Splits a name at underscores or spaces into at most two lines of up to max characters.
+function wrapLabel(text, max) {
+  if (text.length <= max) return [text];
+  const cut = Math.max(text.lastIndexOf('_', max), text.lastIndexOf(' ', max));
+  return cut > 0 ? [text.slice(0, cut + 1).trimEnd(), text.slice(cut + 1)] : [text.slice(0, max), text.slice(max)];
+}
+
 // Table-level lineage as a graph. A task that reads many tables and writes many (the Gold build) is drawn
 // as one task node, as Marquez does, instead of an edge for every input-output pair.
 function lineage({ nodes, edges }) {
@@ -667,8 +671,9 @@ function lineage({ nodes, edges }) {
     for (let i = cols.length - 2; i >= 0; i--) sweep(cols[i], cols[i + 1], children);
   }
 
-  const W = 160, JW = 96, H = 28, GAP = 10, TOP = 34, WIDTH = Math.max(1100, cols.length * 182);
-  const widths = cols.map(c => c.every(n => n.layer === 'job') ? JW : W);
+  // the page column's width; each column gets an equal share and long names wrap onto a second line
+  const WIDTH = 1096, GX = 14, H = 36, GAP = 8, TOP = 34, W = (WIDTH - GX * (cols.length - 1)) / cols.length;
+  const widths = cols.map(() => W);
   const step = (WIDTH - widths.reduce((a, b) => a + b, 0)) / (cols.length - 1);
   const xs = [];
   widths.reduce((x, w, i) => (xs[i] = x, x + w + step), 0);
@@ -697,7 +702,8 @@ function lineage({ nodes, edges }) {
     out.push(`<g class="n ${['job', 'source', 'view', 'app'].includes(n.layer) ? n.layer : ''}" data-id="${esc(n.id)}" tabindex="0" role="button" aria-label="${esc(n.label || n.id)}">
       <rect class="box" x="${n.x}" y="${n.y}" width="${n.w}" height="${H}" rx="4"/>
       <rect class="bar ${n.layer}" x="${n.x}" y="${n.y}" width="4" height="${H}" rx="2"/>
-      <text x="${n.x + 12}" y="${n.y + 18}">${esc(n.label || n.id.replace(/^[a-z]+[./]/, ''))}</text></g>`);
+      <text x="${n.x + 9}" y="${n.y + 15}">${wrapLabel(n.label || n.id.replace(/^[a-z]+[./]/, ''), Math.floor((W - 12) / 6.4))
+        .map((t, i, a) => `<tspan x="${n.x + 9}" y="${n.y + (a.length > 1 ? 15 + i * 12 : 22)}">${esc(t)}</tspan>`).join('')}</text></g>`);
   }
   out.push('</svg>');
   const box = document.getElementById('lineage');
