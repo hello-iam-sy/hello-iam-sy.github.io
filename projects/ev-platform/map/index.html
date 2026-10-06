@@ -148,4 +148,15 @@ main{max-width:1600px;padding-top:28px}.site-in{max-width:1600px}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="analytics-core.js"></script>
 <script src="analytics.js"></script>
+<script>
+// Static copy: no live database to refresh from and no export, so both stay disabled
+// (analytics.js re-enables them after loading; the observer keeps them off).
+['refresh', 'download'].forEach(id => {
+  const b = document.getElementById(id);
+  const off = () => { if (!b.disabled) b.disabled = true; };
+  b.title = 'Disabled in this static copy';
+  b.onclick = null; off();
+  new MutationObserver(off).observe(b, {attributes: true, attributeFilter: ['disabled']});
+});
+</script>
 </main></body></html>
