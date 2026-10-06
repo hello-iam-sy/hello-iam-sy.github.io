@@ -646,7 +646,8 @@ function map(chargers, sa4) {
     document.querySelectorAll('.controls button').forEach(o => o.setAttribute('aria-pressed', o === b));
     draw(b.dataset.filter);
   }));
-  m.fitBounds(regions.getBounds(), { padding: [8, 8] });
+  // mainland NSW: the SA4 bounds reach Lord Howe Island (159° E), which would zoom the map far out
+  m.fitBounds([[-37.6, 140.9], [-28.1, 153.7]], { padding: [8, 8] });
   // map colours are read from the CSS tokens at draw time, so repaint when the theme toggles
   document.addEventListener('themechange', () => { tiles.setUrl(tileUrl()); regions.resetStyle(); draw(current); });
 }
