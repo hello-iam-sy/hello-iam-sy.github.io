@@ -1,0 +1,151 @@
+<!doctype html>
+<!-- Static copy of apps/metadata/templates/analytics.html (Map BI), reading a Gold snapshot instead of /map/data. -->
+<html lang="en" data-map-data="map-data.json">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Charging infrastructure · Map BI – NSW EV charger data</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;700;800&family=Overpass+Mono:wght@400;600&display=swap">
+<style>
+/* Tokens. Sign blue is the charge-point road sign; AC/DC match the map points;
+   bronze/silver/gold/ref mark the medallion layer of a table wherever one is named. */
+:root{
+  --paper:#edf0f2;--surface:#fff;--sunk:#f5f7f8;--ink:#17222d;--ink-2:#36434f;--ink-3:#56636f;
+  --rule:#d3d9df;--rule-soft:#e6eaee;
+  --sign:#1b4f8a;--sign-deep:#143c6a;--sign-tint:#e3ecf6;
+  --dc:#2872a3;--ac:#ce8b32;
+  --pass:#2f7a4e;--pass-tint:#e2f1e7;--warn:#9a6a10;--warn-tint:#f8eed7;--fail:#b23a26;--fail-tint:#f8e3df;
+  --bronze:#a0673a;--silver:#7d8b99;--gold:#b08d1e;--ref:#6a5fa0;
+  --sans:Overpass,"Segoe UI",system-ui,sans-serif;--mono:"Overpass Mono",ui-monospace,Menlo,monospace;
+  font-family:var(--sans);font-size:15px;color:var(--ink);background:var(--paper);
+  -webkit-font-smoothing:antialiased;
+}
+*{box-sizing:border-box}body{margin:0;background:var(--paper)}
+main{max-width:1200px;margin:0 auto;padding:36px 24px 64px}
+
+/* The sign band */
+.site{background:var(--sign);color:#fff}
+.site-in{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:flex-end;gap:32px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;padding:14px 0;color:#fff;text-decoration:none;font-weight:800;font-size:17px;letter-spacing:.005em}
+.plate{display:grid;place-items:center;width:34px;height:34px;border-radius:6px;background:#fff;color:var(--sign)}
+.plate svg{width:22px;height:22px}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-left:auto}
+.tabs a{display:block;padding:11px 16px 10px;border-radius:6px 6px 0 0;color:#d5e2f0;text-decoration:none;font-weight:600;font-size:15px}
+.tabs a:hover{color:#fff;background:var(--sign-deep)}
+.tabs a.on{background:var(--paper);color:var(--ink)}
+
+/* Page heading */
+main>header{display:flex;justify-content:space-between;align-items:flex-end;gap:16px 24px;flex-wrap:wrap;padding-bottom:22px;border-bottom:1px solid var(--rule)}
+h1{font-size:32px;line-height:1.1;font-weight:800;letter-spacing:-.015em;margin:0 0 8px}
+h2{font-size:19px;line-height:1.3;font-weight:700;margin:40px 0 12px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+h2 .count{font-weight:400;color:var(--ink-3)}
+h2 .hint{font-size:14px;font-weight:400;color:var(--ink-3)}
+p{line-height:1.6;color:var(--ink-2);margin:4px 0;max-width:78ch}
+.lede{font-size:15px}
+a{color:var(--sign)}a:hover{color:var(--sign-deep)}
+
+/* Surfaces */
+.panel{border:1px solid var(--rule);border-radius:6px;background:var(--surface);padding:16px 18px;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--rule-soft);vertical-align:middle}
+th{font-size:13.5px;color:var(--ink-2);font-weight:700}
+tr:last-child>td{border-bottom:0}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+
+/* Controls */
+input,select,button{font:inherit;font-size:14px;border:1px solid #bcc5ce;border-radius:4px;padding:6px 9px;background:#fff;color:var(--ink)}
+button{cursor:pointer;font-weight:600;white-space:nowrap}button:hover{background:var(--sunk)}
+button:disabled{cursor:not-allowed;opacity:.5}
+.primary{background:var(--sign);color:#fff;border-color:var(--sign)}.primary:hover{background:var(--sign-deep)}
+.danger{color:var(--fail)}.danger:hover{background:var(--fail-tint)}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.inline{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:0}.nowrap{flex-wrap:nowrap}
+.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.code{font-family:var(--mono);font-size:13.5px;color:var(--ink)}
+.muted{color:var(--ink-3);font-size:13.5px}
+.legend{margin:0 0 12px}
+
+/* Messages and status */
+.msg{padding:10px 14px;border-radius:4px;margin-top:16px;font-size:15px;border-left:4px solid}
+.ok{background:var(--pass-tint);color:#1f5535;border-color:var(--pass)}.err{background:var(--fail-tint);color:#86291a;border-color:var(--fail)}
+.badge{display:inline-block;border-radius:3px;padding:2px 8px 1px;font-size:13px;font-weight:700}
+.badge.pass{background:var(--pass-tint);color:#1f5535}.badge.fail{background:var(--fail-tint);color:#86291a}
+.badge.warn{background:var(--warn-tint);color:#6e4a07}.badge.measured{background:var(--rule-soft);color:var(--ink-2)}
+
+/* Medallion layer marks */
+.layer-bronze{--layer:var(--bronze)}.layer-silver{--layer:var(--silver)}.layer-gold{--layer:var(--gold)}.layer-ref{--layer:var(--ref)}
+
+@media (max-width:760px){
+  main{padding:24px 16px 48px}.site-in{padding:0 16px;gap:0}.tabs{margin-left:0;width:100%}
+  .tabs a{padding:9px 11px 8px;font-size:14px}h1{font-size:26px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+main{max-width:1600px;padding-top:28px}.site-in{max-width:1600px}
+.filters{display:flex;flex-wrap:wrap;gap:12px 14px;align-items:end;padding:18px 0 10px}
+.filters label{display:grid;gap:4px;font-size:13.5px;font-weight:600;color:var(--ink-2)}.filters select{min-width:140px}.filters button{height:32px}
+.scope{font-size:14px;color:var(--ink-2);margin:0 0 14px}.scope .table-select{color:var(--sign)}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);margin-bottom:16px;border:1px solid var(--rule);border-radius:6px;background:var(--surface)}
+.kpi{padding:14px 18px 16px;border-left:1px solid var(--rule-soft)}.kpi:first-child{border-left:0}
+.kpi span{font-size:14px;font-weight:600;color:var(--ink-2)}.kpi strong{display:block;font-size:30px;font-weight:800;letter-spacing:-.01em;margin:4px 0 2px;font-variant-numeric:tabular-nums}.kpi small{color:var(--ink-3);font-size:13px;line-height:1.4;display:block}
+.report-grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px}
+.map-panel{position:relative;background:var(--surface);border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+#map{height:570px;background:#e4e8ec;z-index:0}
+.map-heading{padding:12px 16px;display:flex;gap:12px;align-items:baseline;flex-wrap:wrap;border-bottom:1px solid var(--rule)}.map-heading strong{font-size:16px}.map-heading span{font-size:14px;color:var(--ink-2)}
+.map-caption{padding:10px 16px 12px;border-top:1px solid var(--rule)}.map-caption p{font-size:13.5px}
+.scale{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:4px;font-size:13.5px}.scale[hidden]{display:none}
+.swatch{display:inline-block;width:18px;height:10px;border-radius:2px;margin-right:5px;border:1px solid #9daab4;vertical-align:-1px}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin:0 4px 0 2px;vertical-align:0}.dot.dc{background:var(--dc)}.dot.ac{background:var(--ac)}.dot.unk{background:#7e8982}
+.detail{padding:18px 20px;background:var(--surface);border:1px solid var(--rule);border-radius:6px;overflow:auto;max-height:660px}
+.detail h2{margin:0;font-size:14px;font-weight:600;color:var(--ink-3)}.detail h2+h3{margin-top:4px}.detail dl+h2{margin-top:20px}
+.detail h3{font-size:21px;font-weight:800;line-height:1.2;margin:4px 0 8px}
+.detail dl{display:grid;grid-template-columns:1fr auto;gap:8px 12px;font-size:15px;margin:14px 0}.detail dt{color:var(--ink-2)}.detail dd{margin:0;text-align:right;font-weight:700;font-variant-numeric:tabular-nums}.detail button{margin-top:12px}
+.rank-region{display:grid;grid-template-columns:1fr auto;gap:6px;width:100%;padding:12px 0;border:0;border-bottom:1px solid var(--rule-soft);border-radius:0;background:none;text-align:left;font-weight:400}
+.rank-region:hover{background:var(--sunk)}.rank-name{font-size:15px;color:var(--ink)}.rank-region strong{font-size:18px;font-weight:800;color:var(--sign);font-variant-numeric:tabular-nums}
+.rank-track{grid-column:1 / -1;height:6px;background:var(--rule-soft);border-radius:3px;overflow:hidden}.rank-track span{display:block;height:100%;background:var(--dc);border-radius:3px}
+.comparisons{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}.comparisons h2,.drill h2{margin:0 0 6px;font-size:17px}
+.scroll-table{max-height:360px;overflow:auto;margin-top:10px}th{position:sticky;top:0;background:var(--surface);z-index:1}
+.bar-cell{min-width:115px}.bar-track{height:5px;background:var(--rule-soft);margin-top:4px;border-radius:3px}.bar-fill{height:5px;background:var(--dc);border-radius:3px}
+.table-select{border:0;background:none;padding:0;font-weight:700;text-align:left;color:var(--ink)}.table-select:hover{background:none;color:var(--sign);text-decoration:underline}
+.operator-types{display:flex;gap:6px;margin:10px 0}.operator-types button[aria-pressed="true"]{background:var(--sign);border-color:var(--sign);color:white}.type-count{min-width:28px;text-align:right;text-decoration:underline;text-underline-offset:3px}.type-count:disabled{color:var(--ink-3);text-decoration:none;cursor:default}.type-count[aria-pressed="true"]{color:var(--sign)}.active-row td{background:var(--sign-tint)}.drill{margin-top:16px}.footer-note{margin-top:14px;font-size:13.5px;max-width:110ch}
+.alert{padding:12px 14px;background:var(--fail-tint);color:#86291a;border-left:4px solid var(--fail);border-radius:4px;margin:12px 0}
+.toolbar-right{display:flex;gap:8px;align-items:center}.leaflet-container{font-family:inherit}.muted-value{color:var(--ink-3)}
+@media(max-width:1000px){.report-grid{grid-template-columns:1fr}.detail{max-height:none}.kpis{grid-template-columns:repeat(3,1fr)}.kpi:nth-child(4){border-left:0}.kpi:nth-child(n+4){border-top:1px solid var(--rule-soft)}}
+@media(max-width:650px){.kpis{grid-template-columns:1fr 1fr}.kpi:nth-child(n){border-left:0;border-top:1px solid var(--rule-soft)}.kpi:nth-child(even){border-left:1px solid var(--rule-soft)}.kpi:first-child,.kpi:nth-child(2){border-top:0}.comparisons{grid-template-columns:1fr}#map{height:430px}}
+</style>
+</head>
+<body>
+<header class="site"><div class="site-in">
+  <a class="brand" href="../" target="_top">
+    <span class="plate" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 2.5v4.5M15 2.5v4.5"/><path d="M6 7h12v3.5a6 6 0 0 1-12 0z" fill="currentColor" stroke-linejoin="round"/><path d="M12 16.5v5"/></svg></span>
+    NSW EV charger data
+  </a>
+  <nav class="tabs" aria-label="Sections">
+    <a href="../#silver" target="_top">Term dictionary</a>
+    <a href="../#dq" target="_top">Lineage &amp; quality</a>
+    <a href="./" class="on" aria-current="page">Map</a>
+    <a href="../#job-ops" target="_top">Operations ↗</a>
+  </nav>
+</div></header>
+<main>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<header><div><h1>Where NSW can charge, and what it costs</h1><p class="lede">Compare coverage and prices across SA4 regions and operators. Select a region or a charger on the map for detail.</p></div><div class="toolbar-right"><button id="refresh">Refresh data</button><button id="download" disabled>Export CSV</button></div></header>
+<div id="error" class="alert" hidden role="alert"></div>
+<div class="filters">
+<label>Operator<select id="operator"><option value="">All operators</option></select></label>
+<label>Charger type<select id="current"><option value="">AC + DC</option><option>AC</option><option>DC</option></select></label>
+<label>Operating status<select id="status" disabled><option value="operational">Operational</option></select></label>
+<label>Region<select id="region"><option value="">All NSW SA4 regions</option></select></label>
+<label>Shade regions by<select id="metric"><option value="count">Charger entries</option><option value="density">Entries / 1,000 km²</option><option value="price">Median base price / kWh</option><option value="power">Median rated power</option></select></label>
+<label>Charger points<select id="points"><option value="auto">On region selection</option><option value="on">Always show</option><option value="off">Hide</option></select></label>
+<button id="reset">Reset filters</button>
+</div>
+<p class="scope" id="scope" aria-live="polite">Loading Gold data…</p>
+<div class="kpis" id="kpis"><div class="kpi"><span>Charger entries</span><strong>–</strong><small>Loading</small></div></div>
+<div class="report-grid"><section class="map-panel"><div class="map-heading"><strong id="map-heading">Regional overview</strong><span id="map-context">Select a region to explore its chargers.</span></div><div id="map" aria-label="NSW charging infrastructure map"></div><div class="map-caption"><div id="legend" class="scale"></div><p id="point-key" hidden><i class="dot dc"></i>DC <i class="dot ac"></i>AC<span id="unknown-legend" hidden> <i class="dot unk"></i>Unknown type</span></p><p id="tiles-note" hidden>The basemap could not load. Regions, charger points and every figure still work.</p></div></section><aside class="detail" id="detail" aria-live="polite"><h2>Region detail</h2><h3>All NSW regions</h3><p>Select a region or charger to see its figures.</p></aside></div>
+<div class="comparisons"><section class="panel"><h2 id="regions-title">Regions</h2><p class="muted">Applies the operator, type and status filters. Every region stays listed for comparison.</p><div class="scroll-table"><table><thead><tr><th>SA4 region</th><th class="num">Entries</th><th class="num">Per 1,000 km²</th><th class="num">Median price</th><th class="num">Median kW</th></tr></thead><tbody id="region-rows"></tbody></table></div></section><section class="panel"><h2>Operators in this scope</h2><div class="operator-types" role="group" aria-label="Filter report by charger type"><button type="button" data-report-type="" aria-pressed="true">AC + DC</button><button type="button" data-report-type="AC" aria-pressed="false">AC</button><button type="button" data-report-type="DC" aria-pressed="false">DC</button></div><p class="muted">AC and DC are charger counts. Select a count to filter by operator and type. Prices known shows numeric tariffs / charger entries.</p><div class="scroll-table"><table><thead><tr><th>Operator</th><th class="num">Entries</th><th class="num">AC</th><th class="num">DC</th><th class="num">Prices known<br>/ entries</th><th class="num">Median price</th><th class="num">Median kW</th></tr></thead><tbody id="operator-rows"></tbody></table></div></section></div>
+<section class="panel drill"><h2>Charger entries</h2><div class="toolbar"><label for="search">Find a charger</label><input id="search" placeholder="Name, address or ID"><span id="record-count" class="muted"></span><button id="previous">Previous</button><button id="next">Next</button></div><div class="scroll-table"><table><thead><tr><th>Charger / address</th><th>Operator</th><th>SA4</th><th>Type</th><th class="num">kW</th><th class="num">Base AUD/kWh</th><th>Price source</th></tr></thead><tbody id="charger-rows"></tbody></table></div></section>
+<p class="footer-note" id="freshness"></p><p class="footer-note">Counts represent charger entries, not individual connectors or bays. Sites are distinct location IDs. Price statistics are per charger entry, use AUD/kWh base tariffs and exclude missing prices; peak surcharges and session fees are not included. Missing prices are not treated as free charging. A zero base tariff may apply only to an initial free allowance; check the published tariff in charger details. Density uses land-region area, not population.</p>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="analytics-core.js"></script>
+<script src="analytics.js"></script>
+</main></body></html>

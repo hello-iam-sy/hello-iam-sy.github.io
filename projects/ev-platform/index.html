@@ -9,7 +9,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="stylesheet" href="../../assets/arch.css">
 <script src="../../assets/theme.js"></script>
 <style>
@@ -54,8 +53,6 @@ header.wrap { padding-top: 88px; padding-bottom: 56px; }
 .kpi { border-top: 1px solid var(--line); padding: 14px 0 0; }
 .kpi b { display: block; font-size: 2.2rem; font-weight: 800; letter-spacing: -.03em; }
 .kpi span { color: var(--muted); font-size: .88rem; }
-.map-shell { display: grid; grid-template-columns: 1fr 300px; gap: 16px; }
-#map { height: 560px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); }
 .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 16px; font-size: .9rem; overflow: auto; max-height: 560px; }
 .panel h3 { margin: 0 0 8px; font-size: 1rem; }
 .controls { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
@@ -103,8 +100,7 @@ footer { padding: 32px 0 56px; color: var(--muted); font-size: .9rem; } footer .
 .leaflet-container { font: inherit; background: var(--surface); }
 .leaflet-popup-content-wrapper, .leaflet-popup-tip { background: var(--surface); color: var(--ink); }
 @media (max-width: 860px) {
-  .map-shell, .two { grid-template-columns: 1fr; }
-  #map { height: 420px; }
+  .two { grid-template-columns: 1fr; }
 }
 
 /* operations handbook */
@@ -147,6 +143,8 @@ small { color: var(--muted); }
 .tour button[aria-pressed="true"] { background: transparent; color: var(--ink); }
 .tour-step { font-family: var(--mono); font-size: .82rem; color: var(--accent); }
 .tour-hint { color: var(--muted); font-size: .86rem; }
+.flow-top { margin-top: 48px; padding: 0; }
+.flow-top h2 { font-size: clamp(1.6rem, 2.6vw, 2.1rem); margin: 0 0 10px; }
 .lin-full { width: min(calc(100vw - 32px), 1640px); margin-left: 50%; transform: translateX(-50%); }
 .lin-full .lin { min-width: 1240px; }
 .lin-note { min-height: 3.2em; margin: 10px 0 0; color: var(--text); font-size: .95rem; max-width: 60em; }
@@ -167,6 +165,10 @@ small { color: var(--muted); }
 .lb-close { position: sticky; top: 8px; float: right; margin: 8px 8px -48px 0; z-index: 1; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line);
   background: var(--surface); color: var(--ink); font-size: 1.6rem; line-height: 1; cursor: pointer; }
 .lb-close:hover { border-color: var(--ink); }
+
+.bi-frame { margin: 24px 0 0; width: min(calc(100vw - 32px), 1640px); margin-left: 50%; transform: translateX(-50%); }
+.bi-frame iframe { display: block; width: 100%; height: 1900px; border: 1px solid var(--line); border-radius: 6px; background: #edf0f2; }
+.bi-frame figcaption { color: var(--muted); font-size: .88rem; margin: 10px auto 0; max-width: 1096px; padding: 0 16px; } .bi-frame figcaption b { color: var(--ink); margin-right: 4px; }
 @media (max-width: 900px) { .two, .shots-2 { grid-template-columns: 1fr; } }
 </style>
 </head>
@@ -186,6 +188,18 @@ small { color: var(--muted); }
     <div><dt>Screens</dt><dd>Captured from the running system</dd></div>
   </dl>
   <div class="kpis" id="kpis"></div>
+  <section class="flow-top" aria-labelledby="flow-title">
+    <p class="kicker"><span>↳</span>Full data lineage</p>
+    <h2 id="flow-title">From source file to report</h2>
+    <p class="sub">Every number on the reports traces back to a source file: five sources, through Landing, Bronze, Silver and Gold,
+      to three screens. The tour follows one record; select any box to trace what feeds it (orange) and what it feeds (blue).</p>
+    <div class="tour" id="tour">
+      <button type="button" id="tour-btn" aria-pressed="false">Play tour</button>
+      <span class="tour-step" id="tour-step"></span>
+    </div>
+    <div class="lin-full"><div class="lin-scroll" id="lineage"></div></div>
+    <p id="lineage-note" class="lin-note" aria-live="polite"></p>
+  </section>
   <nav class="toc" aria-label="Contents">
     <a href="#architecture"><span>01</span>Architecture</a>
     <a href="#bronze"><span>02</span>Bronze</a>
@@ -456,19 +470,11 @@ small { color: var(--muted); }
 
     <h3 class="h3 sub-kicker" id="lineage-full"><span>6.3</span>Full data lineage</h3>
     <p class="sub">Every Airflow task declares the tables it reads and writes; the same declarations go to Marquez as OpenLineage
-      events, and a test fails if a model's SQL touches a table it did not declare. Gold views and the screens that read them come
-      from PostgreSQL's dependency catalog and the apps' queries.</p>
-    <div class="tour" id="tour">
-      <button type="button" id="tour-btn" aria-pressed="false">Play tour</button>
-      <span class="tour-step" id="tour-step"></span>
-      <span class="tour-hint">Or select any box to trace what feeds it (orange) and what it feeds (blue).</span>
-    </div>
-    <div class="lin-full"><div class="lin-scroll" id="lineage"></div></div>
-    <p id="lineage-note" class="lin-note" aria-live="polite"></p>
+      events, and a test fails if a model's SQL touches a table it did not declare. Operators read lineage in two places.</p>
     <div class="shots-2">
       <figure class="shot">
         <a href="img/ops/lineage-quality.jpg?v=243ac0eb" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/lineage-quality.jpg?v=243ac0eb" alt="Lineage and quality: silver.ev_charger with its upstream Bronze and dictionary tables and downstream tables, plus a column profile" loading="lazy" width="1600" height="1000"></a>
-        <figcaption><b>Figure 6.4</b> The same lineage in the workspace, one table at a time, next to its profile.</figcaption>
+        <figcaption><b>Figure 6.4</b> Structural lineage in the data workspace: one table at a time, its inputs and dependents, next to its profile.</figcaption>
       </figure>
       <figure class="shot">
         <a href="img/ops/marquez-jobs.jpg?v=7fa0fea8" target="_blank" rel="noopener" title="Open full size"><img src="img/ops/marquez-jobs.jpg?v=7fa0fea8" alt="Marquez DataOps view: ev_sources and its task jobs with completed runs" loading="lazy" width="1600" height="1000"></a>
@@ -479,24 +485,12 @@ small { color: var(--muted); }
     <h3 class="h3 sub-kicker" id="bi"><span>6.4</span>BI report</h3>
     <p class="sub">Regional coverage and pricing for analysts, read from one consistent Gold snapshot. Filters drive the map,
       KPIs and records together, and the filtered rows export as CSV.</p>
-    <div class="controls" role="group" aria-label="Map layers">
-      <button data-filter="all" aria-pressed="true">All chargers</button>
-      <button data-filter="DC" aria-pressed="false">DC fast (24&ndash;400 kW)</button>
-      <button data-filter="AC" aria-pressed="false">AC (3&ndash;23 kW)</button>
-    </div>
-    <div class="map-shell">
-      <div id="map"></div>
-      <aside class="panel" id="detail"><h3>Details</h3><p style="color:var(--muted)">Select a region or charger on the map.</p></aside>
-    </div>
-    <div class="legend">
-      <span><i class="dot" style="background:var(--dc)"></i>DC charger</span>
-      <span><i class="dot" style="background:var(--ac)"></i>AC charger</span>
-      <span>DC chargers per 1,000 km²
-        <span class="ramp"><i style="background:var(--ramp-0)"></i><i style="background:var(--ramp-1)"></i><i style="background:var(--ramp-2)"></i><i style="background:var(--ramp-3)"></i><i style="background:var(--ramp-4)"></i></span>
-      </span>
-    </div>
-    <p class="note"><b style="color:var(--ink)">Figure 6.6</b> The BI map, live on the Gold snapshot of <span class="snap-date">6 Oct 2026</span>: select a
-      region or a charger, or filter to DC or AC.</p>
+    <figure class="bi-frame">
+      <iframe src="map/" title="Map BI report, static copy on the Gold snapshot" loading="lazy" id="bi-frame"></iframe>
+      <figcaption><b>Figure 6.6</b> The Map BI screen, ported as-is from the data workspace and running on the Gold snapshot of
+        <span class="snap-date">6 Oct 2026</span>: filters, KPIs, region shading, top regions, operator comparison, charger records and CSV export.
+        <a href="map/" target="_blank" rel="noopener">Open full screen</a></figcaption>
+    </figure>
   </div>
 </section>
 
@@ -576,80 +570,24 @@ small { color: var(--muted); }
 <footer><div class="wrap" id="foot"></div></footer>
 
 <script src="../../assets/arch.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 const fmt = n => n == null ? '—' : Number(n).toLocaleString('en-AU');
 const esc = s => String(s ?? '—').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
-Promise.all(['chargers.geojson', 'sa4.geojson', 'summary.json'].map(f => fetch('data/' + f).then(r => r.json())))
-  .then(([chargers, sa4, summary]) => { kpis(chargers, sa4, summary); map(chargers, sa4); operators(summary); lineage(fullLineage(summary.lineage)); lightbox(); foot(summary); });
+Promise.all(['map/map-data.json', 'data/summary.json'].map(f => fetch(f).then(r => r.json())))
+  .then(([bi, summary]) => { kpis(bi, summary); operators(summary); lineage(fullLineage(summary.lineage)); lightbox(); foot(summary); });
+fitFrame();
 
-function kpis(chargers, sa4, s) {
-  const operational = chargers.features.filter(f => f.properties.status === 'operational').length;
+function kpis(bi, s) {
   const blocking = s.quality.filter(q => q.severity === 'error').length;
   document.getElementById('kpis').innerHTML = [
-    [fmt(operational), 'operational chargers in Gold, from 1,958 TfNSW records'],
-    [sa4.features.length, 'NSW SA4 regions, every charger assigned'],
+    [fmt(bi.chargers.length), 'operational chargers in Gold, from 1,958 TfNSW records'],
+    [bi.regions.features.length, 'NSW SA4 regions, every charger assigned'],
     [s.augmentation.matched_pct + '%', `DC chargers augmented (${s.augmentation.matched}/${s.augmentation.dc_chargers}: ${s.augmentation.from_evie} from Evie, ${s.augmentation.from_ocm} from Open Charge Map)`],
     [s.quality.length, `quality checks on every run, ${blocking} of them able to stop it`],
   ].map(([b, t]) => `<div class="kpi"><b>${b}</b><span>${t}</span></div>`).join('');
   document.getElementById('aug-pct').textContent = s.augmentation.matched_pct + '%';
-}
-
-function map(chargers, sa4) {
-  const tileUrl = () => `https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_${document.documentElement.dataset.theme === 'dark' ? 'Dark' : 'Light'}_Gray_Base/MapServer/tile/{z}/{y}/{x}`;
-  const m = L.map('map', { scrollWheelZoom: false }).setView([-32.8, 147.5], 6);
-  // Esri gray canvas: no API key needed (CARTO basemaps now require one).
-  const tiles = L.tileLayer(tileUrl(), {
-    attribution: 'Tiles &copy; Esri, HERE, Garmin, &copy; OpenStreetMap contributors', maxZoom: 16 }).addTo(m);
-  const step = d => d >= 20 ? 4 : d >= 5 ? 3 : d >= 1 ? 2 : d >= 0.3 ? 1 : 0;
-  const detail = document.getElementById('detail');
-  const regions = L.geoJSON(sa4, {
-    style: f => ({ fillColor: css(`--ramp-${step(f.properties.dc_chargers_per_1000_sqkm)}`), fillOpacity: .55, color: css('--line'), weight: 1 }),
-    onEachFeature: (f, layer) => layer.on('click', () => {
-      const p = f.properties;
-      detail.innerHTML = `<h3>${esc(p.sa4_name)}</h3><dl>
-        <dt>Area</dt><dd>${esc(p.gcc_name)}</dd><dt>Operational</dt><dd>${fmt(p.operational_chargers)}</dd>
-        <dt>DC chargers</dt><dd>${fmt(p.dc_chargers)}</dd><dt>Upcoming</dt><dd>${fmt(p.upcoming_chargers)}</dd>
-        <dt>Plugs</dt><dd>${fmt(p.operational_plugs)}</dd><dt>Operators</dt><dd>${fmt(p.operators)}</dd>
-        <dt>DC / 1,000 km²</dt><dd>${p.dc_chargers_per_1000_sqkm}</dd><dt>Area km²</dt><dd>${fmt(Math.round(p.area_sqkm))}</dd></dl>`;
-    }),
-  }).addTo(m);
-  const canvas = L.canvas({ padding: .5 });
-  let points, current = 'all';
-  const draw = filter => {
-    current = filter;
-    if (points) m.removeLayer(points);
-    points = L.geoJSON(chargers, {
-      filter: f => filter === 'all' || f.properties.current_type === filter,
-      pointToLayer: (f, ll) => L.circleMarker(ll, { renderer: canvas, radius: f.properties.current_type === 'DC' ? 4.5 : 3.5,
-        color: css('--surface'), weight: 1, fillColor: f.properties.current_type === 'DC' ? css('--dc') : css('--ac'), fillOpacity: .95 }),
-      onEachFeature: (f, layer) => layer.on('click', e => {
-        L.DomEvent.stopPropagation(e);
-        const p = f.properties;
-        const price = p.price_per_kwh == null ? esc(p.usage_cost)
-          : '$' + Number(p.price_per_kwh).toFixed(2) + '/kWh' + (p.peak_surcharge_per_kwh ? ` + $${Number(p.peak_surcharge_per_kwh).toFixed(2)} ${p.peak_start.slice(0, 5)}–${p.peak_end.slice(0, 5)}` : '');
-        const ocm = !p.enrichment_source ? '<dt>Augmented</dt><dd>no match</dd>' : `
-          <dt>Augmented</dt><dd>${p.enrichment_source === 'evie' ? `Evie site #${p.evie_site_id}` : `OCM #${p.ocm_id}`}, ${esc(p.match_method)}, ${p.match_distance_m} m</dd>
-          <dt>Plug types</dt><dd>${esc(p.plug_types)}</dd><dt>Price</dt><dd>${price}</dd>
-          <dt>Bays</dt><dd>${fmt(p.number_of_bays)}</dd>`;
-        detail.innerHTML = `<h3>${esc(p.station_name || p.operator_name)}</h3><dl>
-          <dt>Operator</dt><dd>${esc(p.operator_name)}</dd><dt>Type</dt><dd>${esc(p.current_type)}, ${esc(p.max_power_kw)} kW</dd>
-          <dt>Status</dt><dd>${esc(p.status)}</dd><dt>Plugs</dt><dd>${fmt(p.number_of_plugs)}</dd>
-          <dt>Address</dt><dd>${esc(p.address)}</dd><dt>Region</dt><dd>${esc(p.sa4_name)}</dd>${ocm}</dl>`;
-      }),
-    }).addTo(m);
-  };
-  draw('all');
-  document.querySelectorAll('.controls button').forEach(b => b.addEventListener('click', () => {
-    document.querySelectorAll('.controls button').forEach(o => o.setAttribute('aria-pressed', o === b));
-    draw(b.dataset.filter);
-  }));
-  // mainland NSW: the SA4 bounds reach Lord Howe Island (159° E), which would zoom the map far out
-  m.fitBounds([[-37.6, 140.9], [-28.1, 153.7]], { padding: [8, 8] });
-  // map colours are read from the CSS tokens at draw time, so repaint when the theme toggles
-  document.addEventListener('themechange', () => { tiles.setUrl(tileUrl()); regions.resetStyle(); draw(current); });
 }
 
 function operators(s) {
@@ -851,6 +789,12 @@ function lineage({ nodes, edges }) {
 }
 
 // Screenshots open full size over the page, with a close button; Esc or a click outside closes them too.
+function fitFrame() {
+  const f = document.getElementById('bi-frame');
+  const fit = () => { try { f.style.height = f.contentDocument.documentElement.scrollHeight + 'px'; } catch (e) { /* cross-origin: keep CSS height */ } };
+  f.addEventListener('load', () => { fit(); new ResizeObserver(fit).observe(f.contentDocument.body); });
+}
+
 function lightbox() {
   const dlg = document.createElement('dialog');
   dlg.className = 'lightbox';
