@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css">
-<link rel="stylesheet" href="assets/arch.css">
+<link rel="stylesheet" href="assets/arch.css?v=20261011-examprep">
 <script src="assets/theme.js"></script>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%2314203a'/><text x='16' y='22' font-family='Arial' font-weight='700' font-size='15' text-anchor='middle' fill='white'>SK</text></svg>">
 </head>
@@ -53,7 +53,7 @@
   <div class="wrap railed">
     <h2>Projects</h2>
     <div class="content">
-      <p class="sub">Two end-to-end projects: a production-style data platform, and a research study on controlling LLM tutors.</p>
+      <p class="sub">Data platforms and applied LLM systems: reliable pipelines, research on controlling AI tutors, and course-grounded exam practice.</p>
 
       <article class="project with-arch">
         <div>
@@ -92,6 +92,26 @@
           <a class="more" href="projects/edu-sv/">Read the case study</a>
         </div>
         <div class="arch" data-arch="edusv"></div>
+      </article>
+
+      <article class="project with-arch">
+        <div>
+          <p class="kind">Applied LLM engineering</p>
+          <h3><a href="projects/examprepbot/">ExamPrepBot</a></h3>
+          <p>A course-grounded exam practice app that turns weekly lecture slides and tutorials into questions and model answers.
+            It retrieves within the selected weeks, checks answer citations against the retrieved pages, and lets students
+            inspect the source slides. Exported question sets can be browsed without a running model.</p>
+          <div class="stats">
+            <div class="stat"><b>42</b><span>questions in the demo</span></div>
+            <div class="stat"><b>7</b><span>weeks of course material</span></div>
+            <div class="stat"><b>4</b><span>question types</span></div>
+          </div>
+          <ul class="stack" aria-label="Stack">
+            <li>Python / FastAPI</li><li>RAG</li><li>Qwen2.5 / vLLM</li><li>SQLite</li><li>Prometheus</li><li>Docker</li>
+          </ul>
+          <a class="more" href="projects/examprepbot/">Explore the project and question demo</a>
+        </div>
+        <div class="arch" data-arch="examprep"></div>
       </article>
     </div>
   </div>
@@ -152,7 +172,7 @@
         <dt>Languages</dt><dd>Python, SQL, Shell</dd>
         <dt>Data platforms</dt><dd>Hadoop, Hive, HDFS, Delta Lake, S3, PostgreSQL, Greenplum, DynamoDB, Athena, Informatica, DataHub</dd>
         <dt>Cloud &amp; infra</dt><dd>AWS, GCP (BigQuery), Docker, Kubernetes, Ambari</dd>
-        <dt>From the projects</dt><dd>Airflow, Kafka, Spark Streaming, PostGIS, Prometheus, Grafana, OpenLineage, PyTorch, Transformers, vLLM</dd>
+        <dt>From the projects</dt><dd>Airflow, Kafka, Spark Streaming, PostGIS, Prometheus, Grafana, OpenLineage, PyTorch, Transformers, vLLM, FastAPI, retrieval-augmented generation</dd>
       </dl>
     </div>
   </div>
@@ -162,7 +182,7 @@
   <div class="wrap railed">
     <h2>Contact</h2>
     <div class="content">
-      <p class="sub">I'm open to data engineering and ML engineering roles in Sydney. The code for both projects is available on request.</p>
+      <p class="sub">I'm open to data engineering and ML engineering roles in Sydney. See the project pages for source code and further details.</p>
       <a class="contact-mail" href="mailto:sy.from.kr@gmail.com">sy.from.kr@gmail.com</a>
       <div class="links">
         <a class="btn" href="https://github.com/hello-iam-sy">github.com/hello-iam-sy</a>
@@ -175,6 +195,6 @@
   <div class="wrap">© 2026 Suyeong Kim, Sydney NSW</div>
 </footer>
 
-<script src="assets/arch.js" defer></script>
+<script src="assets/arch.js?v=20261011-examprep" defer></script>
 </body>
 </html>

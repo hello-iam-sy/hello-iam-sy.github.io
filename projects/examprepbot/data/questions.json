@@ -1,0 +1,802 @@
+{
+  "course": "comp5339",
+  "snapshot_date": "2026-10-11",
+  "source": "ExamPrepBot/seed/comp5339.json",
+  "weeks": [
+    {
+      "week": 1,
+      "topic": "Introduction"
+    },
+    {
+      "week": 2,
+      "topic": "Data Acquisition and Cleaning"
+    },
+    {
+      "week": 3,
+      "topic": "Databases and Data Warehouse Lakes, SQL Refresher"
+    },
+    {
+      "week": 4,
+      "topic": "Web Scraping"
+    },
+    {
+      "week": 5,
+      "topic": "NoSQL Databases"
+    },
+    {
+      "week": 6,
+      "topic": "Spatial Data"
+    },
+    {
+      "week": 7,
+      "topic": "Temporal Data Engineeering"
+    }
+  ],
+  "pages": {
+    "W1 p.17": {
+      "source": "week01/COMP5339_01_Introduction.pdf",
+      "page": 17,
+      "image": "data/slides/b7dc66917dd7-p17.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W1 p.18": {
+      "source": "week01/COMP5339_01_Introduction.pdf",
+      "page": 18,
+      "image": "data/slides/b7dc66917dd7-p18.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W1 p.20": {
+      "source": "week01/COMP5339_01_Introduction.pdf",
+      "page": 20,
+      "image": "data/slides/b7dc66917dd7-p20.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W1 p.25": {
+      "source": "week01/COMP5339_01_Introduction.pdf",
+      "page": 25,
+      "image": "data/slides/b7dc66917dd7-p25.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W1 p.28": {
+      "source": "week01/COMP5339_01_Introduction.pdf",
+      "page": 28,
+      "image": "data/slides/b7dc66917dd7-p28.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W1 p.29": {
+      "source": "week01/COMP5339_01_Introduction.pdf",
+      "page": 29,
+      "image": "data/slides/b7dc66917dd7-p29.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W1 p.30": {
+      "source": "week01/COMP5339_01_Introduction.pdf",
+      "page": 30,
+      "image": "data/slides/b7dc66917dd7-p30.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W1 p.31": {
+      "source": "week01/COMP5339_01_Introduction.pdf",
+      "page": 31,
+      "image": "data/slides/b7dc66917dd7-p31.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W1 p.4": {
+      "source": "week01/COMP5339_01_Introduction.pdf",
+      "page": 4,
+      "image": "data/slides/b7dc66917dd7-p4.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W2 p.21": {
+      "source": "week02/COMP5339_02_DataAcquisition_and_Cleaning.pdf",
+      "page": 21,
+      "image": "data/slides/1f59cd4f2fbc-p21.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W2 p.22": {
+      "source": "week02/COMP5339_02_DataAcquisition_and_Cleaning.pdf",
+      "page": 22,
+      "image": "data/slides/1f59cd4f2fbc-p22.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W2 p.24": {
+      "source": "week02/COMP5339_02_DataAcquisition_and_Cleaning.pdf",
+      "page": 24,
+      "image": "data/slides/1f59cd4f2fbc-p24.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W2 p.25": {
+      "source": "week02/COMP5339_02_DataAcquisition_and_Cleaning.pdf",
+      "page": 25,
+      "image": "data/slides/1f59cd4f2fbc-p25.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W2 p.29": {
+      "source": "week02/COMP5339_02_DataAcquisition_and_Cleaning.pdf",
+      "page": 29,
+      "image": "data/slides/1f59cd4f2fbc-p29.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W2 p.30": {
+      "source": "week02/COMP5339_02_DataAcquisition_and_Cleaning.pdf",
+      "page": 30,
+      "image": "data/slides/1f59cd4f2fbc-p30.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W2 p.4": {
+      "source": "week02/COMP5339_02_DataAcquisition_and_Cleaning.pdf",
+      "page": 4,
+      "image": "data/slides/1f59cd4f2fbc-p4.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W2 p.42": {
+      "source": "week02/COMP5339_02_DataAcquisition_and_Cleaning.pdf",
+      "page": 42,
+      "image": "data/slides/1f59cd4f2fbc-p42.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W2 p.44": {
+      "source": "week02/COMP5339_02_DataAcquisition_and_Cleaning.pdf",
+      "page": 44,
+      "image": "data/slides/1f59cd4f2fbc-p44.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W2 p.7": {
+      "source": "week02/COMP5339_02_DataAcquisition_and_Cleaning.pdf",
+      "page": 7,
+      "image": "data/slides/1f59cd4f2fbc-p7.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W2 p.8": {
+      "source": "week02/COMP5339_02_DataAcquisition_and_Cleaning.pdf",
+      "page": 8,
+      "image": "data/slides/1f59cd4f2fbc-p8.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W3-1 p.52": {
+      "source": "week03/COMP5339_03_Databases_and_DataWarehouseLakes.pdf",
+      "page": 52,
+      "image": "data/slides/9c2ea91e054e-p52.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W3-1 p.66": {
+      "source": "week03/COMP5339_03_Databases_and_DataWarehouseLakes.pdf",
+      "page": 66,
+      "image": "data/slides/9c2ea91e054e-p66.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W3-1 p.69": {
+      "source": "week03/COMP5339_03_Databases_and_DataWarehouseLakes.pdf",
+      "page": 69,
+      "image": "data/slides/9c2ea91e054e-p69.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W3-1 p.71": {
+      "source": "week03/COMP5339_03_Databases_and_DataWarehouseLakes.pdf",
+      "page": 71,
+      "image": "data/slides/9c2ea91e054e-p71.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W3-1 p.9": {
+      "source": "week03/COMP5339_03_Databases_and_DataWarehouseLakes.pdf",
+      "page": 9,
+      "image": "data/slides/9c2ea91e054e-p9.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W3-2 p.18": {
+      "source": "week03/COMP5339_03_SQLRefresher.pdf",
+      "page": 18,
+      "image": "data/slides/e9568bb6276f-p18.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W3-2 p.6": {
+      "source": "week03/COMP5339_03_SQLRefresher.pdf",
+      "page": 6,
+      "image": "data/slides/e9568bb6276f-p6.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W3-2 p.7": {
+      "source": "week03/COMP5339_03_SQLRefresher.pdf",
+      "page": 7,
+      "image": "data/slides/e9568bb6276f-p7.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W4 p.16": {
+      "source": "week04/COMP5339_04_WebScraping.pdf",
+      "page": 16,
+      "image": "data/slides/6b4ba1c5adf6-p16.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W4 p.18": {
+      "source": "week04/COMP5339_04_WebScraping.pdf",
+      "page": 18,
+      "image": "data/slides/6b4ba1c5adf6-p18.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W4 p.25": {
+      "source": "week04/COMP5339_04_WebScraping.pdf",
+      "page": 25,
+      "image": "data/slides/6b4ba1c5adf6-p25.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W4 p.28": {
+      "source": "week04/COMP5339_04_WebScraping.pdf",
+      "page": 28,
+      "image": "data/slides/6b4ba1c5adf6-p28.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W4 p.29": {
+      "source": "week04/COMP5339_04_WebScraping.pdf",
+      "page": 29,
+      "image": "data/slides/6b4ba1c5adf6-p29.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W4 p.3": {
+      "source": "week04/COMP5339_04_WebScraping.pdf",
+      "page": 3,
+      "image": "data/slides/6b4ba1c5adf6-p3.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W4 p.36": {
+      "source": "week04/COMP5339_04_WebScraping.pdf",
+      "page": 36,
+      "image": "data/slides/6b4ba1c5adf6-p36.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W4 p.37": {
+      "source": "week04/COMP5339_04_WebScraping.pdf",
+      "page": 37,
+      "image": "data/slides/6b4ba1c5adf6-p37.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W4 p.6": {
+      "source": "week04/COMP5339_04_WebScraping.pdf",
+      "page": 6,
+      "image": "data/slides/6b4ba1c5adf6-p6.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W4 p.8": {
+      "source": "week04/COMP5339_04_WebScraping.pdf",
+      "page": 8,
+      "image": "data/slides/6b4ba1c5adf6-p8.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W5 p.14": {
+      "source": "week05/COMP5339_05_NoSQL_Databases.pdf",
+      "page": 14,
+      "image": "data/slides/d97c23db303c-p14.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W5 p.27": {
+      "source": "week05/COMP5339_05_NoSQL_Databases.pdf",
+      "page": 27,
+      "image": "data/slides/d97c23db303c-p27.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W5 p.28": {
+      "source": "week05/COMP5339_05_NoSQL_Databases.pdf",
+      "page": 28,
+      "image": "data/slides/d97c23db303c-p28.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W5 p.29": {
+      "source": "week05/COMP5339_05_NoSQL_Databases.pdf",
+      "page": 29,
+      "image": "data/slides/d97c23db303c-p29.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W5 p.3": {
+      "source": "week05/COMP5339_05_NoSQL_Databases.pdf",
+      "page": 3,
+      "image": "data/slides/d97c23db303c-p3.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W5 p.35": {
+      "source": "week05/COMP5339_05_NoSQL_Databases.pdf",
+      "page": 35,
+      "image": "data/slides/d97c23db303c-p35.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W5 p.7": {
+      "source": "week05/COMP5339_05_NoSQL_Databases.pdf",
+      "page": 7,
+      "image": "data/slides/d97c23db303c-p7.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W5 p.8": {
+      "source": "week05/COMP5339_05_NoSQL_Databases.pdf",
+      "page": 8,
+      "image": "data/slides/d97c23db303c-p8.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W6 p.18": {
+      "source": "week06/COMP5339_06_Spatial_Data.pdf",
+      "page": 18,
+      "image": "data/slides/cd140c583c5f-p18.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W6 p.28": {
+      "source": "week06/COMP5339_06_Spatial_Data.pdf",
+      "page": 28,
+      "image": "data/slides/cd140c583c5f-p28.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W6 p.30": {
+      "source": "week06/COMP5339_06_Spatial_Data.pdf",
+      "page": 30,
+      "image": "data/slides/cd140c583c5f-p30.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W6 p.31": {
+      "source": "week06/COMP5339_06_Spatial_Data.pdf",
+      "page": 31,
+      "image": "data/slides/cd140c583c5f-p31.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W6 p.35": {
+      "source": "week06/COMP5339_06_Spatial_Data.pdf",
+      "page": 35,
+      "image": "data/slides/cd140c583c5f-p35.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W6 p.42": {
+      "source": "week06/COMP5339_06_Spatial_Data.pdf",
+      "page": 42,
+      "image": "data/slides/cd140c583c5f-p42.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W6 p.5": {
+      "source": "week06/COMP5339_06_Spatial_Data.pdf",
+      "page": 5,
+      "image": "data/slides/cd140c583c5f-p5.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W7 p.11": {
+      "source": "week07/COMP5339_07_TemporalDataEngineeering.pdf",
+      "page": 11,
+      "image": "data/slides/7f6ea755a9b3-p11.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W7 p.12": {
+      "source": "week07/COMP5339_07_TemporalDataEngineeering.pdf",
+      "page": 12,
+      "image": "data/slides/7f6ea755a9b3-p12.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W7 p.15": {
+      "source": "week07/COMP5339_07_TemporalDataEngineeering.pdf",
+      "page": 15,
+      "image": "data/slides/7f6ea755a9b3-p15.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W7 p.2": {
+      "source": "week07/COMP5339_07_TemporalDataEngineeering.pdf",
+      "page": 2,
+      "image": "data/slides/7f6ea755a9b3-p2.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W7 p.22": {
+      "source": "week07/COMP5339_07_TemporalDataEngineeering.pdf",
+      "page": 22,
+      "image": "data/slides/7f6ea755a9b3-p22.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W7 p.23": {
+      "source": "week07/COMP5339_07_TemporalDataEngineeering.pdf",
+      "page": 23,
+      "image": "data/slides/7f6ea755a9b3-p23.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W7 p.6": {
+      "source": "week07/COMP5339_07_TemporalDataEngineeering.pdf",
+      "page": 6,
+      "image": "data/slides/7f6ea755a9b3-p6.png",
+      "width": 1684,
+      "height": 1191
+    },
+    "W7 p.7": {
+      "source": "week07/COMP5339_07_TemporalDataEngineeering.pdf",
+      "page": 7,
+      "image": "data/slides/7f6ea755a9b3-p7.png",
+      "width": 1684,
+      "height": 1191
+    }
+  },
+  "questions": [
+    {
+      "id": "w1-q1",
+      "week": 1,
+      "type": "definition",
+      "marks": 2,
+      "question": "Define data engineering. (2 marks)",
+      "answer": "Data engineering is the development, implementation, and maintenance of systems and processes that take in raw data and produce high-quality, consistent information that supports downstream use cases, such as analysis and machine learning. Data engineering is the intersection of security, data management, DataOps, data architecture, orchestration, and software engineering. [W1 p.4]"
+    },
+    {
+      "id": "w1-q2",
+      "week": 1,
+      "type": "apply",
+      "marks": 5,
+      "question": "An e-commerce platform generates transaction data every minute, with each transaction containing customer details, product information, and timestamps. Would you use a schema-agnostic storage solution like object storage or a storage solution that supports complex query patterns? Justify your choice. (5 marks)",
+      "answer": "A schema-agnostic storage solution like object storage would be suitable for storing the transaction data generated by the e-commerce platform. This is because the data is likely to be unstructured or semi-structured, and object storage allows for flexible schema management without requiring predefined schemas [W1 p.18]. \n\nHowever, if the e-commerce platform requires complex querying capabilities to analyze the transaction data, then a storage solution that supports complex query patterns would be more appropriate. For instance, a cloud data warehouse could be used to store and query the transaction data efficiently, allowing for advanced analytics and reporting [W1 p.17].\n\nGiven that the e-commerce platform generates transaction data every minute, a storage solution that supports complex query patterns would also need to ensure high write and read speeds to handle the frequent data ingestion and retrieval [W1 p.18]. Therefore, while object storage provides flexibility, a storage solution that supports complex query patterns would better meet the needs of the e-commerce platform for real-time analysis and reporting [W1 p.18]. \n\nIn summary, if the primary requirement is flexibility and the data is unstructured or semi-structured, object storage is a viable option. However, if the platform needs to perform complex queries and analyses on the transaction data, a storage solution that supports complex query patterns would be more suitable [W1 p.18]. [5 marks]"
+    },
+    {
+      "id": "w1-q3",
+      "week": 1,
+      "type": "definition",
+      "marks": 2,
+      "question": "Define data acquisition/ingestion. (2 marks)",
+      "answer": "Data acquisition/ingestion refers to the process of collecting raw data from various sources and bringing it into a system for further processing [W1 p.20]. This process is crucial as it forms the initial bottleneck of a data pipeline and involves understanding the nature of the data being ingested, its format, and the frequency and velocity at which it arrives [W1 p.20]. [2 marks]"
+    },
+    {
+      "id": "w1-q4",
+      "week": 1,
+      "type": "explain",
+      "marks": 3,
+      "question": "Explain why Unix commands are keyboard-centric and how this affects user input. (3 marks)",
+      "answer": "Unix commands are keyboard-centric, meaning every character entered matters and has a specific function [W1 p.25]. This characteristic affects user input by requiring precise typing; even minor errors can lead to incorrect command execution [W1 p.25]. For example, typing `ls` instead of `list` or `dir` will still work because `ls` is the correct Unix command for listing directory contents [W1 p.25]. Users must be meticulous when entering commands to avoid unintended results, such as accidental file deletions or modifications [W1 p.25]."
+    },
+    {
+      "id": "w1-q5",
+      "week": 1,
+      "type": "compare",
+      "marks": 4,
+      "question": "Compare output redirection and piping in terms of where the data goes. (4 marks)",
+      "answer": "Output redirection sends the standard output (stdout) of a command to a file, whereas piping sends the output of one command as input to another command without writing it to a file first [W1 p.28]. In output redirection, the data is written directly to a specified file, while in piping, the data flows through a series of commands [W1 p.29][W1 p.30]. [4 marks]"
+    },
+    {
+      "id": "w1-q6",
+      "week": 1,
+      "type": "apply",
+      "marks": 5,
+      "question": "Given a textfile containing the sentence 'The quick brown fox jumps over the lazy dog', use a single line of shell commands to find all words that are not in the dictionary file /usr/share/dict/words. Describe the commands you would use and explain why they work. (5 marks)",
+      "answer": "cat textfile | tr 'A-Z' 'a-z' | tr -cs 'A-Za-z' '\\n' | sort | uniq -u | comm -23 - /usr/share/dict/words [W1 p.31]\n\nExplanation:\n1. `cat textfile` [W1 p.31] displays the content of the textfile.\n2. `tr 'A-Z' 'a-z'` [W1 p.31] converts all uppercase letters to lowercase to ensure case insensitivity.\n3. `tr -cs 'A-Za-z' '\\n'` [W1 p.31] removes all non-alphabetic characters and replaces them with newlines, resulting in one word per line.\n4. `sort` [W1 p.31] sorts the words alphabetically.\n5. `uniq -u` [W1 p.31] outputs only the unique lines, effectively removing duplicate words.\n6. `comm -23 - /usr/share/dict/words` [W1 p.31] compares the sorted list of words from the textfile with the sorted list of words in the dictionary file, and outputs lines that are unique to the textfile, i.e., words not in the dictionary. [W1 p.31]"
+    },
+    {
+      "id": "w2-q1",
+      "week": 2,
+      "type": "definition",
+      "marks": 2,
+      "question": "Define Change Data Capture (CDC). (2 marks)",
+      "answer": "Change Data Capture (CDC) is a method for identifying and capturing changes made to data in a database. These changes are then made available for further processing, typically for data warehousing or data integration purposes. [W2 p.4]"
+    },
+    {
+      "id": "w2-q2",
+      "week": 2,
+      "type": "explain",
+      "marks": 3,
+      "question": "Explain why unbounded data must be converted into bounded data before processing. (3 marks)",
+      "answer": "Unbounded data is continuous and varying in speed as events happen in reality [W2 p.7]. This characteristic makes it challenging to process directly because the volume and velocity of data can be unpredictable and potentially overwhelming for processing systems [W2 p.8]. By converting unbounded data into bounded data, typically through batching or other means of aggregation, the data becomes manageable in discrete datasets or batches [W2 p.7]. This conversion allows for more controlled and efficient processing, ensuring that the system can handle the data without being overwhelmed by its continuous nature [W2 p.8]. Thus, unbounded data must be converted into bounded data for effective and reliable processing [W2 p.7]. [3 marks]"
+    },
+    {
+      "id": "w2-q3",
+      "week": 2,
+      "type": "apply",
+      "marks": 5,
+      "question": "A company collects customer feedback via multiple forms, resulting in data entries with mismatched formats and missing fields. Identify a data quality issue and propose a method to address it. (5 marks)",
+      "answer": "A data quality issue arising from the company's collection of customer feedback via multiple forms is the presence of mismatched formats and missing fields. This issue affects the data's **believability** and **accuracy**, as it may lead to confusion and incorrect interpretations of the feedback.\n\nTo address this issue, a method involves **data cleaning**. Specifically, for handling **missing fields**, these can be identified using detection methods such as in-built functions in Python libraries like Pandas [W2 p.25]. For **mismatched formats**, standardization techniques can be applied. This might include converting all dates to a uniform format, such as `YYYY-MM-DD`, and ensuring consistency in how categories are represented (e.g., all lowercase or uppercase) [W2 p.29].\n\nBy implementing these steps, the data will become more **interpretable** and **accurate**, thereby improving the believability and overall quality of the feedback data. [W2 p.24] [W2 p.29] [W2 p.30]"
+    },
+    {
+      "id": "w2-q4",
+      "week": 2,
+      "type": "definition",
+      "marks": 2,
+      "question": "Define missing values. (2 marks)",
+      "answer": "Missing values refer to instances where a specific value is simply unpopulated [W2 p.24]. This can occur due to various reasons, such as intentional non-response in a survey or technical issues like device faults if the data is captured via sensor [W2 p.25]."
+    },
+    {
+      "id": "w2-q5",
+      "week": 2,
+      "type": "explain",
+      "marks": 3,
+      "question": "Explain why data cleaning is crucial for drawing accurate conclusions from data. (3 marks)",
+      "answer": "Data cleaning is crucial for drawing accurate conclusions from data because it ensures the reliability and consistency of the information being analyzed. As stated in the course materials, \"The quality of our data directly impacts the quality of the conclusions we draw from it\" [W2 p.21]. If data is dirty or contains errors, it can lead to misleading analysis and incorrect decisions. For example, missing values, incorrect formats, and inconsistencies can all introduce biases or inaccuracies into the dataset [W2 p.24]. By cleaning the data, we remove or correct these issues, ensuring that the data is believable, value-added, relevant, accurate, and interpretable [W2 p.22]. This process helps maintain the integrity of the data, leading to more reliable and actionable insights [W2 p.29]. Therefore, thorough data cleaning is essential for drawing accurate conclusions from data. [W2 p.21] [W2 p.22] [W2 p.29]"
+    },
+    {
+      "id": "w2-q6",
+      "week": 2,
+      "type": "apply",
+      "marks": 5,
+      "question": "Given a dataset containing power usage readings every hour, describe how you would create a histogram using Pandas and matplotlib to visualize the distribution of power values over a week. Justify your choices for the number of bins and any other configuration settings. (5 marks)",
+      "answer": "To create a histogram using Pandas and matplotlib to visualize the distribution of power values over a week, follow these steps:\n\n1. First, ensure the dataset is loaded into a Pandas DataFrame. This can be done using `pd.read_csv()` or similar function depending on the file format [W2 p.42].\n\n2. Use the `DataFrame.hist()` method from Pandas to create the histogram. For the given dataset, which contains hourly power usage readings over a week, we can use the `power` column for the histogram [W2 p.44].\n\n3. Set the number of bins to 10. This choice is reasonable because it provides a good balance between detail and simplicity, allowing us to see the overall distribution while still capturing potential subgroups or outliers in the data [W2 p.44].\n\n4. Configure the plot by setting appropriate labels and title. For example, set the x-axis label to \"Power Usage (kWh)\", y-axis label to \"Frequency\", and the title to \"Distribution of Power Usage Over a Week\" [W2 p.44].\n\n5. Use matplotlib's `plt.show()` to display the histogram [W2 p.44].\n\nHere is a sample code snippet:\n\n```python\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\n# Load the dataset\ndf = pd.read_csv('power_usage.csv')\n\n# Create the histogram\ndf['power'].hist(bins=10)\n\n# Configure the plot\nplt.xlabel('Power Usage (kWh)')  # Source: [W2 p.44]\nplt.ylabel('Frequency')          # Source: [W2 p.44]\nplt.title('Distribution of Power Usage Over a Week')  # Source: [W2 p.44]\n\n# Display the histogram\nplt.show()  # Source: [W2 p.44]\n```\n\nThis approach ensures that the histogram effectively visualizes the distribution of power values over the week, providing insights into the frequency of different power usage levels. [W2 p.44]"
+    },
+    {
+      "id": "w3-q1",
+      "week": 3,
+      "type": "definition",
+      "marks": 2,
+      "question": "Define a primary key in a relational database. (2 marks)",
+      "answer": "A primary key is a unique attribute (or combination of attributes) which the database uses to identify a row in a table. It is a unique (typically auto-incrementing) ID which is NEVER NULL [W3-1 p.9]."
+    },
+    {
+      "id": "w3-q2",
+      "week": 3,
+      "type": "definition",
+      "marks": 2,
+      "question": "Define a fact table in a data warehouse. (2 marks)",
+      "answer": "A fact table in a data warehouse is a relational table that contains numeric measures, which depend on a set of dimensions [W3-1 p.52]. These measures are typically derived from business operations and are used for analysis [W3-1 p.52]. For example, in a supermarket application, the fact table might include sales amounts, which depend on dimensions such as market ID, product ID, and time ID [W3-1 p.52]."
+    },
+    {
+      "id": "w3-q3",
+      "week": 3,
+      "type": "explain",
+      "marks": 3,
+      "question": "Explain why data analysts are excluded from ETL work and how this impacts their role. (3 marks)",
+      "answer": "Data analysts are excluded from ETL work because ETL workflows often involve technical processes, restricting data analysts from participating in the data workflow [W3-1 p.66]. Data analysts' strength lies in their knowledge of data and SQL, but when extractions and transformations use unfamiliar code or applications, data analysts' expertise may be excluded [W3-1 p.66]. As a result, data analysts and scientists become dependent on others to create the necessary schemas, tables, and datasets, which limits their direct involvement in the data preparation process [W3-1 p.66]. This exclusion impacts their role by reducing their ability to contribute to the initial stages of data preparation and potentially increasing their dependency on technical teams for data-related tasks [W3-1 p.66]."
+    },
+    {
+      "id": "w3-q4",
+      "week": 3,
+      "type": "compare",
+      "marks": 4,
+      "question": "Compare ELT and ETL in terms of where transformations occur. (4 marks)",
+      "answer": "In ELT, transformations occur after loading the extracted data into the target data lake or warehouse [W3-1 p.69]. This contrasts with ETL, where transformations happen before loading the data into the target system [W3-1 p.71]. Specifically, in ETL, heavy transformations are often performed downstream in the Business Intelligence (BI) layer, while in ELT, these transformations are handled directly within the data lake or warehouse environment [W3-1 p.71]. This difference allows for more flexible and scalable modeling in ELT, as it empowers data team members who are familiar with SQL to handle transformations [W3-1 p.71]."
+    },
+    {
+      "id": "w3-q5",
+      "week": 3,
+      "type": "apply",
+      "marks": 5,
+      "question": "A weather station records temperature and humidity measurements. Some measurements lack a humidity reading. Write a SQL query to find all temperature measurements that do not have a corresponding humidity measurement. (5 marks)",
+      "answer": "SELECT temp.*\nFROM Measurements temp\nLEFT JOIN Measurements hum ON temp.stationid = hum.stationid AND temp.obsdate = hum.obsdate AND temp.sensor = 'temp' AND hum.sensor = 'hum'\nWHERE hum.sensor IS NULL [W3-2 p.6] [W3-2 p.7]"
+    },
+    {
+      "id": "w3-q6",
+      "week": 3,
+      "type": "definition",
+      "marks": 2,
+      "question": "Define a group in the context of SQL GROUP BY. (2 marks)",
+      "answer": "A group in the context of SQL GROUP BY is a set of tuples that have the same value for all attributes specified in the grouping-list. [W3-2 p.18]"
+    },
+    {
+      "id": "w4-q1",
+      "week": 4,
+      "type": "definition",
+      "marks": 2,
+      "question": "Define a web API. (2 marks)",
+      "answer": "A web API is a set of rules and protocols for building and interacting with web applications. It allows you to explicitly request data from many websites or web services through public interfaces, official APIs requiring registration, or closed partner interfaces (B2B). For example, the OpenStreetMap API or the NSW Transport Open Data API can be used to request specific data. [W4 p.3]"
+    },
+    {
+      "id": "w4-q2",
+      "week": 4,
+      "type": "explain",
+      "marks": 3,
+      "question": "Explain why checking terms-of-service and robots.txt is important before web scraping. (3 marks)",
+      "answer": "Checking terms-of-service and robots.txt is important before web scraping because these documents provide guidelines and rules for accessing and using the website's content. Disregarding these guidelines can lead to legal issues or account suspension. The terms-of-service document outlines the acceptable use policies and any restrictions on how the website can be accessed or used, including scraping. The robots.txt file specifies which parts of the website should not be crawled or scraped by automated processes. Adhering to these documents ensures ethical and legal web scraping practices. [W4 p.8]"
+    },
+    {
+      "id": "w4-q3",
+      "week": 4,
+      "type": "compare",
+      "marks": 4,
+      "question": "Compare web scraping options for single webpages and downloading data files. (4 marks)",
+      "answer": "Web scraping and downloading data files are two distinct methods for acquiring data from websites, each with its own advantages and use cases.\n\nFor single webpages, web scraping involves directly extracting data from the HTML content of the webpage. This method allows for the extraction of embedded data that may not be available in downloadable files. The process typically involves making an HTTP request to retrieve the webpage, parsing the HTML content, and then extracting the desired data. Tools like BeautifulSoup in Python can facilitate this process by helping to navigate and extract data from the HTML structure [W4 p.18].\n\nDownloading data files, on the other hand, involves obtaining pre-existing files hosted on a website. These files can be in various formats such as CSV, JSON, or XML, and are often more structured and easier to parse than raw HTML. For instance, using the Pandas library in Python, one can directly read structured data from a URL [W4 p.6]. This method is generally simpler and faster since it does not require parsing HTML, but it relies on the availability of suitable files on the website.\n\nIn summary, web scraping is more flexible and can handle dynamic content, while downloading data files is more straightforward and efficient for static, structured data. Each method should be chosen based on the specific requirements and the nature of the data being sought [W4 p.16]. [4 marks]"
+    },
+    {
+      "id": "w4-q4",
+      "week": 4,
+      "type": "definition",
+      "marks": 2,
+      "question": "Define a Document Object Model (DOM). (2 marks)",
+      "answer": "A Document Object Model (DOM) is a programming interface for web documents. It represents the page so that programs can change the document structure, style, and content. The DOM describes the page as a tree structure where each node is an object representing a part of the document such as the document itself, elements, attributes, and text [W4 p.25]."
+    },
+    {
+      "id": "w4-q5",
+      "week": 4,
+      "type": "explain",
+      "marks": 3,
+      "question": "Explain how CSS selectors like 'table.data' help in extracting specific table elements using BeautifulSoup. (3 marks)",
+      "answer": "CSS selectors like 'table.data' help in extracting specific table elements using BeautifulSoup by allowing precise targeting of HTML elements based on their attributes. Specifically, 'table.data' targets table elements that have the CSS class \"data\". This is achieved through BeautifulSoup's support for CSS selectors, which enables users to specify selection criteria such as class names. For example, the following line of code finds all table elements with the class \"data\":\n\n```python\nelement = page_content.find_all(\"table\", \"data\")\n```\n\nThis command instructs BeautifulSoup to search the document object model (DOM) for table elements that possess the \"data\" class, thereby facilitating the extraction of specific tables that meet this criterion. [W4 p.29] [W4 p.28]"
+    },
+    {
+      "id": "w4-q6",
+      "week": 4,
+      "type": "apply",
+      "marks": 5,
+      "question": "A web application needs to fetch and display real-time weather data. Suggest an appropriate data format (JSON or XML) for this task and justify your choice. (5 marks)",
+      "answer": "JSON [W4 p.36]\n\nJustification: JSON is an appropriate data format for fetching and displaying real-time weather data because it is lightweight, easy to parse, and supports semi-structured data. JSON allows for nested structures and can represent complex data types such as arrays and objects, which are useful for weather data that may include multiple measurements or details about different locations. Additionally, JSON is natively supported by many programming languages, making it straightforward to integrate into web applications. This format also reduces the overhead compared to XML, as it does not require a schema and is generally more compact [W4 p.36]. [W4 p.37]"
+    },
+    {
+      "id": "w5-q1",
+      "week": 5,
+      "type": "definition",
+      "marks": 2,
+      "question": "Define semistructured data. (2 marks)",
+      "answer": "Semistructured data refers to data with non-rigid structure [W5 p.3]. It includes missing or additional attributes, nesting where semistructured objects ('documents') are hierarchical or have a tree-structure, and different types in different objects [W5 p.3]. Additionally, semistructured data is self-describing, irregular, and lacks a strict a priori structure [W5 p.3]."
+    },
+    {
+      "id": "w5-q2",
+      "week": 5,
+      "type": "explain",
+      "marks": 3,
+      "question": "Explain how a DTD specifies the structure and content constraints for elements in an XML document. (3 marks)",
+      "answer": "A DTD specifies the structure and content constraints for elements in an XML document by defining the allowed elements and their relationships, including the order and occurrence of child elements. For example, in the provided bookstore DTD:\n\n- `<!ELEMENT bookstore  (book)*>` indicates that the `bookstore` element can contain zero or more `book` elements.\n- `<!ELEMENT book       (title,author+,price?)>` specifies that a `book` element must contain a `title` element, one or more `author` elements, and optionally a `price` element.\n- `<!ATTLIST book       genre CDATA #REQUIRED>` defines that the `book` element must have a `genre` attribute which is required and of type `CDATA`.\n\nThese declarations establish the constraints on the structure and content of the XML document, ensuring that it adheres to a specific schema defined by the DTD. [W5 p.7] [W5 p.8]"
+    },
+    {
+      "id": "w5-q3",
+      "week": 5,
+      "type": "compare",
+      "marks": 4,
+      "question": "Compare XML and JSON in terms of verbosity. (4 marks)",
+      "answer": "XML is more verbose than JSON [W5 p.14]. This is because XML includes additional tags and markup which increases its size and complexity compared to JSON [W5 p.14]. For example, an XML representation of a person's address might look like this:\n\n```xml\n<person name=\"John Smith\">\n    <address street=\"1 Cleveland Street\"\n             city=\"Sydney\"\n             state=\"NSW\"\n             zipcode=\"2006\" />\n</person>\n```\n\nIn contrast, the same information in JSON would be represented as:\n\n```json\n{\n    \"name\": \"John Smith\",\n    \"address\": {\n        \"street\": \"1 Cleveland Street\",\n        \"city\": \"Sydney\",\n        \"state\": \"NSW\",\n        \"zipcode\": 2006\n    }\n}\n```\n\nAs shown, JSON requires fewer characters and is generally more concise [W5 p.14]. This makes JSON easier to read and process, especially when dealing with large datasets [W5 p.14]."
+    },
+    {
+      "id": "w5-q4",
+      "week": 5,
+      "type": "definition",
+      "marks": 2,
+      "question": "Define a document-oriented database. (2 marks)",
+      "answer": "A document-oriented database is a type of NoSQL database that stores, retrieves, and manages document-oriented information, where data is stored in structured data containers known as documents [W5 p.27]. These documents are typically represented in formats such as JSON, and they can contain nested key-value pairs and arrays [W5 p.28]. Documents in a collection do not need to have the same structure, providing a flexible schema compared to relational databases [W5 p.29]."
+    },
+    {
+      "id": "w5-q5",
+      "week": 5,
+      "type": "explain",
+      "marks": 3,
+      "question": "Explain why MongoDB uses a flexible schema for collections. (3 marks)",
+      "answer": "MongoDB uses a flexible schema for collections because it allows documents in a collection to have varying structures, which is very attractive for handling data from sources that have not been fully cleaned [W5 p.28]. This flexibility enables MongoDB to store and manage semi-structured data efficiently without requiring a predefined schema [W5 p.29]. The ability to handle varying schemas makes MongoDB suitable for applications where data formats may change frequently or where data integration from multiple sources is required [W5 p.29]."
+    },
+    {
+      "id": "w5-q6",
+      "week": 5,
+      "type": "compare",
+      "marks": 4,
+      "question": "Compare automatic data partitioning and single-leader replication in MongoDB. (4 marks)",
+      "answer": "Automatic data partitioning in MongoDB involves the automatic sharding of large collections across multiple machines. This process partitions data in an order-preserving manner, meaning that the data remains sorted as it is distributed among different machines. This technique enables horizontal scaling, allowing MongoDB to handle larger datasets by distributing the load across multiple servers [W5 p.35].\n\nSingle-leader replication in MongoDB refers to a replication model where there is a primary (leader) node responsible for receiving all write operations. This primary node replicates the data to secondary nodes asynchronously. The main goal of this model is to ensure high availability, as the secondary nodes can take over if the primary node fails. However, queries can also be directed to the secondary nodes, though the data will be eventually consistent rather than immediately consistent [W5 p.35].\n\nEach of these features addresses different aspects of scalability and availability in MongoDB. Automatic data partitioning focuses on distributing data horizontally to manage large volumes of data, while single-leader replication ensures that the system remains available even if the primary node fails, albeit with eventual consistency [W5 p.35]. [4 marks]"
+    },
+    {
+      "id": "w6-q1",
+      "week": 6,
+      "type": "definition",
+      "marks": 2,
+      "question": "Define geospatial data. (2 marks)",
+      "answer": "Geospatial data refers to data or information that identifies the geographic location of features and boundaries on Earth (such as localities, cities, suburbs etc) [W6 p.5]."
+    },
+    {
+      "id": "w6-q2",
+      "week": 6,
+      "type": "compare",
+      "marks": 4,
+      "question": "Compare Cartesian Coordinates and Geographic Coordinates in terms of their dimensions. (4 marks)",
+      "answer": "Cartesian Coordinates are described as point positions from a defined origin along axes on a plane, which implies they are 2-dimensional [W6 p.18]. On the other hand, Geographic Coordinates (Geodetic) are specified as angular coordinates (longitude and latitude), indicating they operate in a 3-dimensional space where the Earth is modeled as an ellipsoid or sphere [W6 p.18]. Thus, while Cartesian Coordinates are 2-dimensional, Geographic Coordinates are effectively 3-dimensional [W6 p.18]."
+    },
+    {
+      "id": "w6-q3",
+      "week": 6,
+      "type": "apply",
+      "marks": 5,
+      "question": "A geographer needs to compare the location of a historical marker in Sydney (4326 coordinate system) with a local map using the PostGIS extension. Which PostGIS type should they use for accurate results, and why? (5 marks)",
+      "answer": "For accurate results when comparing the location of a historical marker in Sydney (using the 4326 coordinate system) with a local map using the PostGIS extension, the geographer should use the Geography type. \n\nThe reason for this choice is that the 4326 coordinate system is based on a sphere, which is more appropriate for representing large-scale geodetic data such as locations across countries or continents. The Geography type in PostGIS is designed to handle spherical coordinates, making it suitable for calculating distances, areas, and other geospatial measurements accurately on a curved surface. In contrast, the Geometry type assumes a flat plane, which can lead to inaccuracies when dealing with large distances or when precision is critical.\n\nUsing the Geography type ensures that the shortest path between two points is calculated as a great circle arc, which is the most accurate representation on a spherical Earth. This is particularly important for geodetic data spanning significant distances, as it minimizes errors in distance and area calculations. Therefore, for the geographer's needs, the Geography type is the preferred choice to ensure accurate comparisons and measurements. [W6 p.28]"
+    },
+    {
+      "id": "w6-q4",
+      "week": 6,
+      "type": "definition",
+      "marks": 2,
+      "question": "Define a topological relationship in spatial objects. (2 marks)",
+      "answer": "A topological relationship in spatial objects is a property that remains unchanged under elastic deformation (without tearing or merging) of the objects. For example, if two countries touch each other on a planar map, they will continue to touch each other when mapped onto a spherical globe. These relationships include operations such as whether one object is inside another, whether they overlap, or whether they are disjoint. [W6 p.30] [W6 p.31]"
+    },
+    {
+      "id": "w6-q5",
+      "week": 6,
+      "type": "explain",
+      "marks": 3,
+      "question": "Explain why DuckDB uses the GEOMETRY type with EPSG:4326 by default for spatial data. (3 marks)",
+      "answer": "DuckDB uses the GEOMETRY type with EPSG:4326 by default for spatial data because it follows the OGC (Open Geospatial Consortium) model, which assumes a spherical coordinate system [W6 p.35]. EPSG:4326 refers to the WGS84 (World Geodetic System 1984) geographic coordinate system, which is widely used for global positioning and mapping applications [W6 p.35]. This choice allows DuckDB to correctly calculate spherical distances and areas, providing accurate spatial measurements for geographical data [W6 p.35]."
+    },
+    {
+      "id": "w6-q6",
+      "week": 6,
+      "type": "compare",
+      "marks": 4,
+      "question": "Compare the `total_bounds` attribute and the `bounds` attribute of a GeoSeries. (4 marks)",
+      "answer": "The `total_bounds` attribute of a GeoSeries provides the bounding box for the entire GeoSeries, i.e., the minimum and maximum coordinates across all geometries in the series [W6 p.42]. On the other hand, the `bounds` attribute gives the bounding box for each individual geometry within the GeoSeries [W6 p.42].\n\nEach `bounds` value is a tuple of (minx, miny, maxx, maxy) for a single geometry, whereas `total_bounds` is a single tuple encompassing the overall bounding box for all geometries in the series [W6 p.42].\n\nFor example, if a GeoSeries contains three points, the `bounds` attribute would return a list of three tuples, each representing the bounding box of one point, while `total_bounds` would return a single tuple representing the overall bounding box that encompasses all three points [W6 p.42].\n\nIn summary, `total_bounds` provides the overall bounding box for the entire GeoSeries, while `bounds` provides the bounding box for each individual geometry within the series [W6 p.42]. [4 marks]"
+    },
+    {
+      "id": "w7-q1",
+      "week": 7,
+      "type": "definition",
+      "marks": 2,
+      "question": "Define temporal data. (2 marks)",
+      "answer": "Temporal data is data that is marked with time, either as a point in time or a period. This means that almost all data can be considered temporal since it often includes timestamps indicating when the data was recorded or when events occurred [W7 p.2]."
+    },
+    {
+      "id": "w7-q2",
+      "week": 7,
+      "type": "explain",
+      "marks": 3,
+      "question": "Explain how a temporal DBMS distinguishes between historical data, current data, and future data. (3 marks)",
+      "answer": "A temporal DBMS distinguishes between historical data, current data, and future data by maintaining data with respect to time and allowing time-based reasoning. Specifically, it can store and manage data that reflects past, present, and future states. Historical data refers to information that pertains to past events, current data represents the present state, and future data indicates what will be effective in the future. This distinction enables the system to handle and query data across different time dimensions effectively. [W7 p.6] [W7 p.7]"
+    },
+    {
+      "id": "w7-q3",
+      "week": 7,
+      "type": "compare",
+      "marks": 4,
+      "question": "Compare transaction time and valid time in terms of how they record changes over time. (4 marks)",
+      "answer": "Transaction time records the history of database activity, moving only forward. This means that once a record is created, it cannot be altered or deleted; the history of changes is preserved. This is useful for auditing purposes as it allows tracking of all modifications made to the data over time. On the other hand, valid time can move both forward and backward, recording when a fact is true in the real world. This allows for the simulation of historical changes and the ability to query data as it was at any point in the past. [W7 p.11] [W7 p.12]"
+    },
+    {
+      "id": "w7-q4",
+      "week": 7,
+      "type": "explain",
+      "marks": 3,
+      "question": "A database records product stock levels, updating them whenever changes occur. Suggest a timestamp approach for representing current stock levels and explain why you chose this method. (3 marks)",
+      "answer": "A suitable timestamp approach for representing current stock levels would be the maximum possible timestamp (max-timestamp approach), such as '31-12-9999'. This method simulates 'the end of time' or 'forever', indicating that the stock level is current until it is updated again [W7 p.15]. \n\nThis approach is chosen because it avoids the complications associated with using NULL values, which would make comparisons difficult and violate the principle that NULL represents 'unknown' [W7 p.15]. Additionally, using the minimum possible timestamp ('00-00-0000') could be counter-intuitive and might lead to confusion when querying the data [W7 p.15]. Therefore, the max-timestamp approach is extensively used and provides a clear and unambiguous way to denote current data [W7 p.15]. [3 marks]"
+    },
+    {
+      "id": "w7-q5",
+      "week": 7,
+      "type": "definition",
+      "marks": 2,
+      "question": "Define a semi-temporal table. (2 marks)",
+      "answer": "A semi-temporal table is a table that keeps track of when a current fact is true, by adding a timestamp defining the period of validity since a point in time. This is typically represented using a single column that records the start time of the validity period, with the understanding that the fact remains true until the next change. The table includes a \"since\" attribute that indicates the period of validity, often denoted as [since, now). [W7 p.22]"
+    },
+    {
+      "id": "w7-q6",
+      "week": 7,
+      "type": "explain",
+      "marks": 3,
+      "question": "Explain why EmpPosition uses two DATE columns (start_date and end_date) to represent a time interval. (3 marks)",
+      "answer": "EmpPosition uses two DATE columns (start_date and end_date) to represent a time interval because traditional database systems do not have a built-in \"time period\" data type. By using two DATE columns, the system can capture the beginning and ending points of a period, effectively simulating a time interval. This approach allows for the representation of when a particular state or event was valid, such as an employee's position change. Each row in the EmpPosition table represents a specific period during which the employee held a certain position, with the interval being defined by the start_date (inclusive) and end_date (exclusive). [W7 p.22] [W7 p.23]"
+    }
+  ]
+}
