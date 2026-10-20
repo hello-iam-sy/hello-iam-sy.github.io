@@ -2,6 +2,9 @@
 .exam-case .case-hero h1 { max-width: 18ch; }
 .exam-case .case-hero .stats { margin-top: 40px; }
 .exam-case .case-hero .note { margin-bottom: 0; }
+.app-video { margin: 40px 0 0; }
+.app-video video { display: block; width: 100%; height: auto; aspect-ratio: 1280 / 800; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); }
+.app-video figcaption { margin-top: 10px; }
 .exam-steps { margin-top: 48px; }
 .exam-footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
 .practice { border: 1px solid var(--line); background: var(--surface); border-radius: 8px; overflow: hidden; }

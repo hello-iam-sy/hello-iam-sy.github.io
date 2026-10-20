@@ -78,13 +78,14 @@ header.hero h1 { max-width: 11ch; margin-bottom: 32px; }
 /* sections with a left rail */
 section { padding: 88px 0; }
 .railed { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 0 48px; }
-.railed > h2 { font-size: 1.15rem; letter-spacing: -.005em; padding-top: 14px; border-top: 2px solid var(--rule); align-self: start; position: sticky; top: 76px; }
+.railed > h2 { font-size: 1.15rem; letter-spacing: -.005em; line-height: 1.6; align-self: start; position: sticky; top: 76px; }
 .railed > .content { min-width: 0; }
 .railed .sub { margin-bottom: 40px; }
 
 /* projects */
-.project { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 40px; padding: 14px 0 64px; border-top: 2px solid var(--rule); }
-.project + .project { padding-top: 40px; }
+/* The section intro opens the first project; later projects are separated by a hairline only. */
+.project { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 40px; padding: 0 0 72px; }
+.project + .project { padding-top: 56px; border-top: 1px solid var(--line); }
 .project:last-child { padding-bottom: 0; }
 .project .kind { color: var(--muted); font-size: .95rem; margin: 0 0 6px; }
 .project h3 { font-size: clamp(1.6rem, 3vw, 2.2rem); line-height: 1.1; letter-spacing: -.025em; font-weight: 800; margin: 0 0 16px; }
@@ -98,7 +99,9 @@ section { padding: 88px 0; }
 .more { font-weight: 650; }
 .project .visual { align-self: start; margin-top: 44px; }
 .project.with-arch { grid-template-columns: minmax(0, 1fr); gap: 24px; }
-@media (min-width: 901px) { .project.with-arch .arch { margin-left: -248px; } }
+.project-video, .project-figure { display: block; }
+.project-figure img { display: block; width: 100%; height: auto; padding: 16px; background: #fff; border-radius: 10px; border: 1px solid var(--line); }
+.project-video video { display: block; width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); }
 
 /* medallion mini-diagram */
 .medallion { display: flex; flex-direction: column; gap: 6px; font-size: .9rem; }

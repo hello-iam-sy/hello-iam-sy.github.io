@@ -11,7 +11,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css">
-<link rel="stylesheet" href="assets/arch.css?v=20261011-examprep">
 <script src="assets/theme.js"></script>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%2314203a'/><text x='16' y='22' font-family='Arial' font-weight='700' font-size='15' text-anchor='middle' fill='white'>SK</text></svg>">
 </head>
@@ -59,20 +58,22 @@
         <div>
           <p class="kind">Data engineering</p>
           <h3><a href="projects/ev-platform/">NSW EV Charger Data Platform</a></h3>
-          <p>An on-premise ELT platform that merges four public and operator sources into one reliable view of EV charging in
-            New South Wales. It runs daily on Airflow, only processes what changed, gates every run on 26 data quality checks, profiles any table on
-            demand, and traces every number from source file to report with full lineage, Grafana and Slack alerts.</p>
+          <p>Twelve public and operator sources, cleaned and checked every morning into one catalogue of NSW EV chargers.
+            Drivers use it through Charge Journey, a web app that finds a charger that fits their car, with price and live availability.</p>
           <div class="stats">
-            <div class="stat"><b>1,958</b><span>chargers modelled</span></div>
-            <div class="stat"><b>4</b><span>sources linked</span></div>
-            <div class="stat"><b>56.4%</b><span>DC chargers enriched (from 41.8%)</span></div>
+            <div class="stat"><b>12</b><span>sources linked</span></div>
+            <div class="stat"><b>2,710</b><span>stations in the catalogue</span></div>
+            <div class="stat"><b>38</b><span>quality checks per daily run</span></div>
           </div>
           <ul class="stack" aria-label="Stack">
-            <li>PostgreSQL / PostGIS</li><li>Airflow</li><li>Data quality</li><li>OpenLineage</li><li>Kafka + Spark</li><li>Grafana</li>
+            <li>PostgreSQL / PostGIS</li><li>Airflow</li><li>Kafka</li><li>Data quality</li><li>OpenLineage</li><li>Grafana</li>
           </ul>
-          <a class="more" href="projects/ev-platform/">Read the operations handbook</a>
+          <a class="more" href="projects/ev-platform/">See the platform and the app</a>
         </div>
-        <div class="arch" data-arch="ev"></div>
+        <a class="project-video" href="projects/ev-platform/" aria-label="NSW EV Charger Data Platform">
+          <video src="projects/ev-platform/media/charge-journey.mp4" poster="projects/ev-platform/media/charge-journey.jpg" autoplay muted loop playsinline preload="metadata"
+            aria-label="Charge Journey app finding a compatible charger nearby"></video>
+        </a>
       </article>
 
       <article class="project with-arch">
@@ -91,7 +92,10 @@
           </ul>
           <a class="more" href="projects/edu-sv/">Read the case study</a>
         </div>
-        <div class="arch" data-arch="edusv"></div>
+        <a class="project-figure" href="projects/edu-sv/">
+          <img src="assets/img/edu-sv-leakage.png" width="1890" height="830" loading="lazy"
+            alt="Cumulative answer leakage over 20 attack rounds: without intervention it reaches about 63% for both tutor models; with the steering vector it stays at 17.8% for Qwen2.5-7B-Instruct and 5.4% for TutorRL">
+        </a>
       </article>
 
       <article class="project with-arch">
@@ -111,7 +115,10 @@
           </ul>
           <a class="more" href="projects/examprepbot/">Explore the project and question demo</a>
         </div>
-        <div class="arch" data-arch="examprep"></div>
+        <a class="project-video" href="projects/examprepbot/" aria-label="ExamPrepBot">
+          <video src="projects/examprepbot/media/examprepbot.mp4" poster="projects/examprepbot/media/examprepbot.jpg" autoplay muted loop playsinline preload="metadata"
+            aria-label="ExamPrepBot: weekly practice questions with model answers that open the cited lecture slide"></video>
+        </a>
       </article>
     </div>
   </div>
@@ -195,6 +202,5 @@
   <div class="wrap">© 2026 Suyeong Kim, Sydney NSW</div>
 </footer>
 
-<script src="assets/arch.js?v=20261011-examprep" defer></script>
 </body>
 </html>

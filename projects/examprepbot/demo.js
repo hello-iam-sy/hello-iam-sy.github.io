@@ -127,25 +127,17 @@
     detail.setAttribute('aria-labelledby', heading.id);
     detail.append(tags, heading);
 
-    const toggle = element('button', 'Reveal model answer', 'btn primary');
-    toggle.type = 'button';
-    toggle.setAttribute('aria-expanded', 'false');
-    toggle.setAttribute('aria-controls', 'model-answer');
     const answer = element('div', undefined, 'answer');
-    answer.id = 'model-answer';
-    answer.hidden = true;
     const source = element('div', undefined, 'source-reference');
     source.id = 'source-reference';
     source.hidden = true;
     source.setAttribute('role', 'region');
     source.setAttribute('aria-label', 'Cited source slide');
     answer.append(element('h4', 'Saved model answer'), answerText(question.answer, source), source);
-    toggle.addEventListener('click', () => {
-      answer.hidden = !answer.hidden;
-      toggle.setAttribute('aria-expanded', String(!answer.hidden));
-      toggle.textContent = answer.hidden ? 'Reveal model answer' : 'Hide model answer';
-    });
-    detail.append(toggle, answer);
+    detail.append(answer);
+    // Open the first cited slide so the evidence is visible without a click.
+    const first = answer.querySelector('.citation');
+    if (first) showSource(first.dataset.label, source);
   }
 
   function select(question) {

@@ -162,7 +162,7 @@
   function showCharger(r,pan=true) {
     selectedCharger = r;
     $('detail').innerHTML = `<h2>Charger #${esc(r.charger_id)}</h2><h3>${esc(r.station_name || r.address || 'Charger #'+r.charger_id)}</h3><p>${esc(r.station_name ? r.address : 'Station name not provided in source')}</p>`+details([
-      ['Region',r.sa4_name],['Operator',r.operator_name],['Status',r.status],['Type',r.current_type||'Unknown'],['Rated output',r.max_power_kw==null?'Unknown':fmt(r.max_power_kw,1)+' kW'],['Plugs',r.number_of_plugs==null?'Unknown':fmt(r.number_of_plugs)],['Base tariff',r.price_per_kwh==null?'Unknown':price(r.price_per_kwh)+'/kWh'],['Price source',r.enrichment_source||'Not matched'],['Peak surcharge',r.peak_surcharge_per_kwh==null?'Not supplied':price(r.peak_surcharge_per_kwh)+'/kWh'],['Peak window',r.peak_start?`${r.peak_start}–${r.peak_end}`:'Not supplied']])+`<h2>Published tariff</h2><p>${esc(r.usage_cost || 'No published tariff available in the current Gold data.')}</p><button id="back-region">Back to scope summary</button>`;
+      ['Region',r.sa4_name],['Operator',r.operator_name],['Status',r.status],['Type',r.current_type||'Unknown'],['Rated output',r.max_power_kw==null?'Unknown':fmt(r.max_power_kw,1)+' kW'],['Power source',r.power_source||'Not supplied'],['Plugs',r.number_of_plugs==null?'Unknown':fmt(r.number_of_plugs)],['Base tariff',r.price_per_kwh==null?'Unknown':price(r.price_per_kwh)+'/kWh'],['Location source',r.location_source||'tfnsw'],['Price source',r.price_source==='agl'?'AGL EV Charging':r.price_source||'Not supplied'],['Peak surcharge',r.peak_surcharge_per_kwh==null?'Not supplied':price(r.peak_surcharge_per_kwh)+'/kWh'],['Peak window',r.peak_start?`${r.peak_start}–${r.peak_end} (Sydney)`:'Not supplied']])+`<h2>Published tariff</h2><p>${esc(r.usage_cost || 'No published tariff available in the current Gold data.')}</p><button id="back-region">Back to scope summary</button>`;
     $('back-region').onclick=()=>{selectedCharger=null;render();};
     if(pan && map && Number.isFinite(r.latitude) && Number.isFinite(r.longitude)) map.setView([r.latitude,r.longitude],Math.max(map.getZoom(),12),{animate:false});
   }
@@ -174,7 +174,7 @@
     const rows=recordRows(),size=20;page=Math.min(page,Math.max(0,Math.ceil(rows.length/size)-1));
     $('record-count').textContent=`${fmt(rows.length)} entries, page ${page+1} of ${Math.max(1,Math.ceil(rows.length/size))}`;
     $('previous').disabled=page===0;$('next').disabled=(page+1)*size>=rows.length;
-    $('charger-rows').innerHTML=rows.slice(page*size,(page+1)*size).map(r=>`<tr><td><button class="table-select" data-charger="${r.charger_id}">${esc(r.station_name || r.address)}</button><br><small class="muted">#${r.charger_id}, ${esc(r.station_name?r.address:'Name not supplied')}</small></td><td>${esc(r.operator_name)}</td><td>${esc(r.sa4_name)}</td><td>${esc(r.current_type||'Unknown')}</td><td class="num">${fmt(r.max_power_kw,1)}</td><td class="num">${price(r.price_per_kwh)}</td><td>${esc(r.enrichment_source||'—')}</td></tr>`).join('') || '<tr><td colspan="7">No charger entries match these filters.</td></tr>';
+    $('charger-rows').innerHTML=rows.slice(page*size,(page+1)*size).map(r=>`<tr><td><button class="table-select" data-charger="${r.charger_id}">${esc(r.station_name || r.address)}</button><br><small class="muted">#${r.charger_id}, ${esc(r.station_name?r.address:'Name not supplied')}</small></td><td>${esc(r.operator_name)}</td><td>${esc(r.sa4_name)}</td><td>${esc(r.current_type||'Unknown')}</td><td class="num">${fmt(r.max_power_kw,1)}</td><td class="num">${price(r.price_per_kwh)}</td><td>${esc(r.price_source||'—')}</td></tr>`).join('') || '<tr><td colspan="7">No charger entries match these filters.</td></tr>';
     document.querySelectorAll('[data-charger]').forEach(b=>b.onclick=()=>{showCharger(snapshotRows.find(r=>String(r.charger_id)===b.dataset.charger));$('detail').scrollIntoView({behavior:'smooth',block:'center'});});
   }
   ['operator','current','status','region','metric','points'].forEach(id=>$(id).onchange=()=>{selectedCharger=null;page=0;id==='region'?selectRegion($(id).value):render();});
@@ -182,7 +182,7 @@
   $('search').oninput=()=>{page=0;renderRecords();};$('previous').onclick=()=>{page--;renderRecords();};$('next').onclick=()=>{page++;renderRecords();};
   $('refresh').onclick=load;
   $('download').onclick=()=>{
-    const fields=['charger_id','station_name','operator_name','sa4_name','current_type','status','address','max_power_kw','price_per_kwh','enrichment_source','usage_cost'];
+    const fields=['charger_id','station_name','operator_name','sa4_name','current_type','status','address','max_power_kw','price_per_kwh','location_source','price_source','power_source','enrichment_source','usage_cost'];
     const cell=v=>{let s=String(v??'');if(/^[=+@\-\t\r]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"';};
     const csv=[fields,...recordRows().map(r=>fields.map(k=>r[k]))].map(row=>row.map(cell).join(',')).join('\r\n');
     const url=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));

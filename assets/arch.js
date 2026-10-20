@@ -5,20 +5,20 @@ const LOGOS = {"postgresql": "M23.5594 14.7228a.5269.5269 0 0 0-.0563-.1191c-.13
 
 // kind: node | lane (container) | layer (medallion layer inside PostgreSQL)
 const EV_N = [
-  { id: 'streaming', kind: 'lane', x: 220, y: 30, w: 620, h: 100, label: 'Streaming, every 15 minutes' },
+  { id: 'streaming', kind: 'lane', x: 220, y: 30, w: 620, h: 100, label: 'Live charger status, polled continuously' },
   { id: 'airflow', kind: 'lane', x: 220, y: 170, w: 620, h: 300, logo: 'apacheairflow', title: 'Airflow 3', sub: 'daily at 06:00 Sydney, or on the SA4 asset event',
     children: ['retrieve', 'landing', 'postgres', 'bronze', 'silver', 'gold'],
     desc: 'Two DAGs split by change frequency. ev_reference (manual, SA4 boundaries) emits an Asset event that starts ev_sources, which also runs daily. Initial and incremental loads are the same idempotent run.' },
   { id: 'obs', kind: 'lane', x: 220, y: 505, w: 620, h: 90, label: 'Monitoring and lineage' },
 
   { id: 'tfnsw', x: 20, y: 190, w: 160, h: 54, tag: 'CSV', title: 'Transport for NSW', sub: 'Charger locations',
-    desc: 'Every public charger in NSW, from the TfNSW Open Data Hub. CKAN last_modified is checked before download, then SHA-256. The spine of the model: 1,958 chargers.' },
+    desc: 'Every public charger in NSW, from the TfNSW Open Data Hub. CKAN last_modified is checked before download, then SHA-256. The spine of the model: 1,958 records, 1,858 operational chargers in Gold.' },
   { id: 'abs', x: 20, y: 256, w: 160, h: 54, tag: 'SHP', title: 'ABS', sub: 'SA4 boundaries, 2026',
     desc: 'ASGS Edition 4 Statistical Area Level 4 boundaries, fetched with an HTTP conditional GET. They change yearly, so they have their own manual DAG.' },
   { id: 'ocm', x: 20, y: 322, w: 160, h: 54, tag: 'API', title: 'Open Charge Map', sub: 'Plugs, prices, bays',
-    desc: 'Crowd-sourced registry queried for the NSW bounding box: a full daily snapshot for the batch, and a changes feed polled every 15 minutes for streaming.' },
-  { id: 'evie', x: 20, y: 388, w: 160, h: 54, tag: 'JSON', title: 'Evie Networks', sub: 'Operator site data',
-    desc: "The operator's own store-locator data: connectors, power and AC/DC tariffs where Open Charge Map has gaps. Queried as a grid, 10 s apart per robots.txt." },
+    desc: 'Crowd-sourced registry queried for the NSW bounding box as a full daily snapshot: plugs, prices and bay counts where operators publish none.' },
+  { id: 'evie', x: 20, y: 388, w: 160, h: 54, tag: 'API', title: 'Operator networks', sub: 'Evie, Exploren, AGL +6',
+    desc: "Nine operator sources: Evie, Exploren, AGL, JOLT, EVX, Chargefox, EVUp, Ampol and NRMA. Their own site lists, connectors and tariffs build the station catalogue (2,710 stations, 3,157 connectors); their public status APIs feed the live status stream." },
 
   { id: 'retrieve', x: 250, y: 278, w: 160, h: 60, logo: 'python', title: 'Retrieve', sub: 'Change checks first',
     desc: 'Python only retrieves and lands files. Each source has its own change check (last_modified, HTTP 304, SHA-256), so unchanged data is neither stored nor processed again.' },
@@ -32,15 +32,17 @@ const EV_N = [
   { id: 'silver', kind: 'layer', x: 665, y: 340, w: 140, h: 36, title: 'Silver', color: 'silver',
     desc: 'Cleaned and matched: ST_Covers spatial join to SA4 regions, record linkage across sources in SQL, and SCD2 price and status history.' },
   { id: 'gold', kind: 'layer', x: 665, y: 390, w: 140, h: 36, title: 'Gold', color: 'gold',
-    desc: 'Analysis-ready outputs such as gold.operator_summary, checked by 26 quality checks on every run. An error-level check fails the Airflow run.' },
+    desc: 'Analysis-ready outputs such as gold.operator_summary, checked by 38 quality checks on every run. An error-level check fails the Airflow run.' },
 
-  { id: 'producer', x: 250, y: 50, w: 160, h: 60, logo: 'python', title: 'Producer', sub: 'OCM modifiedsince',
-    desc: 'Polls Open Charge Map every 15 minutes for sites modified since the last poll, so price changes arrive between daily batch runs.' },
-  { id: 'kafka', x: 450, y: 50, w: 160, h: 60, logo: 'apachekafka', title: 'Kafka', sub: 'ev.ocm.poi.changes',
-    desc: "Keyed by OCM ID, so each site's changes stay in order. Retention is unlimited, which makes the topic the replay log after a database reset." },
-  { id: 'spark', x: 650, y: 50, w: 170, h: 60, logo: 'apachespark', title: 'Spark', sub: 'Structured Streaming',
-    desc: 'Two checkpointed queries: Parquet by event_date, and rows in bronze.ocm_poi_events with a unique (topic, partition, offset), so a replayed micro-batch is a no-op.' },
+  { id: 'producer', x: 250, y: 50, w: 160, h: 60, logo: 'python', title: 'Status producer', sub: 'Operator status APIs',
+    desc: "Polls each operator's public availability API in a continuous cycle, with per-provider request delays, and publishes only connectors whose status changed." },
+  { id: 'kafka', x: 450, y: 50, w: 160, h: 60, logo: 'apachekafka', title: 'Kafka', sub: 'ev.charging.status',
+    desc: "Status events keyed by connector, so each connector's changes stay in order. Daily prices stay in the batch; only availability is streamed." },
+  { id: 'spark', x: 650, y: 50, w: 170, h: 60, logo: 'python', title: 'Status consumer', sub: 'Latest state per connector',
+    desc: 'Appends events to bronze.charging_status_events (kept 7 days) and upserts silver.charging_status_latest, which the driver app reads for live availability.' },
 
+  { id: 'journey', x: 880, y: 130, w: 260, h: 60, title: 'Charge Journey', sub: 'Driver app: nearby chargers, AI chat',
+    desc: 'A public web app for drivers: finds compatible chargers near a point or along a trip, with price, plugs and live status, previews the drive in 3D, and answers questions with Gemini grounded in the same search API.' },
   { id: 'flask', x: 880, y: 230, w: 260, h: 60, logo: 'flask', title: 'Metadata app', sub: 'Term dictionary, quality dashboard',
     desc: 'A local Flask app with two tabs: Meta, where people curate the standard term dictionary (every change audited), and Dashboard, with the data quality result of every run.' },
   { id: 'llm', x: 880, y: 330, w: 260, h: 60, logo: 'langchain', title: 'LLM proposals', sub: 'LangChain, OpenAI mini model',
@@ -63,7 +65,7 @@ const EV_E = [
   ['abs', 'retrieve', [[180, 283], [195, 283], [195, 308], [250, 308]]],
   ['ocm', 'retrieve', [[180, 349], [195, 349], [195, 308], [250, 308]]],
   ['evie', 'retrieve', [[180, 415], [195, 415], [195, 308], [250, 308]]],
-  ['ocm', 'producer', [[180, 349], [207, 349], [207, 80], [250, 80]]],
+  ['evie', 'producer', [[180, 415], [207, 415], [207, 80], [250, 80]]],
   ['retrieve', 'landing', [[410, 308], [450, 308]]],
   ['landing', 'bronze', [[610, 308], [665, 308]]],
   ['bronze', 'silver', [[735, 326], [735, 340]]],
@@ -71,6 +73,7 @@ const EV_E = [
   ['producer', 'kafka', [[410, 80], [450, 80]]],
   ['kafka', 'spark', [[610, 80], [650, 80]]],
   ['spark', 'bronze', [[800, 110], [800, 290]]],
+  ['postgres', 'journey', [[820, 235], [850, 235], [850, 160], [880, 160]]],
   ['postgres', 'flask', [[820, 260], [880, 260]]],
   ['postgres', 'llm', [[820, 360], [880, 360]]],
   ['llm', 'slack', [[1010, 390], [1010, 522]]],
@@ -156,7 +159,7 @@ const EXAM_N = [
 
 const DIAGRAMS = {
   ev: { nodes: EV_N, edges: EV_E, height: 640, label: 'Component diagram of the EV charger data platform',
-    notes: [[20, 176, 'Sources'], [880, 216, 'For people']] },
+    notes: [[20, 176, 'Sources'], [880, 116, 'For people']] },
   edusv: { nodes: EDU_N, edges: EDU_E, height: 550, label: 'Component diagram of the answer-leak control study', notes: [] },
 };
 
